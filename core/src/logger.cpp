@@ -1,50 +1,39 @@
 #include <iostream>
-#include <fstream>
-#include <string>
 #include <chrono>
 #include <iomanip>
 #include <sstream>
 
+using namespace std;
+
 namespace tablemax {
 
-enum class LogLevel {
-    Debug,
-    Info,
-    Warn,
-    Error,
-};
+enum class LogLevel { Debug, Info, Warn, Error };
 
-static LogLevel g_log_level = LogLevel::Info;
+class Logger {
+public:
+    static void set_level(LogLevel level) { level_ = level; }
 
-void set_log_level(LogLevel level) {
-    g_log_level = level;
-}
+    static void debug(const string& tag, const string& msg) { log(LogLevel::Debug, tag, msg); }
+    static void info(const string& tag, const string& msg)  { log(LogLevel::Info,  tag, msg); }
+    static void warn(const string& tag, const string& msg)  { log(LogLevel::Warn,  tag, msg); }
+    static void error(const string& tag, const string& msg) { log(LogLevel::Error, tag, msg); }
 
-static std::string level_string(LogLevel level) {
-    switch (level) {
-        case LogLevel::Debug: return "DEBUG";
-        case LogLevel::Info:  return "INFO";
-        case LogLevel::Warn:  return "WARN";
-        case LogLevel::Error: return "ERROR";
-        default: return "???";
+private:
+    static inline LogLevel level_ = LogLevel::Info;
+
+    static void log(LogLevel level, const string& tag, const string& msg) {
+        if (level < level_) return;
+        static const char* names[] = { "DEBUG", "INFO", "WARN", "ERROR" };
+        cerr << "[" << timestamp() << "] [" << names[(int)level] << "] [" << tag << "] " << msg << endl;
     }
-}
 
-static std::string timestamp() {
-    auto now = std::chrono::system_clock::now();
-    auto time = std::chrono::system_clock::to_time_t(now);
-    std::ostringstream ss;
-    ss << std::put_time(std::localtime(&time), "%H:%M:%S");
-    return ss.str();
-}
-
-void log(LogLevel level, const std::string& component, const std::string& message) {
-    if (level < g_log_level) return;
-
-    std::cerr << "[" << timestamp() << "] "
-              << "[" << level_string(level) << "] "
-              << "[" << component << "] "
-              << message << std::endl;
-}
+    static string timestamp() {
+        auto now = chrono::system_clock::now();
+        auto t = chrono::system_clock::to_time_t(now);
+        ostringstream ss;
+        ss << put_time(localtime(&t), "%H:%M:%S");
+        return ss.str();
+    }
+};
 
 }

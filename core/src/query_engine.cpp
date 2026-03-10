@@ -1,352 +1,118 @@
 #include "engine.h"
-#include "plugin_interface.h"
-
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <memory>
-#include <mutex>
-#include <cstring>
 #include <chrono>
 #include <sstream>
 
-#define ENGINE_VERSION "0.1.0"
-
-namespace tablemax {
-struct PluginEntry {
-    std::string path;
-    std::string db_type;
-    CreatePluginFn create_fn = nullptr;
-    DestroyPluginFn destroy_fn = nullptr;
-    void* lib_handle = nullptr;
-};
-
-struct ConnectionEntry {
-    std::string db_type;
-    IDbPlugin* plugin = nullptr;
-    bool owned = true;
-};
-
-struct Engine {
-    std::vector<PluginEntry> plugins;
-    std::unordered_map<ConnectionHandle, ConnectionEntry> connections;
-    std::string last_error;
-    std::mutex mutex;
-    int next_conn_id = 1;
-};
-struct ResultWrapper {
-    std::unique_ptr<IResultStream> stream;
-    std::vector<ColumnInfo> columns_cache;
-    bool columns_cached = false;
-};
-static char* dup_string(const std::string& str) {
-    char* copy = new char[str.size() + 1];
-    std::memcpy(copy, str.c_str(), str.size() + 1);
-    return copy;
-}
-static std::string row_to_json(const Row& row) {
-    std::ostringstream ss;
-    ss << "{";
-    for (size_t i = 0; i < row.size(); ++i) {
-        if (i > 0) ss << ",";
-        ss << "\"" << row[i].first << "\":\"" << row[i].second << "\"";
-    }
-    ss << "}";
-    return ss.str();
-}
-
-static std::string rows_to_json(const std::vector<Row>& rows) {
-    std::ostringstream ss;
-    ss << "[";
-    for (size_t i = 0; i < rows.size(); ++i) {
-        if (i > 0) ss << ",";
-        ss << row_to_json(rows[i]);
-    }
-    ss << "]";
-    return ss.str();
-}
-
-static std::string strings_to_json(const std::vector<std::string>& strs) {
-    std::ostringstream ss;
-    ss << "[";
-    for (size_t i = 0; i < strs.size(); ++i) {
-        if (i > 0) ss << ",";
-        ss << "\"" << strs[i] << "\"";
-    }
-    ss << "]";
-    return ss.str();
-}
-
-} 
+using namespace std;
 using namespace tablemax;
-extern "C" {
 
-EngineHandle engine_init(void) {
-    auto* engine = new Engine();
-    return static_cast<EngineHandle>(engine);
-}
-
-void engine_shutdown(EngineHandle handle) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine) return;
-    for (auto& [_, conn] : engine->connections) {
-        if (conn.plugin && conn.owned) {
-            conn.plugin->disconnect();
-        }
+Engine::~Engine() {
+    lock_guard<mutex> lock(mutex_);
+    for (auto& [_, conn] : connections_) {
+        if (conn.plugin && conn.owned) conn.plugin->disconnect();
     }
-    engine->connections.clear();
-    engine->plugins.clear();
-
-    delete engine;
-}
-const char* engine_get_version(void) {
-    return dup_string(ENGINE_VERSION);
+    connections_.clear();
+    plugins_.clear();
 }
 
-void engine_free_string(const char* str) {
-    delete[] str;
-}
-int engine_load_plugins(EngineHandle handle, const char* plugin_dir) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || !plugin_dir) return 0;
-    (void)plugin_dir;
-    return 0;
+int Engine::plugin_count() const { return (int)plugins_.size(); }
+
+string Engine::plugin_name(int i) const {
+    if (i < 0 || i >= (int)plugins_.size()) return "";
+    return plugins_[i].db_type;
 }
 
-int engine_plugin_count(EngineHandle handle) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine) return 0;
-    return static_cast<int>(engine->plugins.size());
+bool Engine::has_plugin(const string& db_type) const {
+    for (auto& p : plugins_)
+        if (p.db_type == db_type) return true;
+    return false;
 }
 
-const char* engine_plugin_name(EngineHandle handle, int index) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || index < 0 || index >= static_cast<int>(engine->plugins.size())) {
-        return dup_string("");
-    }
-    return dup_string(engine->plugins[index].db_type);
-}
-
-int engine_has_plugin(EngineHandle handle, const char* db_type) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || !db_type) return 0;
-
-    for (const auto& p : engine->plugins) {
-        if (p.db_type == db_type) return 1;
-    }
-    return 0;
-}
-ConnectionHandle engine_connect(
-    EngineHandle handle,
-    const char* db_type,
-    const char* connection_string
-) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || !db_type || !connection_string) return nullptr;
+int Engine::connect(const string& db_type, const string& conn_str) {
     PluginEntry* found = nullptr;
-    for (auto& p : engine->plugins) {
-        if (p.db_type == db_type) {
-            found = &p;
-            break;
-        }
-    }
+    for (auto& p : plugins_)
+        if (p.db_type == db_type) { found = &p; break; }
 
     if (!found || !found->create_fn) {
-        engine->last_error = std::string("No plugin found for database type: ") + db_type;
-        return nullptr;
-    }
-    IDbPlugin* plugin = found->create_fn();
-    if (!plugin) {
-        engine->last_error = "Failed to create plugin instance";
-        return nullptr;
+        error_ = "No plugin for: " + db_type;
+        return -1;
     }
 
-    if (!plugin->connect(connection_string)) {
-        engine->last_error = plugin->last_error();
+    auto* plugin = found->create_fn();
+    if (!plugin) { error_ = "Failed to create plugin"; return -1; }
+
+    if (!plugin->connect(conn_str)) {
+        error_ = plugin->last_error();
         if (found->destroy_fn) found->destroy_fn(plugin);
-        return nullptr;
+        return -1;
     }
 
-    std::lock_guard<std::mutex> lock(engine->mutex);
-    ConnectionHandle conn_handle = reinterpret_cast<ConnectionHandle>(engine->next_conn_id++);
-    engine->connections[conn_handle] = { db_type, plugin, true };
-    return conn_handle;
+    lock_guard<mutex> lock(mutex_);
+    int id = next_id_++;
+    connections_[id] = { db_type, plugin, true };
+    return id;
 }
 
-void engine_disconnect(EngineHandle handle, ConnectionHandle conn) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine) return;
-
-    std::lock_guard<std::mutex> lock(engine->mutex);
-    auto it = engine->connections.find(conn);
-    if (it != engine->connections.end()) {
-        if (it->second.plugin) {
-            it->second.plugin->disconnect();
-        }
-        engine->connections.erase(it);
-    }
+void Engine::disconnect(int conn_id) {
+    lock_guard<mutex> lock(mutex_);
+    auto it = connections_.find(conn_id);
+    if (it == connections_.end()) return;
+    if (it->second.plugin) it->second.plugin->disconnect();
+    connections_.erase(it);
 }
 
-EngineStatus engine_test_connection(
-    EngineHandle handle,
-    const char* db_type,
-    const char* connection_string,
-    int* latency_ms
-) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || !db_type || !connection_string) return ENGINE_ERROR;
+bool Engine::test_connection(const string& db_type, const string& conn_str, int& latency_ms) {
     PluginEntry* found = nullptr;
-    for (auto& p : engine->plugins) {
-        if (p.db_type == db_type) {
-            found = &p;
-            break;
-        }
-    }
+    for (auto& p : plugins_)
+        if (p.db_type == db_type) { found = &p; break; }
 
     if (!found || !found->create_fn) {
-        engine->last_error = std::string("No plugin for: ") + db_type;
-        return ENGINE_PLUGIN_NOT_FOUND;
+        error_ = "No plugin for: " + db_type;
+        return false;
     }
 
-    IDbPlugin* plugin = found->create_fn();
-    if (!plugin) return ENGINE_ERROR;
+    auto* plugin = found->create_fn();
+    if (!plugin) return false;
 
-    int lat = 0;
-    bool ok = plugin->test_connection(lat);
-    if (latency_ms) *latency_ms = lat;
+    if (!plugin->connect(conn_str)) {
+        error_ = plugin->last_error();
+        if (found->destroy_fn) found->destroy_fn(plugin);
+        return false;
+    }
 
+    bool ok = plugin->test_connection(latency_ms);
+    if (!ok) error_ = plugin->last_error();
+    plugin->disconnect();
     if (found->destroy_fn) found->destroy_fn(plugin);
-    return ok ? ENGINE_OK : ENGINE_ERROR;
-}
-ResultHandle engine_execute(
-    EngineHandle handle,
-    ConnectionHandle conn,
-    const char* query
-) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || !query) return nullptr;
-
-    std::lock_guard<std::mutex> lock(engine->mutex);
-    auto it = engine->connections.find(conn);
-    if (it == engine->connections.end() || !it->second.plugin) {
-        engine->last_error = "Connection not found";
-        return nullptr;
-    }
-
-    auto stream = it->second.plugin->execute(query);
-    if (!stream) {
-        engine->last_error = it->second.plugin->last_error();
-        return nullptr;
-    }
-
-    auto* wrapper = new ResultWrapper();
-    wrapper->stream = std::move(stream);
-    return static_cast<ResultHandle>(wrapper);
+    return ok;
 }
 
-const char* engine_get_error(EngineHandle handle) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine) return dup_string("Invalid engine handle");
-    return dup_string(engine->last_error);
-}
-int result_column_count(ResultHandle handle) {
-    auto* wrapper = static_cast<ResultWrapper*>(handle);
-    if (!wrapper || !wrapper->stream) return 0;
+unique_ptr<IResultStream> Engine::execute(int conn_id, const string& query) {
+    auto* plugin = find_connection(conn_id);
+    if (!plugin) { error_ = "Connection not found"; return nullptr; }
 
-    if (!wrapper->columns_cached) {
-        wrapper->columns_cache = wrapper->stream->columns();
-        wrapper->columns_cached = true;
-    }
-    return static_cast<int>(wrapper->columns_cache.size());
+    auto result = plugin->execute(query);
+    if (!result) error_ = plugin->last_error();
+    return result;
 }
 
-const char* result_column_name(ResultHandle handle, int index) {
-    auto* wrapper = static_cast<ResultWrapper*>(handle);
-    if (!wrapper || !wrapper->stream) return dup_string("");
-
-    if (!wrapper->columns_cached) {
-        wrapper->columns_cache = wrapper->stream->columns();
-        wrapper->columns_cached = true;
-    }
-
-    if (index < 0 || index >= static_cast<int>(wrapper->columns_cache.size())) {
-        return dup_string("");
-    }
-    return dup_string(wrapper->columns_cache[index].name);
+vector<string> Engine::list_databases(int conn_id) {
+    auto* plugin = find_connection(conn_id);
+    return plugin ? plugin->list_databases() : vector<string>{};
 }
 
-long long result_row_count(ResultHandle handle) {
-    auto* wrapper = static_cast<ResultWrapper*>(handle);
-    if (!wrapper || !wrapper->stream) return 0;
-    return wrapper->stream->meta().total_rows;
+vector<string> Engine::list_tables(int conn_id, const string& database) {
+    auto* plugin = find_connection(conn_id);
+    return plugin ? plugin->list_tables(database) : vector<string>{};
 }
 
-const char* result_next_chunk(ResultHandle handle, int chunk_size) {
-    auto* wrapper = static_cast<ResultWrapper*>(handle);
-    if (!wrapper || !wrapper->stream) return nullptr;
-
-    auto rows = wrapper->stream->next_chunk(chunk_size);
-    if (rows.empty()) return nullptr;
-
-    return dup_string(rows_to_json(rows));
+vector<ColumnInfo> Engine::get_table_schema(int conn_id, const string& table) {
+    auto* plugin = find_connection(conn_id);
+    return plugin ? plugin->get_table_schema(table) : vector<ColumnInfo>{};
 }
 
-int result_has_more(ResultHandle handle) {
-    auto* wrapper = static_cast<ResultWrapper*>(handle);
-    if (!wrapper || !wrapper->stream) return 0;
-    return wrapper->stream->has_more() ? 1 : 0;
+IDbPlugin* Engine::find_connection(int conn_id) {
+    lock_guard<mutex> lock(mutex_);
+    auto it = connections_.find(conn_id);
+    if (it == connections_.end() || !it->second.plugin) return nullptr;
+    return it->second.plugin;
 }
-
-void result_close(ResultHandle handle) {
-    auto* wrapper = static_cast<ResultWrapper*>(handle);
-    if (!wrapper) return;
-
-    if (wrapper->stream) {
-        wrapper->stream->close();
-    }
-    delete wrapper;
-}
-const char* engine_list_tables(EngineHandle handle, ConnectionHandle conn) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine) return dup_string("[]");
-
-    std::lock_guard<std::mutex> lock(engine->mutex);
-    auto it = engine->connections.find(conn);
-    if (it == engine->connections.end() || !it->second.plugin) {
-        return dup_string("[]");
-    }
-
-    auto tables = it->second.plugin->list_tables();
-    return dup_string(strings_to_json(tables));
-}
-
-const char* engine_get_table_schema(
-    EngineHandle handle,
-    ConnectionHandle conn,
-    const char* table_name
-) {
-    auto* engine = static_cast<Engine*>(handle);
-    if (!engine || !table_name) return dup_string("[]");
-
-    std::lock_guard<std::mutex> lock(engine->mutex);
-    auto it = engine->connections.find(conn);
-    if (it == engine->connections.end() || !it->second.plugin) {
-        return dup_string("[]");
-    }
-
-    auto columns = it->second.plugin->get_table_schema(table_name);
-    std::ostringstream ss;
-    ss << "[";
-    for (size_t i = 0; i < columns.size(); ++i) {
-        if (i > 0) ss << ",";
-        ss << "{\"name\":\"" << columns[i].name << "\""
-           << ",\"type\":\"" << columns[i].type << "\""
-           << ",\"nullable\":" << (columns[i].nullable ? "true" : "false")
-           << ",\"primary_key\":" << (columns[i].primary_key ? "true" : "false")
-           << "}";
-    }
-    ss << "]";
-    return dup_string(ss.str());
-}
-
-} 

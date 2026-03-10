@@ -1,6 +1,4 @@
 #include "plugin_interface.h"
-#include <string>
-#include <vector>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -9,97 +7,79 @@
     #include <dirent.h>
 #endif
 
+using namespace std;
+
 namespace tablemax {
 
 struct LoadedPlugin {
     void* handle = nullptr;
     CreatePluginFn create_fn = nullptr;
     DestroyPluginFn destroy_fn = nullptr;
-    std::string path;
-    std::string db_type;
+    string path, db_type;
 };
-static LoadedPlugin load_plugin_from_path(const std::string& path) {
-    LoadedPlugin result;
-    result.path = path;
+
+LoadedPlugin load_plugin(const string& path) {
+    LoadedPlugin p;
+    p.path = path;
 
 #ifdef _WIN32
-    HMODULE lib = LoadLibraryA(path.c_str());
-    if (!lib) return result;
-
-    result.handle = static_cast<void*>(lib);
-    result.create_fn = reinterpret_cast<CreatePluginFn>(
-        GetProcAddress(lib, "create_plugin")
-    );
-    result.destroy_fn = reinterpret_cast<DestroyPluginFn>(
-        GetProcAddress(lib, "destroy_plugin")
-    );
+    auto lib = LoadLibraryA(path.c_str());
+    if (!lib) return p;
+    p.handle = (void*)lib;
+    p.create_fn = (CreatePluginFn)GetProcAddress(lib, "create_plugin");
+    p.destroy_fn = (DestroyPluginFn)GetProcAddress(lib, "destroy_plugin");
 #else
-    void* lib = dlopen(path.c_str(), RTLD_LAZY);
-    if (!lib) return result;
-
-    result.handle = lib;
-    result.create_fn = reinterpret_cast<CreatePluginFn>(
-        dlsym(lib, "create_plugin")
-    );
-    result.destroy_fn = reinterpret_cast<DestroyPluginFn>(
-        dlsym(lib, "destroy_plugin")
-    );
+    auto lib = dlopen(path.c_str(), RTLD_LAZY);
+    if (!lib) return p;
+    p.handle = lib;
+    p.create_fn = (CreatePluginFn)dlsym(lib, "create_plugin");
+    p.destroy_fn = (DestroyPluginFn)dlsym(lib, "destroy_plugin");
 #endif
-    if (!result.create_fn || !result.destroy_fn) {
+
+    if (!p.create_fn || !p.destroy_fn) {
 #ifdef _WIN32
-        FreeLibrary(static_cast<HMODULE>(result.handle));
+        FreeLibrary((HMODULE)p.handle);
 #else
-        dlclose(result.handle);
+        dlclose(p.handle);
 #endif
-        result.handle = nullptr;
-        result.create_fn = nullptr;
-        result.destroy_fn = nullptr;
-        return result;
+        p.handle = nullptr;
+        return p;
     }
-    IDbPlugin* temp = result.create_fn();
+
+    auto* temp = p.create_fn();
     if (temp) {
-        result.db_type = temp->db_type();
-        result.destroy_fn(temp);
+        p.db_type = temp->db_type();
+        p.destroy_fn(temp);
     }
-
-    return result;
+    return p;
 }
-std::vector<LoadedPlugin> scan_plugin_directory(const std::string& dir) {
-    std::vector<LoadedPlugin> plugins;
+
+vector<LoadedPlugin> scan_plugins(const string& dir) {
+    vector<LoadedPlugin> result;
 
 #ifdef _WIN32
-    std::string pattern = dir + "\\*.dll";
     WIN32_FIND_DATAA fd;
-    HANDLE hFind = FindFirstFileA(pattern.c_str(), &fd);
-    if (hFind == INVALID_HANDLE_VALUE) return plugins;
-
+    auto h = FindFirstFileA((dir + "\\*.dll").c_str(), &fd);
+    if (h == INVALID_HANDLE_VALUE) return result;
     do {
-        std::string full_path = dir + "\\" + fd.cFileName;
-        auto plugin = load_plugin_from_path(full_path);
-        if (plugin.handle) {
-            plugins.push_back(std::move(plugin));
-        }
-    } while (FindNextFileA(hFind, &fd));
-    FindClose(hFind);
+        auto p = load_plugin(dir + "\\" + fd.cFileName);
+        if (p.handle) result.push_back(move(p));
+    } while (FindNextFileA(h, &fd));
+    FindClose(h);
 #else
-    DIR* d = opendir(dir.c_str());
-    if (!d) return plugins;
-
-    struct dirent* entry;
-    while ((entry = readdir(d)) != nullptr) {
-        std::string name = entry->d_name;
+    auto* d = opendir(dir.c_str());
+    if (!d) return result;
+    while (auto* e = readdir(d)) {
+        string name = e->d_name;
         if (name.size() > 3 && name.substr(name.size() - 3) == ".so") {
-            std::string full_path = dir + "/" + name;
-            auto plugin = load_plugin_from_path(full_path);
-            if (plugin.handle) {
-                plugins.push_back(std::move(plugin));
-            }
+            auto p = load_plugin(dir + "/" + name);
+            if (p.handle) result.push_back(move(p));
         }
     }
     closedir(d);
 #endif
 
-    return plugins;
+    return result;
 }
 
-} 
+}

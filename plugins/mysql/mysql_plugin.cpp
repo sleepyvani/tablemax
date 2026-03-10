@@ -1,55 +1,33 @@
-#include "mysql_plugin.h"
+#include "plugin_interface.h"
+
+using namespace std;
 
 namespace tablemax {
 
-bool MySQLPlugin::connect(const std::string& connection_string) {
-    connection_string_ = connection_string;
-    // TODO: Use libmysqlclient to actually connect
-    connected_ = true;
-    return true;
+class MySQLPlugin : public IDbPlugin {
+    bool connected_ = false;
+    string cs_, error_;
+
+public:
+    string name() const override { return "MySQL"; }
+    string version() const override { return "0.2.0"; }
+    string db_type() const override { return "mysql"; }
+
+    bool connect(const string& cs) override { cs_ = cs; connected_ = true; return true; }
+    void disconnect() override { connected_ = false; }
+    bool is_connected() const override { return connected_; }
+    bool test_connection(int& ms) override { ms = 0; return connected_; }
+
+    unique_ptr<IResultStream> execute(const string&) override { error_ = "Not implemented"; return nullptr; }
+    vector<string> list_databases() override { return {}; }
+    vector<string> list_tables(const string&) override { return {}; }
+    vector<ColumnInfo> get_table_schema(const string&) override { return {}; }
+    string last_error() const override { return error_; }
+};
+
 }
 
-void MySQLPlugin::disconnect() {
-    connected_ = false;
-}
-
-bool MySQLPlugin::is_connected() const {
-    return connected_;
-}
-
-bool MySQLPlugin::test_connection(int& latency_ms) {
-    latency_ms = 0;
-    // TODO: Actually ping the server
-    return connected_;
-}
-
-std::unique_ptr<IResultStream> MySQLPlugin::execute(const std::string& query) {
-    (void)query;
-    error_ = "MySQL query execution not yet implemented in C++ plugin";
-    return nullptr;
-}
-
-std::vector<std::string> MySQLPlugin::list_tables() {
-    return {};
-}
-
-std::vector<ColumnInfo> MySQLPlugin::get_table_schema(const std::string& table_name) {
-    (void)table_name;
-    return {};
-}
-
-std::string MySQLPlugin::last_error() const {
-    return error_;
-}
-
-} // namespace tablemax
-
-// ─── Plugin factory (exported) ─────────────────────────────
 extern "C" {
-    tablemax::IDbPlugin* create_plugin() {
-        return new tablemax::MySQLPlugin();
-    }
-    void destroy_plugin(tablemax::IDbPlugin* plugin) {
-        delete plugin;
-    }
+    tablemax::IDbPlugin* create_plugin() { return new tablemax::MySQLPlugin(); }
+    void destroy_plugin(tablemax::IDbPlugin* p) { delete p; }
 }
