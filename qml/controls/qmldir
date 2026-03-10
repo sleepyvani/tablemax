@@ -1,0 +1,40 @@
+module TableMax.Controls
+
+singleton Theme 1.0 Theme.qml
+
+FlatButton 1.0 FlatButton.qml
+FlatInput 1.0 FlatInput.qml
+FlatTextArea 1.0 FlatTextArea.qml
+FlatSelect 1.0 FlatSelect.qml
+FlatCheckbox 1.0 FlatCheckbox.qml
+FlatSwitch 1.0 FlatSwitch.qml
+FlatRadioButton 1.0 FlatRadioButton.qml
+FlatBadge 1.0 FlatBadge.qml
+FlatDialog 1.0 FlatDialog.qml
+FlatTooltip 1.0 FlatTooltip.qml
+FlatTabs 1.0 FlatTabs.qml
+FlatSeparator 1.0 FlatSeparator.qml
+FlatCard 1.0 FlatCard.qml
+FlatScrollArea 1.0 FlatScrollArea.qml
+FlatProgress 1.0 FlatProgress.qml
+FlatSkeleton 1.0 FlatSkeleton.qml
+FlatSpinner 1.0 FlatSpinner.qml
+FlatLabel 1.0 FlatLabel.qml
+FlatContextMenu 1.0 FlatContextMenu.qml
+FlatAlert 1.0 FlatAlert.qml
+FlatToast 1.0 FlatToast.qml
+FlatPopover 1.0 FlatPopover.qml
+FlatSlider 1.0 FlatSlider.qml
+FlatAvatar 1.0 FlatAvatar.qml
+FlatAccordion 1.0 FlatAccordion.qml
+FlatSheet 1.0 FlatSheet.qml
+FlatTable 1.0 FlatTable.qml
+FlatDropdownMenu 1.0 FlatDropdownMenu.qml
+FlatField 1.0 FlatField.qml
+FlatKbd 1.0 FlatKbd.qml
+FlatPagination 1.0 FlatPagination.qml
+FlatResizable 1.0 FlatResizable.qml
+FlatToggle 1.0 FlatToggle.qml
+FlatToggleGroup 1.0 FlatToggleGroup.qml
+FlatEmpty 1.0 FlatEmpty.qml
+FlatColorPicker 1.0 FlatColorPicker.qml
