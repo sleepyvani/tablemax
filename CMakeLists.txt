@@ -36,6 +36,15 @@ if(Qt6_FOUND)
 
     qt_add_executable(tablemax src/main.cpp)
 
+    # Tell QML engine the type names for component files in subdirectories
+    set_source_files_properties(qml/components/Sidebar.qml PROPERTIES QT_QML_SOURCE_TYPENAME Sidebar)
+    set_source_files_properties(qml/components/ConnectionDialog.qml PROPERTIES QT_QML_SOURCE_TYPENAME ConnectionDialog)
+    set_source_files_properties(qml/components/QueryEditor.qml PROPERTIES QT_QML_SOURCE_TYPENAME QueryEditor)
+    set_source_files_properties(qml/components/DataGrid.qml PROPERTIES QT_QML_SOURCE_TYPENAME DataGrid)
+    set_source_files_properties(qml/components/SchemaTree.qml PROPERTIES QT_QML_SOURCE_TYPENAME SchemaTree)
+    set_source_files_properties(qml/components/StatusBar.qml PROPERTIES QT_QML_SOURCE_TYPENAME StatusBar)
+    set_source_files_properties(qml/components/WelcomeView.qml PROPERTIES QT_QML_SOURCE_TYPENAME WelcomeView)
+
     qt_add_qml_module(tablemax
         URI TableMax
         VERSION 1.0
