@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE void closeTab(int index) {
         if (index < 0 || index >= tabs_.size()) return;
         tabs_.removeAt(index);
-        if (currentIndex_ >= tabs_.size()) setCurrentIndex(max(0, tabs_.size() - 1));
+        if (currentIndex_ >= tabs_.size()) setCurrentIndex(qMax(0, (int)tabs_.size() - 1));
         emit tabsChanged();
     }
 

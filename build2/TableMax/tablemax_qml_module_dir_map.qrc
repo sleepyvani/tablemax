@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file alias="/TableMax">V:/Tauri/tablemax/build2/TableMax</file>
-
-  </qresource>
-</RCC>
