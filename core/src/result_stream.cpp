@@ -1,1 +1,1 @@
-#include "plugin_interface.h"
+// Engine::load_plugins bridge — see connection_manager.cpp

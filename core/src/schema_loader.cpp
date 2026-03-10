@@ -1,1 +1,1 @@
-#include "plugin_interface.h"
+// Schema loading is handled by SchemaService (Qt backend) + IDbPlugin::get_table_schema()
