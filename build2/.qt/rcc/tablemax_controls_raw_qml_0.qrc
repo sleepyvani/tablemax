@@ -1,0 +1,42 @@
+<RCC>
+  <qresource prefix="/TableMax/Controls/">
+    <file alias="qml/controls/Theme.qml">V:/Tauri/tablemax/qml/controls/Theme.qml</file>
+    <file alias="qml/controls/FlatButton.qml">V:/Tauri/tablemax/qml/controls/FlatButton.qml</file>
+    <file alias="qml/controls/FlatInput.qml">V:/Tauri/tablemax/qml/controls/FlatInput.qml</file>
+    <file alias="qml/controls/FlatTextArea.qml">V:/Tauri/tablemax/qml/controls/FlatTextArea.qml</file>
+    <file alias="qml/controls/FlatSelect.qml">V:/Tauri/tablemax/qml/controls/FlatSelect.qml</file>
+    <file alias="qml/controls/FlatCheckbox.qml">V:/Tauri/tablemax/qml/controls/FlatCheckbox.qml</file>
+    <file alias="qml/controls/FlatSwitch.qml">V:/Tauri/tablemax/qml/controls/FlatSwitch.qml</file>
+    <file alias="qml/controls/FlatRadioButton.qml">V:/Tauri/tablemax/qml/controls/FlatRadioButton.qml</file>
+    <file alias="qml/controls/FlatBadge.qml">V:/Tauri/tablemax/qml/controls/FlatBadge.qml</file>
+    <file alias="qml/controls/FlatDialog.qml">V:/Tauri/tablemax/qml/controls/FlatDialog.qml</file>
+    <file alias="qml/controls/FlatTooltip.qml">V:/Tauri/tablemax/qml/controls/FlatTooltip.qml</file>
+    <file alias="qml/controls/FlatTabs.qml">V:/Tauri/tablemax/qml/controls/FlatTabs.qml</file>
+    <file alias="qml/controls/FlatSeparator.qml">V:/Tauri/tablemax/qml/controls/FlatSeparator.qml</file>
+    <file alias="qml/controls/FlatCard.qml">V:/Tauri/tablemax/qml/controls/FlatCard.qml</file>
+    <file alias="qml/controls/FlatScrollArea.qml">V:/Tauri/tablemax/qml/controls/FlatScrollArea.qml</file>
+    <file alias="qml/controls/FlatProgress.qml">V:/Tauri/tablemax/qml/controls/FlatProgress.qml</file>
+    <file alias="qml/controls/FlatSkeleton.qml">V:/Tauri/tablemax/qml/controls/FlatSkeleton.qml</file>
+    <file alias="qml/controls/FlatSpinner.qml">V:/Tauri/tablemax/qml/controls/FlatSpinner.qml</file>
+    <file alias="qml/controls/FlatLabel.qml">V:/Tauri/tablemax/qml/controls/FlatLabel.qml</file>
+    <file alias="qml/controls/FlatContextMenu.qml">V:/Tauri/tablemax/qml/controls/FlatContextMenu.qml</file>
+    <file alias="qml/controls/FlatAlert.qml">V:/Tauri/tablemax/qml/controls/FlatAlert.qml</file>
+    <file alias="qml/controls/FlatToast.qml">V:/Tauri/tablemax/qml/controls/FlatToast.qml</file>
+    <file alias="qml/controls/FlatPopover.qml">V:/Tauri/tablemax/qml/controls/FlatPopover.qml</file>
+    <file alias="qml/controls/FlatSlider.qml">V:/Tauri/tablemax/qml/controls/FlatSlider.qml</file>
+    <file alias="qml/controls/FlatAvatar.qml">V:/Tauri/tablemax/qml/controls/FlatAvatar.qml</file>
+    <file alias="qml/controls/FlatAccordion.qml">V:/Tauri/tablemax/qml/controls/FlatAccordion.qml</file>
+    <file alias="qml/controls/FlatSheet.qml">V:/Tauri/tablemax/qml/controls/FlatSheet.qml</file>
+    <file alias="qml/controls/FlatTable.qml">V:/Tauri/tablemax/qml/controls/FlatTable.qml</file>
+    <file alias="qml/controls/FlatDropdownMenu.qml">V:/Tauri/tablemax/qml/controls/FlatDropdownMenu.qml</file>
+    <file alias="qml/controls/FlatField.qml">V:/Tauri/tablemax/qml/controls/FlatField.qml</file>
+    <file alias="qml/controls/FlatKbd.qml">V:/Tauri/tablemax/qml/controls/FlatKbd.qml</file>
+    <file alias="qml/controls/FlatPagination.qml">V:/Tauri/tablemax/qml/controls/FlatPagination.qml</file>
+    <file alias="qml/controls/FlatResizable.qml">V:/Tauri/tablemax/qml/controls/FlatResizable.qml</file>
+    <file alias="qml/controls/FlatToggle.qml">V:/Tauri/tablemax/qml/controls/FlatToggle.qml</file>
+    <file alias="qml/controls/FlatToggleGroup.qml">V:/Tauri/tablemax/qml/controls/FlatToggleGroup.qml</file>
+    <file alias="qml/controls/FlatEmpty.qml">V:/Tauri/tablemax/qml/controls/FlatEmpty.qml</file>
+    <file alias="qml/controls/FlatColorPicker.qml">V:/Tauri/tablemax/qml/controls/FlatColorPicker.qml</file>
+  </qresource>
+</RCC>
+

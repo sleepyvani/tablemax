@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/TableMax">
+    <file alias="qmldir">V:/Tauri/tablemax/build2/TableMax/qmldir</file>
+  </qresource>
+</RCC>
+

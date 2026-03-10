@@ -17,7 +17,6 @@ target_include_directories(tablemax_core PUBLIC core/include)
 macro(add_db_plugin name folder)
     add_library(${name} SHARED plugins/${folder}/${name}_plugin.cpp)
     target_include_directories(${name} PRIVATE core/include)
-    target_link_libraries(${name} PRIVATE tablemax_core)
 endmacro()
 
 add_db_plugin(postgres postgres)
@@ -28,8 +27,8 @@ add_db_plugin(redis redis)
 add_db_plugin(mssql mssql)
 add_db_plugin(mariadb mariadb)
 
-# ─── Qt UI (only when Qt is available) ───
-find_package(Qt6 QUIET COMPONENTS Quick QuickControls2 Sql)
+# ─── Qt UI ───
+find_package(Qt6 QUIET COMPONENTS Quick QuickControls2)
 
 if(Qt6_FOUND)
     message(STATUS "Qt6 found — building full app")
@@ -42,6 +41,11 @@ if(Qt6_FOUND)
         VERSION 1.0
         QML_FILES
             qml/Main.qml
+            qml/components/Sidebar.qml
+            qml/components/ConnectionDialog.qml
+            qml/components/QueryEditor.qml
+            qml/components/DataGrid.qml
+            qml/components/SchemaTree.qml
         SOURCES
             src/ConnectionManager.h
             src/DatabaseService.h
@@ -50,10 +54,10 @@ if(Qt6_FOUND)
             src/models/QueryResultModel.h
     )
 
-    # QML controls module
     qt_add_qml_module(tablemax_controls
         URI TableMax.Controls
         VERSION 1.0
+        STATIC
         QML_FILES
             qml/controls/Theme.qml
             qml/controls/FlatButton.qml
@@ -92,7 +96,6 @@ if(Qt6_FOUND)
             qml/controls/FlatToggleGroup.qml
             qml/controls/FlatEmpty.qml
             qml/controls/FlatColorPicker.qml
-        SINGLETON_SOURCES qml/controls/Theme.qml
     )
 
     target_link_libraries(tablemax PRIVATE
@@ -100,12 +103,9 @@ if(Qt6_FOUND)
         tablemax_controlsplugin
         Qt6::Quick
         Qt6::QuickControls2
-        Qt6::Sql
     )
 else()
     message(STATUS "Qt6 not found — building core engine only")
-    
-    # Test executable (no Qt)
     add_executable(tablemax_test core/test/test_engine.cpp)
     target_link_libraries(tablemax_test PRIVATE tablemax_core)
 endif()
