@@ -1,7 +1,12 @@
 #include "plugin_interface.h"
 
 #ifdef _WIN32
+    #ifndef NOMINMAX
+    #define NOMINMAX
+    #endif
+    #define byte win_byte_override
     #include <windows.h>
+    #undef byte
 #else
     #include <dlfcn.h>
     #include <dirent.h>

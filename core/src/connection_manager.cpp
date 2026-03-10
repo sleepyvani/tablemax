@@ -1,14 +1,28 @@
 #include "engine.h"
-#include <filesystem>
+
+#ifdef _WIN32
+    #ifndef NOMINMAX
+    #define NOMINMAX
+    #endif
+    #define byte win_byte_override
+    #include <windows.h>
+    #undef byte
+#else
+    #include <dlfcn.h>
+    #include <dirent.h>
+#endif
 
 using namespace std;
-namespace fs = filesystem;
 
 namespace tablemax {
 
-// Forward declaration from plugin_loader.cpp
-struct LoadedPlugin;
-LoadedPlugin load_plugin(const string& path);
+// Defined in plugin_loader.cpp
+struct LoadedPlugin {
+    void* handle = nullptr;
+    CreatePluginFn create_fn = nullptr;
+    DestroyPluginFn destroy_fn = nullptr;
+    string path, db_type;
+};
 vector<LoadedPlugin> scan_plugins(const string& dir);
 
 int Engine::load_plugins(const string& dir) {

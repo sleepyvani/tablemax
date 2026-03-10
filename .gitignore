@@ -22,3 +22,33 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# C++ build
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.pdb
+*.ilk
+*.exp
+
+# Qt
+*.pro.user
+*.qmlc
+*.jsc
+moc_*
+qrc_*
+ui_*
+.qmake.stash
+
+# OS
+Thumbs.db
+desktop.ini
