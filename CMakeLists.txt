@@ -46,6 +46,8 @@ if(Qt6_FOUND)
             qml/components/QueryEditor.qml
             qml/components/DataGrid.qml
             qml/components/SchemaTree.qml
+            qml/components/StatusBar.qml
+            qml/components/WelcomeView.qml
         SOURCES
             src/ConnectionManager.h
             src/DatabaseService.h
