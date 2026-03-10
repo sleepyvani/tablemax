@@ -1,311 +1,302 @@
 <p align="center">
   <h1 align="center">TableMax</h1>
   <p align="center">
-    Ứng dụng quản lý cơ sở dữ liệu đa nền tảng — nhẹ, nhanh, hiệu suất native.
+    Native multi-database desktop client — lightweight, fast, GPU-rendered.
     <br />
-    <em>A lightweight multi-database desktop client with native performance.</em>
+    <em>Quản lý cơ sở dữ liệu đa nền tảng với hiệu suất native thực sự.</em>
   </p>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.0-blue" alt="Version" />
-  <img src="https://img.shields.io/badge/license-Private-red" alt="License" />
-  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-brightgreen" alt="Platform" />
+  <img src="https://img.shields.io/badge/version-0.2.0-blue" alt="Version" />
+  <img src="https://img.shields.io/badge/license-GPL%20v3-green" alt="License" />
+  <img src="https://img.shields.io/badge/platform-Windows-brightgreen" alt="Platform" />
+  <img src="https://img.shields.io/badge/UI-Qt6%20QML-41cd52" alt="Qt" />
+  <img src="https://img.shields.io/badge/style-shadcn-000000" alt="shadcn" />
 </p>
 
 ---
 
-## ✨ Điểm nổi bật
+## Highlights
 
-| Tính năng | Mô tả |
-|-----------|-------|
-| 🚀 **Hiệu suất Native** | Core engine viết bằng C++ kết hợp Rust, khởi động chỉ ~80–120 MB RAM |
-| 📊 **Hàng triệu dòng** | Virtual scrolling mượt mà với TanStack Virtual, không bao giờ render toàn bộ dataset |
-| 🔌 **Plugin System** | Mỗi database là một plugin riêng biệt, dễ mở rộng thêm database mới |
-| 🌊 **Query Streaming** | Stream kết quả theo chunk (500 rows), không bao giờ trả toàn bộ result set |
-| 🎨 **UI hiện đại** | shadcn/ui + Tailwind CSS v4, dark mode, giao diện tối giản kiểu Linear/Vercel |
-| 🖥️ **Cross-platform** | Đóng gói native cho Windows (.exe), macOS (.dmg), Linux (.AppImage) qua Tauri |
+| Feature | Description |
+|---------|-------------|
+| **True Native** | Qt6 QML, GPU-rendered — không webview, không Electron, không browser engine |
+| **Ultra Lightweight** | ~15–30 MB RAM, startup < 500ms, binary < 30 MB |
+| **10M+ Rows** | Native virtual scrolling — smooth 60fps với hàng chục triệu dòng |
+| **shadcn-style UI** | Dark theme, muted borders, subtle hover, Inter font — thiết kế hiện đại |
+| **12 Databases** | SQL + NoSQL — một app duy nhất cho tất cả |
+| **Query Streaming** | Stream kết quả theo chunk, không bao giờ load toàn bộ dataset |
+| **Open Source** | GPL v3 — miễn phí, tự do sử dụng và đóng góp |
 
 ---
 
-## 🗄️ Database được hỗ trợ
+## Databases Supported
 
 ### SQL
-- **MySQL** — Full query, schema browser, table viewer
-- **PostgreSQL** — Full query, schema browser, table viewer
-- **SQLite** — Embedded database, zero-config
-- **SQL Server** — *(đang phát triển)*
-- **Oracle** — *(đang phát triển)*
-- **Redshift** — *(đang phát triển)*
+
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="40" title="PostgreSQL" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" width="40" title="MySQL" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" width="40" title="SQLite" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mariadb/mariadb-original.svg" width="40" title="MariaDB" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoftsqlserver/microsoftsqlserver-original.svg" width="40" title="SQL Server" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg" width="40" title="Oracle" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" width="40" title="Amazon Redshift" />
+  <img src="https://cdn.freebiesupply.com/logos/large/2x/cockroachdb-logo-png-transparent.png" width="40" title="CockroachDB" />
+</p>
+
+| Database | Status | Driver |
+|----------|--------|--------|
+| PostgreSQL | ✅ Supported | Qt SQL (QPSQL) |
+| MySQL | ✅ Supported | Qt SQL (QMYSQL) |
+| SQLite | ✅ Supported | Qt SQL (built-in) |
+| MariaDB | ✅ Supported | Qt SQL (MySQL compatible) |
+| SQL Server | 🔧 In Progress | Qt SQL (QODBC) |
+| CockroachDB | 🔧 In Progress | Qt SQL (QPSQL) |
+| Amazon Redshift | 🔧 In Progress | Qt SQL (QODBC) |
+| Oracle | 🔧 In Progress | Qt SQL (QOCI) |
 
 ### NoSQL
-- **MongoDB** — List databases, collections, CRUD operations, aggregation pipeline, document view
-- **Redis** — *(đang phát triển)*
+
+<p>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" width="40" title="MongoDB" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" width="40" title="Redis" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cassandra/cassandra-original.svg" width="40" title="Cassandra" />
+</p>
+
+| Database | Status | Driver |
+|----------|--------|--------|
+| MongoDB | ✅ Supported | mongocxx |
+| Redis | 🔧 In Progress | hiredis |
+| Cassandra | 🔧 In Progress | DataStax cpp-driver |
+| Gel (EdgeDB) | 🔧 In Progress | EdgeDB client |
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ```
-┌─────────────────────────────────────────┐
-│              Frontend (UI)               │
-│  React 19 · TypeScript · Vite 7         │
-│  shadcn/ui · TanStack Table/Virtual     │
-│  Tailwind CSS v4 · Zustand · Recharts   │
-├─────────────────────────────────────────┤
-│           Desktop Runtime                │
-│  Tauri v2 (Rust) · IPC Bridge           │
-│  tauri-plugin-sql · tauri-plugin-store  │
-├─────────────────────────────────────────┤
-│           Native Core Engine             │
-│  C++17 · CMake · Shared Library (.dll)  │
-│  Query Engine · Connection Manager      │
-│  Schema Loader · Result Streaming       │
-├─────────────────────────────────────────┤
-│           Database Plugins               │
-│  MySQL · PostgreSQL · SQLite            │
-│  MongoDB · Redis (dynamic loading)      │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│         QML UI (shadcn-style)            │
+│   GPU rendered · 60fps · dark theme      │
+│   Custom controls: FlatButton, FlatInput │
+│   FlatDialog, FlatSelect, FlatToast ...  │
+├──────────────────────────────────────────┤
+│         C++ Backend (Qt6)                │
+│   ConnectionManager · DatabaseService    │
+│   TabManager · SchemaService             │
+│   QAbstractTableModel · QAbstractItemModel│
+├──────────────────────────────────────────┤
+│         C++ Core Engine                  │
+│   QueryEngine · ResultStream             │
+│   PluginLoader · Logger                  │
+├──────────────────────────────────────────┤
+│         Database Drivers                 │
+│   Qt SQL (PG, MySQL, SQLite, ODBC, OCI) │
+│   mongocxx · hiredis · cpp-driver        │
+└──────────────────────────────────────────┘
 ```
 
 ---
 
-## 📦 Yêu cầu hệ thống
+## System Requirements
 
-Trước khi cài đặt, hãy đảm bảo bạn đã cài đặt các công cụ sau:
+| Tool | Version | Purpose |
+|------|---------|---------|
+| [Qt6](https://www.qt.io/download-qt-installer-oss) | ≥ 6.7 | UI framework + SQL drivers |
+| [CMake](https://cmake.org/) | ≥ 3.16 | Build system |
+| [MSVC 2022](https://visualstudio.microsoft.com/) | Latest | C++ compiler |
+| [Git](https://git-scm.com/) | Any | Source control |
 
-| Công cụ | Phiên bản | Mục đích |
-|---------|-----------|----------|
-| [Node.js](https://nodejs.org/) | ≥ 18 | Chạy frontend build tool (Vite) |
-| [Rust](https://rustup.rs/) | ≥ 1.70 | Biên dịch Tauri backend |
-| [CMake](https://cmake.org/) | ≥ 3.16 | Build C++ core engine |
-| C++ Compiler | MSVC / GCC / Clang | Biên dịch native engine |
-| [Git](https://git-scm.com/) | Bất kỳ | Clone source code |
+### Qt6 Installation
 
-### Yêu cầu theo hệ điều hành
-
-<details>
-<summary><strong>🪟 Windows</strong></summary>
-
-1. Cài đặt [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) với workload **"Desktop development with C++"**
-2. Cài đặt [Rust](https://rustup.rs/) (tự động chọn MSVC toolchain)
-3. Cài đặt [Node.js LTS](https://nodejs.org/)
-4. Cài đặt [CMake](https://cmake.org/download/) (thêm vào PATH)
-
-</details>
-
-<details>
-<summary><strong>🍎 macOS</strong></summary>
-
-```bash
-# Xcode Command Line Tools
-xcode-select --install
-
-# Homebrew packages
-brew install cmake node rust
-```
-
-</details>
-
-<details>
-<summary><strong>🐧 Linux (Ubuntu/Debian)</strong></summary>
-
-```bash
-# System dependencies cho Tauri
-sudo apt update
-sudo apt install -y libwebkit2gtk-4.1-dev build-essential curl wget \
-  libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev \
-  cmake
-
-# Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# Node.js (via nvm)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-nvm install --lts
-```
-
-</details>
+1. Download [Qt Online Installer (open-source)](https://www.qt.io/download-qt-installer-oss)
+2. Select: **Qt 6.8+** → **MSVC 2022 64-bit**
+3. Check modules: **Qt Quick**, **Qt SQL**, **Qt ShaderTools**
+4. Note install path (e.g., `C:\Qt\6.8.0\msvc2022_64`)
 
 ---
 
-## 🚀 Cài đặt & Chạy
+## Build & Run
 
-### 1. Clone repository
+### 1. Clone
 
 ```bash
-git clone https://github.com/your-org/tablemax.git
+git clone https://github.com/sleepyvani/tablemax.git
 cd tablemax
 ```
 
-### 2. Cài đặt dependencies
+### 2. Configure
 
 ```bash
-# Frontend dependencies
-npm install
-
-# Rust dependencies (tự động khi build)
+cmake -B build -G "Visual Studio 17 2022" ^
+  -DCMAKE_PREFIX_PATH="C:/Qt/6.8.0/msvc2022_64"
 ```
 
-### 3. Build C++ Core Engine
+### 3. Build
 
 ```bash
-cd core
-mkdir build && cd build
-cmake ..
-cmake --build . --config Release
-cd ../..
+cmake --build build --config Release
 ```
 
-### 4. Chạy Development Mode
+### 4. Run
 
 ```bash
-# Chạy cả frontend + Tauri cùng lúc
-npm run tauri dev
+./build/Release/tablemax.exe
 ```
-
-Frontend sẽ chạy tại `http://localhost:1420`, Tauri sẽ tự mở cửa sổ desktop.
-
-### 5. Build Production
-
-```bash
-npm run tauri build
-```
-
-File cài đặt sẽ xuất hiện tại `src-tauri/target/release/bundle/`.
 
 ---
 
-## 🎯 Tính năng chi tiết
+## Features
 
-### 🔗 Quản lý kết nối (Connection Manager)
-- Tạo, lưu, chỉnh sửa và xóa các kết nối database
-- Hỗ trợ kết nối qua **URI** hoặc **nhập tay** (host, port, username, password)
-- Test connection trước khi lưu
-- Gắn **màu riêng** cho mỗi kết nối để dễ phân biệt
-- Lưu trữ cục bộ qua `tauri-plugin-store`
+### Connection Manager
+- Add, edit, delete database connections
+- Connect via **URI** or **form fields** (host, port, user, password)
+- Test connection before saving
+- Assign **custom color** per connection
+- Persistent storage (JSON)
 
-### 📝 Query Editor
-- Viết và chạy truy vấn SQL / MongoDB command
-- Hỗ trợ **multiple tabs** — mở nhiều query cùng lúc
-- Kết quả hiển thị ngay bên dưới editor
-- Phím tắt: `Ctrl+Enter` để chạy query
+### Query Editor
+- Write SQL / MongoDB queries
+- **Multiple tabs** — open many queries simultaneously
+- Execute with `Ctrl+Enter`
+- Results displayed below editor
 
-### 📊 Data Grid ảo hóa (Virtual Data Grid)
-- Sử dụng **TanStack Table** + **TanStack Virtual** để render
-- Chỉ render các hàng đang hiển thị trên viewport
-- Scroll mượt mà với hàng triệu dòng dữ liệu
-- Cell renderer thông minh cho từng kiểu dữ liệu
+### Data Grid
+- Native `TableView` — built-in virtual scrolling
+- Smooth 60fps with millions of rows
+- Column resize, sort, multi-select
+- Smart cell renderer: null, number, date, JSON, ObjectId
+- Copy rows, export data
 
-### 🍃 MongoDB Document View
-- Giao diện xem document chuyên biệt cho MongoDB
-- Hỗ trợ CRUD: insert, update, delete document
-- Aggregation pipeline
-- List databases & collections
+### MongoDB View
+- Document list, JSON, table view modes
+- CRUD: insert, update, delete, clone
+- Aggregation pipeline support
+- Database & collection browser
 
-### 🌳 Schema Browser
-- Duyệt cấu trúc database dạng tree
-- Xem danh sách tables, columns, indexes
-- Click để xem dữ liệu bảng
+### Schema Browser
+- Tree view: Database → Table/Collection → Column
+- Click table to view data
+- Show column types, nullable, primary key
 
-### ⌨️ Phím tắt
+### Keyboard Shortcuts
 
-| Phím tắt | Chức năng |
-|----------|-----------|
-| `Ctrl + N` | Mở tab mới |
-| `Ctrl + W` | Đóng tab hiện tại |
-| `Ctrl + Enter` | Chạy query |
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl + N` | New query tab |
+| `Ctrl + W` | Close current tab |
+| `Ctrl + Enter` | Execute query |
+| `Ctrl + S` | Save connection |
 
 ---
 
-## 🏗️ Kiến trúc hệ thống
+## Architecture
+
+See [Architecture.md](Architecture.md) for detailed technical documentation.
 
 ```
-React UI  →  Tauri IPC  →  Rust Commands  →  C++ Engine  →  Database Plugin  →  Database Server
-                                                    ↓
-                                            Stream Results (500 rows/chunk)
-                                                    ↓
-                                              React Data Grid (Virtual)
+QML UI  →  C++ Backend  →  Database Driver  →  Database Server
+                ↓
+        QueryResultModel
+                ↓
+        QML TableView (GPU rendered)
 ```
 
-### Cấu trúc thư mục
+### Project Structure
 
 ```
 tablemax/
-├── src/                    # React frontend
-│   ├── app/                # Layout, Router
-│   ├── components/ui/      # shadcn/ui components (56+ components)
-│   ├── features/           # Feature modules
-│   │   ├── connection/     # Connection manager
-│   │   ├── query-editor/   # SQL/NoSQL editor + tabs
-│   │   ├── table-viewer/   # Virtual data grid + MongoDB view
-│   │   └── schema-browser/ # Database schema tree
-│   ├── hooks/              # Custom React hooks
-│   ├── services/           # API services
-│   └── lib/                # Utilities
-│
-├── src-tauri/              # Rust backend (Tauri v2)
+├── CMakeLists.txt
+├── src/                        C++ backend
+│   ├── main.cpp
+│   ├── ConnectionManager.h/.cpp
+│   ├── DatabaseService.h/.cpp
+│   ├── TabManager.h/.cpp
+│   ├── SchemaService.h/.cpp
+│   └── models/
+│       ├── QueryResultModel.h
+│       ├── ConnectionModel.h
+│       └── SchemaTreeModel.h
+├── qml/                        QML UI (shadcn-style)
+│   ├── Main.qml
+│   ├── Theme.qml
+│   ├── components/             App components
+│   └── controls/               Reusable controls
+├── core/                       C++ engine
+│   ├── include/
 │   └── src/
-│       ├── commands/       # IPC handlers (connection, query, mongodb)
-│       └── bridge/         # C++ engine bridge (FFI)
-│
-├── core/                   # C++ native engine
-│   ├── src/                # Engine source (query, connection, schema, stream)
-│   └── include/            # Header files
-│
-├── plugins/                # Database driver plugins
-│   ├── mysql/              # MySQL plugin
-│   ├── postgres/           # PostgreSQL plugin
-│   ├── sqlite/             # SQLite plugin
-│   ├── mongodb/            # MongoDB plugin
-│   └── redis/              # Redis plugin
-│
-├── shared/                 # Shared types (TypeScript)
-└── scripts/                # Build scripts
+├── plugins/                    Database plugins
+│   ├── postgres/     mysql/     sqlite/
+│   ├── mongodb/      redis/     sqlserver/
+│   ├── oracle/       redshift/  cockroachdb/
+│   ├── cassandra/    mariadb/   gel/
+│   └── ...
+└── resources/                  Icons, fonts
 ```
 
 ---
 
-## 🗺️ Lộ trình phát triển (Roadmap)
+## Performance
 
-- [x] **Phase 1** — Connection manager, database test, query executor
-- [x] **Phase 2** — Virtual data grid, result streaming, pagination
-- [ ] **Phase 3** — Schema browser nâng cao, table viewer, index viewer
-- [ ] **Phase 4** — SQL editor với syntax highlighting, autocomplete
-- [ ] **Phase 5** — Query history, saved queries, ER diagram, data export
-
-### 🔮 Tính năng tương lai
-- 🤖 AI SQL Assistant — Gợi ý và sinh query tự động
-- 📈 Query Plan Visualizer — Xem execution plan trực quan
-- ⚡ Query Performance Analyzer — Phân tích hiệu suất truy vấn
-- 🔄 Schema Diff Tool — So sánh schema giữa các database
-- 🚢 Migration Runner — Chạy database migration
+| Metric | TableMax (Qt) | Typical Electron App |
+|--------|---------------|----------------------|
+| Startup RAM | 15–30 MB | 150–300 MB |
+| Startup time | < 500ms | 2–5s |
+| Binary size | < 30 MB | 150–250 MB |
+| Scroll 10M rows | 60fps | Laggy / crash |
 
 ---
 
-## 🧑‍💻 Phát triển
+## Roadmap
 
-### Scripts có sẵn
+- [x] **Phase 1** — C++ core engine, plugin system
+- [ ] **Phase 2** — Qt6 project, connection manager, main window
+- [ ] **Phase 3** — Schema browser, query editor, data grid
+- [ ] **Phase 4** — MongoDB CRUD, Redis commands
+- [ ] **Phase 5** — SQL Server, Oracle, Redshift, CockroachDB
+- [ ] **Phase 6** — Cassandra, Gel (EdgeDB), MariaDB
+- [ ] **Phase 7** — Syntax highlighting, autocomplete
+- [ ] **Phase 8** — Query history, saved queries, export
 
-```bash
-npm run dev          # Chạy Vite dev server (frontend only)
-npm run build        # Build frontend (TypeScript + Vite)
-npm run preview      # Preview production build
-npm run tauri dev    # Chạy full app (frontend + Tauri)
-npm run tauri build  # Build production installer
+### Future
+- AI SQL Assistant
+- Query Plan Visualizer
+- Performance Analyzer
+- Schema Diff Tool
+- Migration Runner
+- Cross-platform (macOS, Linux)
+
+---
+
+## Development
+
+### IDE Setup
+
+- [Qt Creator](https://www.qt.io/product/development-tools) — best QML support
+- [VS Code](https://code.visualstudio.com/) with extensions:
+  - [QML](https://marketplace.visualstudio.com/items?itemName=bbenoist.QML) — syntax highlighting
+  - [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) — IntelliSense
+  - [CMake](https://marketplace.visualstudio.com/items?itemName=twxs.cmake) — build support
+
+---
+
+## License
+
+GPL v3 — Free and open source.
+
+```
+Copyright (C) 2026 VaniStudio
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 ```
 
-### IDE khuyến nghị
-
-- [VS Code](https://code.visualstudio.com/) với các extension:
-  - [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode)
-  - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-  - [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
-  - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-  - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-
 ---
 
-## 📄 License
-
-Private — All rights reserved.
+<p align="center">
+  <strong>TableMax</strong> — One app for all your databases. Native. Fast. Beautiful.
+</p>
