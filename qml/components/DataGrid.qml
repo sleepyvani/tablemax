@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import TableMax.Controls
 
 Rectangle {
     color: Theme.background

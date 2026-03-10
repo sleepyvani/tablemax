@@ -36,7 +36,7 @@ if(Qt6_FOUND)
 
     qt_add_executable(tablemax src/main.cpp)
 
-    # Tell QML engine the type names for component files in subdirectories
+    # ── Type names for app components (in subdirectory) ──
     set_source_files_properties(qml/components/Sidebar.qml PROPERTIES QT_QML_SOURCE_TYPENAME Sidebar)
     set_source_files_properties(qml/components/ConnectionDialog.qml PROPERTIES QT_QML_SOURCE_TYPENAME ConnectionDialog)
     set_source_files_properties(qml/components/QueryEditor.qml PROPERTIES QT_QML_SOURCE_TYPENAME QueryEditor)
@@ -64,6 +64,47 @@ if(Qt6_FOUND)
             src/SchemaService.h
             src/models/QueryResultModel.h
     )
+
+    # ── Type names for controls (in subdirectory) ──
+    set_source_files_properties(qml/controls/Theme.qml PROPERTIES
+        QT_QML_SOURCE_TYPENAME Theme
+        QT_QML_SINGLETON_TYPE TRUE)
+    set_source_files_properties(qml/controls/FlatButton.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatButton)
+    set_source_files_properties(qml/controls/FlatInput.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatInput)
+    set_source_files_properties(qml/controls/FlatTextArea.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatTextArea)
+    set_source_files_properties(qml/controls/FlatSelect.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSelect)
+    set_source_files_properties(qml/controls/FlatCheckbox.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatCheckbox)
+    set_source_files_properties(qml/controls/FlatSwitch.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSwitch)
+    set_source_files_properties(qml/controls/FlatRadioButton.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatRadioButton)
+    set_source_files_properties(qml/controls/FlatBadge.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatBadge)
+    set_source_files_properties(qml/controls/FlatDialog.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatDialog)
+    set_source_files_properties(qml/controls/FlatTooltip.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatTooltip)
+    set_source_files_properties(qml/controls/FlatTabs.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatTabs)
+    set_source_files_properties(qml/controls/FlatSeparator.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSeparator)
+    set_source_files_properties(qml/controls/FlatCard.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatCard)
+    set_source_files_properties(qml/controls/FlatScrollArea.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatScrollArea)
+    set_source_files_properties(qml/controls/FlatProgress.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatProgress)
+    set_source_files_properties(qml/controls/FlatSkeleton.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSkeleton)
+    set_source_files_properties(qml/controls/FlatSpinner.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSpinner)
+    set_source_files_properties(qml/controls/FlatLabel.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatLabel)
+    set_source_files_properties(qml/controls/FlatContextMenu.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatContextMenu)
+    set_source_files_properties(qml/controls/FlatAlert.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatAlert)
+    set_source_files_properties(qml/controls/FlatToast.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatToast)
+    set_source_files_properties(qml/controls/FlatPopover.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatPopover)
+    set_source_files_properties(qml/controls/FlatSlider.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSlider)
+    set_source_files_properties(qml/controls/FlatAvatar.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatAvatar)
+    set_source_files_properties(qml/controls/FlatAccordion.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatAccordion)
+    set_source_files_properties(qml/controls/FlatSheet.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatSheet)
+    set_source_files_properties(qml/controls/FlatTable.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatTable)
+    set_source_files_properties(qml/controls/FlatDropdownMenu.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatDropdownMenu)
+    set_source_files_properties(qml/controls/FlatField.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatField)
+    set_source_files_properties(qml/controls/FlatKbd.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatKbd)
+    set_source_files_properties(qml/controls/FlatPagination.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatPagination)
+    set_source_files_properties(qml/controls/FlatResizable.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatResizable)
+    set_source_files_properties(qml/controls/FlatToggle.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatToggle)
+    set_source_files_properties(qml/controls/FlatToggleGroup.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatToggleGroup)
+    set_source_files_properties(qml/controls/FlatEmpty.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatEmpty)
+    set_source_files_properties(qml/controls/FlatColorPicker.qml PROPERTIES QT_QML_SOURCE_TYPENAME FlatColorPicker)
 
     qt_add_qml_module(tablemax_controls
         URI TableMax.Controls
