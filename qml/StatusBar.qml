@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import TableMax.Controls
 
 Rectangle {
     Layout.fillWidth: true
