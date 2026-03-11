@@ -24,6 +24,11 @@ int main(int argc, char* argv[]) {
     QueryResultModel resultModel;
     ThemeProvider theme;
 
+    // Auto-load database plugins from app directory
+    QString pluginDir = QCoreApplication::applicationDirPath();
+    databaseService.loadPlugins(pluginDir);
+    qDebug() << "Loaded plugins from:" << pluginDir;
+
     // QML engine
     QQmlApplicationEngine engine;
 

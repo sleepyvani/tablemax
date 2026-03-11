@@ -11,22 +11,24 @@ T.Dialog {
     property string testMsg: ""
     property int dbTypeIdx: 0
     property var dbTypes: ["postgres", "mysql", "sqlite", "mongodb", "redis", "mssql", "mariadb"]
+    property string selectedColor: "#6366f1"
 
     anchors.centerIn: parent
-    modal: true; dim: true
-    implicitWidth: 500
+    modal: true
+    dim: true
+    implicitWidth: 520
     padding: 0
 
+    // ── Animations ──
     enter: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.durationSlow; easing.type: Easing.OutCubic }
-            NumberAnimation { property: "scale"; from: 0.96; to: 1.0; duration: Theme.durationSlow; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 180; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "scale"; from: 0.96; to: 1.0; duration: 180; easing.type: Easing.OutCubic }
         }
     }
     exit: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.durationFast; easing.type: Easing.InCubic }
-            NumberAnimation { property: "scale"; from: 1.0; to: 0.96; duration: Theme.durationFast; easing.type: Easing.InCubic }
+            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: 100; easing.type: Easing.InCubic }
         }
     }
 
@@ -34,15 +36,14 @@ T.Dialog {
         color: Theme.background
         border.width: 1
         border.color: Theme.border
-        radius: Theme.radiusLg
+        radius: 12
     }
 
     T.Overlay.modal: Rectangle {
-        color: Qt.rgba(0, 0, 0, 0.6)
-        Behavior on opacity { NumberAnimation { duration: Theme.durationSlow } }
+        color: Qt.rgba(0, 0, 0, 0.5)
+        Behavior on opacity { NumberAnimation { duration: 180 } }
     }
 
-    // Use Connections to avoid "duplicate method" error on onOpened
     Connections {
         target: dlg
         function onOpened() { dlg.initForm() }
@@ -51,10 +52,13 @@ T.Dialog {
     contentItem: ColumnLayout {
         spacing: 0
 
-        // ─── Header ───
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  HEADER
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         ColumnLayout {
             Layout.fillWidth: true
             Layout.topMargin: 24
+            Layout.bottomMargin: 20
             Layout.leftMargin: 24
             Layout.rightMargin: 24
             spacing: 4
@@ -62,91 +66,85 @@ T.Dialog {
             Text {
                 text: dlg.editIdx >= 0 ? "Edit Connection" : "New Connection"
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSizeLg
+                font.pixelSize: 18
                 font.weight: Font.DemiBold
                 color: Theme.foreground
             }
             Text {
-                text: "Configure your database connection settings"
+                text: "Choose a database type and enter credentials"
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSizeSm
+                font.pixelSize: 13
                 color: Theme.mutedForeground
             }
         }
 
-        Item { Layout.preferredHeight: 20 }
-
-        // ─── Database Type ───
-        ColumnLayout {
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  DATABASE TYPE — horizontal pill strip
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Flickable {
             Layout.fillWidth: true
+            Layout.preferredHeight: 38
             Layout.leftMargin: 24
             Layout.rightMargin: 24
-            spacing: 8
+            contentWidth: dbRow.width
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
 
-            Text {
-                text: "Database"
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-                font.weight: Font.Medium
-                color: Theme.foreground
-            }
-
-            GridLayout {
-                Layout.fillWidth: true
-                columns: 4
-                rowSpacing: 6
-                columnSpacing: 6
+            Row {
+                id: dbRow
+                spacing: 6
 
                 Repeater {
                     model: [
-                        { key: "postgres", label: "PostgreSQL", icon: "qrc:/TableMax/icons/postgres.svg" },
-                        { key: "mysql",    label: "MySQL",      icon: "qrc:/TableMax/icons/mysql.svg" },
-                        { key: "sqlite",   label: "SQLite",     icon: "qrc:/TableMax/icons/sqlite.svg" },
-                        { key: "mongodb",  label: "MongoDB",    icon: "qrc:/TableMax/icons/mongodb.svg" },
-                        { key: "redis",    label: "Redis",      icon: "qrc:/TableMax/icons/redis.svg" },
-                        { key: "mssql",    label: "MSSQL",      icon: "qrc:/TableMax/icons/mssql.svg" },
-                        { key: "mariadb",  label: "MariaDB",    icon: "qrc:/TableMax/icons/mariadb.svg" }
+                        { label: "PostgreSQL", icon: "qrc:/TableMax/icons/postgres.svg" },
+                        { label: "MySQL",      icon: "qrc:/TableMax/icons/mysql.svg" },
+                        { label: "SQLite",     icon: "qrc:/TableMax/icons/sqlite.svg" },
+                        { label: "MongoDB",    icon: "qrc:/TableMax/icons/mongodb.svg" },
+                        { label: "Redis",      icon: "qrc:/TableMax/icons/redis.svg" },
+                        { label: "MSSQL",      icon: "qrc:/TableMax/icons/mssql.svg" },
+                        { label: "MariaDB",    icon: "qrc:/TableMax/icons/mariadb.svg" }
                     ]
 
                     Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 52
-                        radius: Theme.radius
+                        width: pillRow.implicitWidth + 24
+                        height: 32
+                        radius: 8
 
                         property bool sel: dlg.dbTypeIdx === index
 
-                        color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
-                                   : cardMa.containsMouse ? Theme.muted : "transparent"
+                        color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
+                                   : pillMa.containsMouse ? Qt.rgba(1, 1, 1, 0.04) : "transparent"
                         border.width: 1
-                        border.color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3) : Theme.border
+                        border.color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.4)
+                                          : pillMa.containsMouse ? Qt.rgba(1, 1, 1, 0.08) : Theme.border
 
-                        Behavior on color { ColorAnimation { duration: Theme.durationFast } }
-                        Behavior on border.color { ColorAnimation { duration: Theme.durationFast } }
+                        Behavior on color { ColorAnimation { duration: 120 } }
+                        Behavior on border.color { ColorAnimation { duration: 120 } }
 
-                        ColumnLayout {
+                        Row {
+                            id: pillRow
                             anchors.centerIn: parent
-                            spacing: 4
+                            spacing: 6
 
                             Image {
-                                Layout.alignment: Qt.AlignHCenter
-                                Layout.preferredWidth: 22
-                                Layout.preferredHeight: 22
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 16; height: 16
                                 source: modelData.icon
-                                sourceSize: Qt.size(22, 22)
-                                smooth: true
+                                sourceSize: Qt.size(32, 32)
+                                smooth: true; mipmap: true
                             }
-
                             Text {
-                                Layout.alignment: Qt.AlignHCenter
+                                anchors.verticalCenter: parent.verticalCenter
                                 text: modelData.label
                                 font.family: Theme.fontFamily
-                                font.pixelSize: 9
+                                font.pixelSize: 12
+                                font.weight: sel ? Font.DemiBold : Font.Normal
                                 color: sel ? Theme.foreground : Theme.mutedForeground
                             }
                         }
 
                         MouseArea {
-                            id: cardMa
+                            id: pillMa
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
@@ -159,7 +157,9 @@ T.Dialog {
 
         Item { Layout.preferredHeight: 16 }
 
-        // ─── Connection Name ───
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  CONNECTION NAME
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         ColumnLayout {
             Layout.fillWidth: true
             Layout.leftMargin: 24
@@ -167,22 +167,24 @@ T.Dialog {
             spacing: 6
 
             Text {
-                text: "Connection Name"
+                text: "Name"
                 font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
+                font.pixelSize: 13
                 font.weight: Font.Medium
-                color: Theme.foreground
+                color: Theme.mutedForeground
             }
             FlatInput {
                 id: nameIn
                 placeholderText: "e.g. Production DB"
-                width: parent.width
+                Layout.fillWidth: true
             }
         }
 
-        Item { Layout.preferredHeight: 14 }
+        Item { Layout.preferredHeight: 16 }
 
-        // ─── Mode Toggle ───
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  MODE TOGGLE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         FlatToggleGroup {
             Layout.fillWidth: true
             Layout.leftMargin: 24
@@ -192,267 +194,279 @@ T.Dialog {
             onToggled: function(idx) { dlg.modeIdx = idx }
         }
 
-        Item { Layout.preferredHeight: 14 }
+        Item { Layout.preferredHeight: 16 }
 
-        // ─── Form Mode ───
-        ColumnLayout {
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  FORM MODE — grouped in a subtle card
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Rectangle {
             Layout.fillWidth: true
             Layout.leftMargin: 24
             Layout.rightMargin: 24
-            spacing: 12
+            implicitHeight: formContent.implicitHeight + 32
+            radius: 10
+            color: Qt.rgba(1, 1, 1, 0.015)
+            border.width: 1
+            border.color: Theme.border
             visible: dlg.modeIdx === 0
 
-            // Host + Port
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 10
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 6
-
-                    Text {
-                        text: "Host"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSize
-                        font.weight: Font.Medium
-                        color: Theme.foreground
-                    }
-                    FlatInput {
-                        id: hostIn
-                        placeholderText: "localhost"
-                        width: parent.width
-                    }
-                }
-
-                ColumnLayout {
-                    Layout.preferredWidth: 100
-                    spacing: 6
-
-                    Text {
-                        text: "Port"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSize
-                        font.weight: Font.Medium
-                        color: Theme.foreground
-                    }
-                    FlatInput {
-                        id: portIn
-                        placeholderText: {
-                            var ports = ["5432", "3306", "0", "27017", "6379", "1433", "3306"]
-                            return ports[dlg.dbTypeIdx] || "5432"
-                        }
-                        width: parent.width
-                    }
-                }
-            }
-
-            // Username + Password
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 10
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 6
-
-                    Text {
-                        text: "Username"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSize
-                        font.weight: Font.Medium
-                        color: Theme.foreground
-                    }
-                    FlatInput {
-                        id: userIn
-                        placeholderText: "admin"
-                        width: parent.width
-                    }
-                }
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 6
-
-                    Text {
-                        text: "Password"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSize
-                        font.weight: Font.Medium
-                        color: Theme.foreground
-                    }
-                    FlatInput {
-                        id: passIn
-                        placeholderText: "••••••••"
-                        echoMode: TextInput.Password
-                        width: parent.width
-                    }
-                }
-            }
-
-            // Database
             ColumnLayout {
-                Layout.fillWidth: true
+                id: formContent
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: 16
+                spacing: 14
+
+                // Host + Port
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 5
+
+                        Text {
+                            text: "Host"
+                            font.family: Theme.fontFamily; font.pixelSize: 12
+                            color: Theme.mutedForeground
+                        }
+                        FlatInput {
+                            id: hostIn
+                            placeholderText: "localhost"
+                            Layout.fillWidth: true
+                        }
+                    }
+
+                    ColumnLayout {
+                        Layout.preferredWidth: 90
+                        Layout.maximumWidth: 90
+                        spacing: 5
+
+                        Text {
+                            text: "Port"
+                            font.family: Theme.fontFamily; font.pixelSize: 12
+                            color: Theme.mutedForeground
+                        }
+                        FlatInput {
+                            id: portIn
+                            placeholderText: {
+                                return ["5432","3306","","27017","6379","1433","3306"][dlg.dbTypeIdx] || ""
+                            }
+                            Layout.fillWidth: true
+                        }
+                    }
+                }
+
+                // Username + Password
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 10
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 5
+
+                        Text {
+                            text: "Username"
+                            font.family: Theme.fontFamily; font.pixelSize: 12
+                            color: Theme.mutedForeground
+                        }
+                        FlatInput {
+                            id: userIn
+                            placeholderText: "admin"
+                            Layout.fillWidth: true
+                        }
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 5
+
+                        Text {
+                            text: "Password"
+                            font.family: Theme.fontFamily; font.pixelSize: 12
+                            color: Theme.mutedForeground
+                        }
+                        FlatInput {
+                            id: passIn
+                            placeholderText: "••••••••"
+                            echoMode: TextInput.Password
+                            Layout.fillWidth: true
+                        }
+                    }
+                }
+
+                // Database
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 5
+
+                    Text {
+                        text: "Database"
+                        font.family: Theme.fontFamily; font.pixelSize: 12
+                        color: Theme.mutedForeground
+                    }
+                    FlatInput {
+                        id: dbNameIn
+                        placeholderText: "mydb"
+                        Layout.fillWidth: true
+                    }
+                }
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  CONNECTION STRING MODE
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
+            implicitHeight: connStrContent.implicitHeight + 32
+            radius: 10
+            color: Qt.rgba(1, 1, 1, 0.015)
+            border.width: 1
+            border.color: Theme.border
+            visible: dlg.modeIdx === 1
+
+            ColumnLayout {
+                id: connStrContent
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: 16
                 spacing: 6
 
                 Text {
-                    text: "Database"
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSize
-                    font.weight: Font.Medium
-                    color: Theme.foreground
+                    text: "Connection String"
+                    font.family: Theme.fontFamily; font.pixelSize: 12
+                    color: Theme.mutedForeground
                 }
                 FlatInput {
-                    id: dbNameIn
-                    placeholderText: "mydb"
-                    width: parent.width
+                    id: connStrIn
+                    placeholderText: "Enter connection string..."
+                    Layout.fillWidth: true
                 }
-            }
-        }
-
-        // ─── Connection String Mode ───
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.leftMargin: 24
-            Layout.rightMargin: 24
-            spacing: 6
-            visible: dlg.modeIdx === 1
-
-            Text {
-                text: "Connection String"
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-                font.weight: Font.Medium
-                color: Theme.foreground
-            }
-            FlatInput {
-                id: connStrIn
-                placeholderText: "Enter connection string..."
-                width: parent.width
-            }
-            Text {
-                text: {
-                    var examples = [
-                        "e.g. postgresql://user:pass@localhost:5432/mydb",
-                        "e.g. mysql://user:pass@localhost:3306/mydb",
-                        "e.g. /path/to/database.db",
-                        "e.g. mongodb://user:pass@localhost:27017/mydb",
-                        "e.g. redis://localhost:6379",
-                        "e.g. Server=localhost;Database=mydb;User=sa;Password=pass",
-                        "e.g. mysql://user:pass@localhost:3306/mydb"
-                    ]
-                    return examples[dlg.dbTypeIdx] || examples[0]
+                Text {
+                    text: {
+                        var ex = ["postgresql://user:pass@host:5432/db",
+                                  "mysql://user:pass@host:3306/db",
+                                  "/path/to/database.db",
+                                  "mongodb://user:pass@host:27017/db",
+                                  "redis://host:6379",
+                                  "Server=host;Database=db;User=sa;Password=pass",
+                                  "mysql://user:pass@host:3306/db"]
+                        return ex[dlg.dbTypeIdx] || ex[0]
+                    }
+                    font.family: Theme.fontFamily; font.pixelSize: 11
+                    color: Theme.mutedForeground; opacity: 0.5
+                    wrapMode: Text.Wrap
+                    Layout.fillWidth: true
                 }
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSizeXs
-                color: Theme.mutedForeground
-                wrapMode: Text.Wrap
-                Layout.fillWidth: true
             }
         }
 
         Item { Layout.preferredHeight: 14 }
 
-        // ─── Color Picker ───
-        ColumnLayout {
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  COLOR — compact dot row
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        RowLayout {
             Layout.fillWidth: true
             Layout.leftMargin: 24
             Layout.rightMargin: 24
-            spacing: 6
+            spacing: 8
 
             Text {
                 text: "Color"
-                font.family: Theme.fontFamily
-                font.pixelSize: Theme.fontSize
-                font.weight: Font.Medium
-                color: Theme.foreground
+                font.family: Theme.fontFamily; font.pixelSize: 12
+                color: Theme.mutedForeground
             }
-            FlatColorPicker {
-                id: colorPick
-                width: parent.width
+
+            Item { Layout.preferredWidth: 8 }
+
+            Repeater {
+                model: ["#6366f1","#8b5cf6","#ec4899","#ef4444","#f97316","#eab308","#22c55e","#06b6d4","#3b82f6","#64748b"]
+
+                Rectangle {
+                    width: 18; height: 18; radius: 9
+                    color: modelData
+                    border.width: dlg.selectedColor === modelData ? 2 : 0
+                    border.color: "#fff"
+                    opacity: dlg.selectedColor === modelData ? 1.0 : 0.6
+                    scale: colorDotMa.containsMouse ? 1.15 : 1.0
+
+                    Behavior on scale { NumberAnimation { duration: 100 } }
+                    Behavior on opacity { NumberAnimation { duration: 100 } }
+
+                    MouseArea {
+                        id: colorDotMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: dlg.selectedColor = modelData
+                    }
+                }
             }
+
+            Item { Layout.fillWidth: true }
         }
 
-        Item { Layout.preferredHeight: 14 }
+        Item { Layout.preferredHeight: 10 }
 
-        // ─── Test Result Banner ───
+        // ── Test Status ──
         Rectangle {
             Layout.fillWidth: true
             Layout.leftMargin: 24
             Layout.rightMargin: 24
-            Layout.preferredHeight: dlg.testStatus !== "" ? 36 : 0
-            radius: Theme.radius
+            Layout.preferredHeight: dlg.testStatus !== "" ? 34 : 0
+            radius: 8
             visible: dlg.testStatus !== ""
             clip: true
 
-            Behavior on Layout.preferredHeight {
-                NumberAnimation { duration: Theme.durationSlow; easing.type: Easing.OutCubic }
-            }
+            Behavior on Layout.preferredHeight { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
-            color: {
-                if (dlg.testStatus === "ok") return Qt.rgba(0.2, 0.83, 0.6, 0.08)
-                if (dlg.testStatus === "fail") return Qt.rgba(0.97, 0.44, 0.44, 0.08)
-                return Theme.muted
-            }
+            color: dlg.testStatus === "ok" ? "#0d2818" : dlg.testStatus === "fail" ? "#2d0f0f" : Qt.rgba(1,1,1,0.03)
             border.width: 1
-            border.color: {
-                if (dlg.testStatus === "ok") return Qt.rgba(0.2, 0.83, 0.6, 0.2)
-                if (dlg.testStatus === "fail") return Qt.rgba(0.97, 0.44, 0.44, 0.2)
-                return Theme.border
-            }
+            border.color: dlg.testStatus === "ok" ? "#1a4d2e" : dlg.testStatus === "fail" ? "#4d1a1a" : Theme.border
 
             RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-                spacing: 8
+                anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 6
 
                 Text {
-                    text: {
-                        if (dlg.testStatus === "ok") return "✓"
-                        if (dlg.testStatus === "fail") return "✗"
-                        return "⟳"
-                    }
-                    font.pixelSize: 13
-                    color: {
-                        if (dlg.testStatus === "ok") return Theme.success
-                        if (dlg.testStatus === "fail") return Theme.error
-                        return Theme.mutedForeground
-                    }
+                    text: dlg.testStatus === "ok" ? "✓" : dlg.testStatus === "fail" ? "✗" : "⟳"
+                    font.pixelSize: 13; font.weight: Font.Bold
+                    color: dlg.testStatus === "ok" ? "#4ade80" : dlg.testStatus === "fail" ? "#f87171" : Theme.mutedForeground
                 }
                 Text {
                     text: dlg.testMsg
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSizeSm
-                    color: {
-                        if (dlg.testStatus === "ok") return Theme.success
-                        if (dlg.testStatus === "fail") return Theme.error
-                        return Theme.mutedForeground
-                    }
-                    Layout.fillWidth: true
-                    elide: Text.ElideRight
+                    font.family: Theme.fontFamily; font.pixelSize: 12
+                    color: dlg.testStatus === "ok" ? "#4ade80" : dlg.testStatus === "fail" ? "#f87171" : Theme.mutedForeground
+                    Layout.fillWidth: true; elide: Text.ElideRight
                 }
             }
         }
 
-        Item { Layout.preferredHeight: 8 }
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        //  FOOTER
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        Item { Layout.preferredHeight: 12 }
+        Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border }
 
-        // ─── Separator ───
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 1
-            color: Theme.border
-        }
-
-        // ─── Footer ───
         RowLayout {
             Layout.fillWidth: true
-            Layout.margins: 16
+            Layout.topMargin: 12
+            Layout.bottomMargin: 12
+            Layout.leftMargin: 20
+            Layout.rightMargin: 20
             spacing: 8
 
             FlatButton {
                 text: "Test Connection"
                 variant: "outline"
+                size: "sm"
                 onClicked: dlg.runTest()
             }
 
@@ -461,17 +475,21 @@ T.Dialog {
             FlatButton {
                 text: "Cancel"
                 variant: "ghost"
+                size: "sm"
                 onClicked: dlg.close()
             }
 
             FlatButton {
-                text: dlg.editIdx >= 0 ? "Update" : "Save"
+                text: dlg.editIdx >= 0 ? "Save Changes" : "Connect"
+                size: "sm"
                 onClicked: dlg.saveConn()
             }
         }
     }
 
-    // ─── Functions (named to avoid base class conflicts) ───
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    //  LOGIC
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     function buildConnStr(): string {
         if (dlg.modeIdx === 1) return connStrIn.text
@@ -481,8 +499,8 @@ T.Dialog {
         var pw = passIn.text || ""
         var db = dbNameIn.text || ""
         var t = dlg.dbTypes[dlg.dbTypeIdx]
-        if (t === "postgres" || t === "mysql" || t === "mariadb")
-            return t + "://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
+        if (t === "postgres") return "postgresql://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
+        if (t === "mysql" || t === "mariadb") return "mysql://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
         if (t === "mongodb") return "mongodb://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
         if (t === "redis") return "redis://" + h + (p ? ":" + p : "")
         if (t === "sqlite") return db || h
@@ -505,7 +523,7 @@ T.Dialog {
             name: nameIn.text || "Untitled",
             dbType: dlg.dbTypes[dlg.dbTypeIdx],
             connectionString: dlg.buildConnStr(),
-            color: colorPick.selectedColor.toString()
+            color: dlg.selectedColor
         }
         if (dlg.editIdx >= 0) connectionManager.update(dlg.editIdx, c)
         else connectionManager.add(c)
@@ -524,6 +542,7 @@ T.Dialog {
         dlg.modeIdx = 0
         dlg.testStatus = ""
         dlg.testMsg = ""
+        dlg.selectedColor = "#6366f1"
     }
 
     function initForm(): void {
@@ -534,6 +553,7 @@ T.Dialog {
             var idx = dlg.dbTypes.indexOf(c.dbType || "postgres")
             dlg.dbTypeIdx = idx >= 0 ? idx : 0
             dlg.modeIdx = 1
+            dlg.selectedColor = c.color || "#6366f1"
         } else {
             dlg.clearForm()
         }
