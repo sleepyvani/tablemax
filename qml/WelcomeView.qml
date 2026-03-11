@@ -2,177 +2,75 @@ import QtQuick
 import QtQuick.Layouts
 
 Rectangle {
-    color: Theme.background
+    color: Theme.bg
 
     ColumnLayout {
-        anchors.centerIn: parent
-        spacing: 20
+        anchors.centerIn: parent; spacing: Theme.s24
 
         // Logo
-        Rectangle {
-            Layout.alignment: Qt.AlignHCenter
-            width: 64; height: 64
-            radius: 16
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#6366f1" }
-                GradientStop { position: 1.0; color: "#8b5cf6" }
-            }
+        Item {
+            Layout.alignment: Qt.AlignHCenter; width: 56; height: 56
 
-            Text {
-                anchors.centerIn: parent
-                text: "T"
-                font.pixelSize: 28
-                font.weight: Font.Bold
-                color: "#ffffff"
-            }
-
-            // Glow
             Rectangle {
-                anchors.centerIn: parent
-                width: 80; height: 80
-                radius: 20
-                color: "transparent"
-                border.width: 1
-                border.color: Qt.rgba(0.4, 0.4, 1, 0.1)
-            }
-        }
-
-        // Title
-        Text {
-            text: "Welcome to TableMax"
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize2xl
-            font.weight: Font.Bold
-            color: Theme.foreground
-            Layout.alignment: Qt.AlignHCenter
-        }
-
-        Text {
-            text: "Your modern database management tool"
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize
-            color: Theme.mutedForeground
-            Layout.alignment: Qt.AlignHCenter
-        }
-
-        Item { height: 8 }
-
-        // Quick actions
-        RowLayout {
-            Layout.alignment: Qt.AlignHCenter
-            spacing: 12
-
-            // New Connection
-            Rectangle {
-                width: 180; height: 80
-                radius: Theme.radiusMd
-                color: newConnMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.03) : "transparent"
-                border.width: 1
-                border.color: newConnMouse.containsMouse ? Qt.lighter(Theme.border, 1.3) : Theme.border
-
-                Behavior on color { ColorAnimation { duration: Theme.duration } }
-                Behavior on border.color { ColorAnimation { duration: Theme.duration } }
-
-                ColumnLayout {
-                    anchors.centerIn: parent
-                    spacing: 6
-
-                    Text {
-                        text: "+"
-                        font.pixelSize: 22
-                        font.weight: Font.Light
-                        color: "#6366f1"
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Text {
-                        text: "New Connection"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeSm
-                        font.weight: Font.Medium
-                        color: Theme.foreground
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-                }
-
-                MouseArea {
-                    id: newConnMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: connectionDialog.open()
-                }
+                anchors.fill: parent; radius: 14
+                gradient: Gradient { GradientStop { position: 0; color: "#6366f1" }; GradientStop { position: 1; color: "#8b5cf6" } }
+                Text { anchors.centerIn: parent; text: "T"; font.pixelSize: 24; font.weight: Font.Bold; color: "#fff" }
             }
 
-            // New Query
-            Rectangle {
-                width: 180; height: 80
-                radius: Theme.radiusMd
-                color: newQueryMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.03) : "transparent"
-                border.width: 1
-                border.color: newQueryMouse.containsMouse ? Qt.lighter(Theme.border, 1.3) : Theme.border
-
-                Behavior on color { ColorAnimation { duration: Theme.duration } }
-                Behavior on border.color { ColorAnimation { duration: Theme.duration } }
-
-                ColumnLayout {
-                    anchors.centerIn: parent
-                    spacing: 6
-
-                    Text {
-                        text: "▶"
-                        font.pixelSize: 18
-                        color: "#8b5cf6"
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Text {
-                        text: "New Query"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeSm
-                        font.weight: Font.Medium
-                        color: Theme.foreground
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-                }
-
-                MouseArea {
-                    id: newQueryMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: tabManager.addTab()
-                }
-            }
+            Rectangle { anchors.centerIn: parent; width: 72; height: 72; radius: 18; color: "transparent"; border.width: 1; border.color: Qt.rgba(0.4, 0.4, 1, 0.08) }
         }
 
-        Item { height: 12 }
-
-        // Shortcuts
         ColumnLayout {
-            Layout.alignment: Qt.AlignHCenter
-            spacing: 8
+            spacing: Theme.s4; Layout.alignment: Qt.AlignHCenter
+            Text { text: "Welcome to TableMax"; font.family: Theme.sans; font.pixelSize: Theme.t24; font.weight: Font.Bold; color: Theme.fg; Layout.alignment: Qt.AlignHCenter }
+            Text { text: "Modern database management"; font.family: Theme.sans; font.pixelSize: Theme.t14; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter }
+        }
+
+        // Actions
+        RowLayout {
+            Layout.alignment: Qt.AlignHCenter; spacing: Theme.s12
 
             Repeater {
                 model: [
-                    { key: "Ctrl+N", desc: "New query tab" },
-                    { key: "Ctrl+B", desc: "Toggle sidebar" },
-                    { key: "Ctrl+Enter", desc: "Execute query" },
-                    { key: "Ctrl+W", desc: "Close tab" },
+                    { icon: "+", label: "New Connection", action: "conn" },
+                    { icon: "▶", label: "New Query", action: "tab" }
                 ]
 
-                RowLayout {
-                    Layout.alignment: Qt.AlignHCenter
-                    spacing: 12
+                Rectangle {
+                    width: 160; height: 72; radius: Theme.r8
+                    color: cardMa.containsMouse ? Theme.bgHover : "transparent"
+                    border.width: 1; border.color: cardMa.containsMouse ? Theme.borderLight : Theme.border
+                    Behavior on color { ColorAnimation { duration: Theme.normal } }
+                    Behavior on border.color { ColorAnimation { duration: Theme.normal } }
 
-                    FlatKbd { text: modelData.key }
-
-                    Text {
-                        text: modelData.desc
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeXs
-                        color: Theme.mutedForeground
+                    ColumnLayout {
+                        anchors.centerIn: parent; spacing: Theme.s6
+                        Text { text: modelData.icon; font.pixelSize: 18; color: Theme.accent; Layout.alignment: Qt.AlignHCenter }
+                        Text { text: modelData.label; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; Layout.alignment: Qt.AlignHCenter }
                     }
+
+                    MouseArea {
+                        id: cardMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: { if (modelData.action === "conn") connDialog.open(); else tabManager.addTab() }
+                    }
+                }
+            }
+        }
+
+        // Shortcuts
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter; spacing: Theme.s6
+
+            Repeater {
+                model: [ { k: "Ctrl+N", d: "New tab" }, { k: "Ctrl+B", d: "Toggle sidebar" }, { k: "Ctrl+Enter", d: "Execute" }, { k: "Ctrl+W", d: "Close tab" } ]
+
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter; spacing: Theme.s8
+                    Rectangle {
+                        height: 18; width: skText.implicitWidth + 10; radius: Theme.r4; color: Theme.bgSurface; border.width: 1; border.color: Theme.border
+                        Text { id: skText; anchors.centerIn: parent; text: modelData.k; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
+                    }
+                    Text { text: modelData.d; font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim }
                 }
             }
         }

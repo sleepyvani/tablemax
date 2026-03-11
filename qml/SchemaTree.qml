@@ -8,152 +8,68 @@ Rectangle {
         anchors.fill: parent
 
         ColumnLayout {
-            width: parent.width
-            spacing: 0
+            width: parent.width; spacing: 0
 
             Repeater {
-                model: schemaService.tree
+                model: schemaService ? schemaService.tree : []
 
                 ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 0
+                    Layout.fillWidth: true; spacing: 0
+                    property bool open: true
 
-                    property bool expanded: true
-
-                    // ─── Database / Top-level node ───
+                    // Node
                     Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 28
-                        color: dbMouse.containsMouse ? Qt.rgba(1,1,1,0.02) : "transparent"
-                        Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+                        Layout.fillWidth: true; Layout.preferredHeight: 26
+                        color: ndMa.containsMouse ? Theme.bgHover : "transparent"
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                         RowLayout {
-                            anchors.fill: parent
-                            anchors.leftMargin: 10
-                            spacing: 6
+                            anchors.fill: parent; anchors.leftMargin: Theme.s8; spacing: Theme.s6
 
-                            Text {
-                                text: expanded ? "▾" : "▸"
-                                font.pixelSize: 9
-                                color: Theme.mutedForeground
-                            }
+                            Text { text: open ? "▾" : "▸"; font.pixelSize: 8; color: Theme.fgDim; Layout.preferredWidth: 10 }
 
                             Rectangle {
-                                width: 16; height: 16
-                                radius: 3
-                                color: Theme.muted
-
+                                width: 14; height: 14; radius: 3; color: Theme.bgSurface
                                 Text {
-                                    anchors.centerIn: parent
+                                    anchors.centerIn: parent; font.family: Theme.mono; font.pixelSize: 8; font.weight: Font.Bold
                                     text: modelData.type === "database" ? "D" : "T"
-                                    font.family: Theme.monoFamily
-                                    font.pixelSize: 9
-                                    font.weight: Font.Bold
-                                    color: modelData.type === "database" ? "#60a5fa" : "#a78bfa"
+                                    color: modelData.type === "database" ? Theme.info : Theme.synKeyword
                                 }
                             }
 
-                            Text {
-                                text: modelData.name
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSizeSm
-                                color: Theme.foreground
-                                Layout.fillWidth: true
-                                elide: Text.ElideRight
-                            }
+                            Text { text: modelData.name || ""; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true }
 
                             Text {
                                 text: modelData.children ? modelData.children.length : ""
-                                font.family: Theme.fontFamily
-                                font.pixelSize: 10
-                                color: Theme.mutedForeground
-                                opacity: 0.5
-                                Layout.rightMargin: 8
+                                font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; Layout.rightMargin: Theme.s8
                                 visible: modelData.children && modelData.children.length > 0
                             }
                         }
-
-                        MouseArea {
-                            id: dbMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: expanded = !expanded
-                        }
+                        MouseArea { id: ndMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: open = !open }
                     }
 
-                    // ─── Children ───
+                    // Children
                     ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 0
-                        visible: expanded
-                        clip: true
+                        Layout.fillWidth: true; spacing: 0; visible: open; clip: true
 
                         Repeater {
                             model: modelData.children || []
-
                             Rectangle {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 26
-                                color: childMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.02) : "transparent"
-                                Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+                                Layout.fillWidth: true; Layout.preferredHeight: 24
+                                color: chMa.containsMouse ? Theme.bgHover : "transparent"
+                                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                                 RowLayout {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 32
-                                    spacing: 6
-
+                                    anchors.fill: parent; anchors.leftMargin: 30; spacing: Theme.s6
                                     Rectangle {
-                                        width: 14; height: 14
-                                        radius: 2
-                                        color: "transparent"
-                                        border.width: 1
-                                        border.color: Qt.rgba(Theme.border.r, Theme.border.g, Theme.border.b, 0.5)
-
-                                        Text {
-                                            anchors.centerIn: parent
-                                            text: modelData.type === "table" ? "T" : "C"
-                                            font.family: Theme.monoFamily
-                                            font.pixelSize: 8
-                                            font.weight: Font.Bold
-                                            color: modelData.type === "table" ? "#a78bfa" : Theme.mutedForeground
-                                        }
+                                        width: 12; height: 12; radius: 2; color: "transparent"; border.width: 1; border.color: Theme.border
+                                        Text { anchors.centerIn: parent; text: modelData.type === "table" ? "T" : "C"; font.family: Theme.mono; font.pixelSize: 7; font.weight: Font.Bold; color: modelData.type === "table" ? Theme.synKeyword : Theme.fgDim }
                                     }
-
-                                    Text {
-                                        text: modelData.name
-                                        font.family: Theme.fontFamily
-                                        font.pixelSize: Theme.fontSizeXs
-                                        color: Theme.foreground
-                                        opacity: 0.85
-                                        Layout.fillWidth: true
-                                        elide: Text.ElideRight
-                                    }
-
-                                    Text {
-                                        text: modelData.type === "column" ? (modelData["type"] || "") : ""
-                                        font.family: Theme.monoFamily
-                                        font.pixelSize: 10
-                                        color: Theme.mutedForeground
-                                        opacity: 0.4
-                                        visible: text.length > 0
-                                        Layout.rightMargin: 8
-                                    }
+                                    Text { text: modelData.name || ""; font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fg; opacity: 0.85; elide: Text.ElideRight; Layout.fillWidth: true }
                                 }
-
                                 MouseArea {
-                                    id: childMouse
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-                                    onDoubleClicked: {
-                                        // Insert table name into editor
-                                        if (modelData.type === "table") {
-                                            var idx = tabManager.currentIndex
-                                            var tab = tabManager.getTab(idx)
-                                            tabManager.updateContent(idx, (tab.content || "") + " " + modelData.name)
-                                        }
-                                    }
+                                    id: chMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                                    onDoubleClicked: { if (modelData.type === "table" && tabManager) { var t = tabManager.getTab(tabManager.currentIndex); tabManager.updateContent(tabManager.currentIndex, (t.content || "") + modelData.name + " ") } }
                                 }
                             }
                         }
@@ -161,40 +77,13 @@ Rectangle {
                 }
             }
 
-            // Empty state
+            // Empty
             Item {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 80
-                visible: schemaService.tree.length === 0
-
+                Layout.fillWidth: true; Layout.preferredHeight: 60; visible: !schemaService || schemaService.tree.length === 0
                 ColumnLayout {
-                    anchors.centerIn: parent
-                    spacing: 6
-
-                    Text {
-                        text: databaseService.connected ? "Empty schema" : "Not connected"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeSm
-                        color: Theme.mutedForeground
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    Text {
-                        text: databaseService.connected ? "No tables found" : "Select a connection"
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeXs
-                        color: Theme.mutedForeground
-                        opacity: 0.5
-                        Layout.alignment: Qt.AlignHCenter
-                    }
+                    anchors.centerIn: parent; spacing: Theme.s4
+                    Text { text: databaseService && databaseService.connected ? "Empty schema" : "Not connected"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter }
                 }
-            }
-
-            // Loading
-            FlatProgress {
-                Layout.fillWidth: true
-                indeterminate: true
-                visible: schemaService.loading
             }
         }
     }

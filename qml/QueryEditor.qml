@@ -3,242 +3,127 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 Rectangle {
-    color: Theme.background
+    color: Theme.bg
 
     ColumnLayout {
-        anchors.fill: parent
-        spacing: 0
+        anchors.fill: parent; spacing: 0
 
         // ─── Toolbar ───
         Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 42
-            color: "transparent"
+            Layout.fillWidth: true; Layout.preferredHeight: 38; color: Theme.bgElevated
 
             RowLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 12
-                anchors.rightMargin: 12
-                spacing: 8
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s6
 
-                // Run button
+                // Run
                 Rectangle {
-                    Layout.preferredWidth: runRow.implicitWidth + 20
-                    Layout.preferredHeight: 28
-                    radius: Theme.radius
-                    gradient: Gradient {
-                        orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: runMouse.containsMouse ? "#4f46e5" : "#6366f1" }
-                        GradientStop { position: 1.0; color: runMouse.containsMouse ? "#7c3aed" : "#8b5cf6" }
-                    }
+                    width: runContent.implicitWidth + 20; height: 26; radius: Theme.r6
+                    color: runMa.containsMouse ? Theme.accentHover : Theme.accent
+                    scale: runMa.pressed ? 0.96 : 1
+                    Behavior on scale { NumberAnimation { duration: Theme.fast } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                     RowLayout {
-                        id: runRow
-                        anchors.centerIn: parent
-                        spacing: 6
-
-                        Text {
-                            text: "▶"
-                            font.pixelSize: 10
-                            color: "#ffffff"
-                        }
-                        Text {
-                            text: "Run"
-                            font.family: Theme.fontFamily
-                            font.pixelSize: Theme.fontSizeSm
-                            font.weight: Font.DemiBold
-                            color: "#ffffff"
-                        }
+                        id: runContent; anchors.centerIn: parent; spacing: Theme.s4
+                        Text { text: "▶"; font.pixelSize: 9; color: "#fff" }
+                        Text { text: "Run"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: "#fff" }
                     }
-
                     MouseArea {
-                        id: runMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            var idx = tabManager.currentIndex
-                            var tab = tabManager.getTab(idx)
-                            if (tab.content) console.log("Execute:", tab.content)
-                        }
+                        id: runMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: { if (tabManager) { var t = tabManager.getTab(tabManager.currentIndex); if (t.content) console.log("EXEC:", t.content) } }
                     }
-
-                    scale: runMouse.pressed ? 0.95 : 1.0
-                    Behavior on scale { NumberAnimation { duration: Theme.durationFast; easing.type: Easing.OutCubic } }
                 }
 
-                FlatKbd { text: "Ctrl+Enter" }
+                // Shortcut hint
+                Rectangle {
+                    height: 18; width: kbdText.implicitWidth + 10; radius: Theme.r4; color: Theme.bgSurface; border.width: 1; border.color: Theme.border
+                    Text { id: kbdText; anchors.centerIn: parent; text: "Ctrl+Enter"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
+                }
 
                 Item { Layout.fillWidth: true }
 
-                // Format button
+                // Format
                 Rectangle {
-                    width: 28; height: 28
-                    radius: Theme.radiusSm
-                    color: fmtMouse.containsMouse ? Theme.muted : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "{ }"
-                        font.family: Theme.monoFamily
-                        font.pixelSize: 10
-                        color: Theme.mutedForeground
-                    }
-
-                    MouseArea {
-                        id: fmtMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                    }
+                    width: 26; height: 26; radius: Theme.r6; color: fmtMa.containsMouse ? Theme.bgHover : "transparent"
+                    Text { anchors.centerIn: parent; text: "{}"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgMuted }
+                    MouseArea { id: fmtMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor }
                 }
 
-                // Clear button
+                // Clear
                 Rectangle {
-                    width: 28; height: 28
-                    radius: Theme.radiusSm
-                    color: clrMouse.containsMouse ? Theme.muted : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "⌫"
-                        font.pixelSize: 13
-                        color: Theme.mutedForeground
-                    }
-
-                    MouseArea {
-                        id: clrMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: editorArea.text = ""
-                    }
+                    width: 26; height: 26; radius: Theme.r6; color: clrMa.containsMouse ? Theme.bgHover : "transparent"
+                    Text { anchors.centerIn: parent; text: "⌫"; font.pixelSize: 13; color: Theme.fgMuted }
+                    MouseArea { id: clrMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: editor.text = "" }
                 }
             }
 
-            Rectangle {
-                anchors.bottom: parent.bottom
-                width: parent.width; height: 1
-                color: Theme.border
-            }
+            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
-        // ─── Editor with line numbers ───
+        // ─── Editor Area ───
         RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 0
+            Layout.fillWidth: true; Layout.fillHeight: true; spacing: 0
 
             // Line numbers
             Rectangle {
-                Layout.fillHeight: true
-                Layout.preferredWidth: 44
-                color: Qt.rgba(Theme.muted.r, Theme.muted.g, Theme.muted.b, 0.3)
+                Layout.fillHeight: true; Layout.preferredWidth: 48; color: Theme.bgElevated
 
-                ListView {
-                    anchors.fill: parent
-                    anchors.topMargin: 12
-                    model: Math.max(1, editorArea.text.split("\n").length)
-                    interactive: false
-                    contentY: editorFlick.contentY
+                Column {
+                    anchors.fill: parent; anchors.topMargin: Theme.s8
 
-                    delegate: Item {
-                        width: 44
-                        height: editorArea.font.pixelSize + 7
-
-                        Text {
-                            anchors.right: parent.right
-                            anchors.rightMargin: 12
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: index + 1
-                            font.family: Theme.monoFamily
-                            font.pixelSize: 11
-                            color: Theme.mutedForeground
-                            opacity: 0.5
+                    Repeater {
+                        model: Math.max(1, editor.text.split("\n").length)
+                        delegate: Item {
+                            width: 48; height: lineHeight
+                            Text {
+                                anchors.right: parent.right; anchors.rightMargin: Theme.s12; anchors.verticalCenter: parent.verticalCenter
+                                text: index + 1; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
+                            }
                         }
                     }
                 }
             }
 
-            // Separator
-            Rectangle {
-                Layout.fillHeight: true
-                width: 1
-                color: Theme.border
-                opacity: 0.5
-            }
+            Rectangle { Layout.fillHeight: true; width: 1; color: Theme.border; opacity: 0.5 }
 
             // Editor
             Flickable {
-                id: editorFlick
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                contentWidth: width
-                contentHeight: editorArea.implicitHeight + 24
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
+                id: editorFlick; Layout.fillWidth: true; Layout.fillHeight: true
+                contentWidth: width; contentHeight: editor.implicitHeight + Theme.s16
+                clip: true; boundsBehavior: Flickable.StopAtBounds
 
                 TextEdit {
-                    id: editorArea
-                    width: parent.width
-                    topPadding: 12
-                    leftPadding: 12
-                    rightPadding: 12
-                    bottomPadding: 12
-                    font.family: Theme.monoFamily
-                    font.pixelSize: 13
-                    color: Theme.foreground
-                    selectionColor: Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.3)
-                    selectedTextColor: Theme.foreground
-                    wrapMode: TextEdit.NoWrap
-                    selectByMouse: true
-                    focus: true
+                    id: editor; width: parent.width
+                    topPadding: Theme.s8; leftPadding: Theme.s12; rightPadding: Theme.s12; bottomPadding: Theme.s12
+                    font.family: Theme.mono; font.pixelSize: Theme.t13; color: Theme.fg
+                    selectionColor: Theme.accentDim; selectedTextColor: Theme.fg
+                    wrapMode: TextEdit.NoWrap; selectByMouse: true; focus: true
 
-                    onTextChanged: {
-                        tabManager.updateContent(tabManager.currentIndex, text)
-                    }
+                    onTextChanged: { if (tabManager) tabManager.updateContent(tabManager.currentIndex, text) }
 
                     // Placeholder
                     Text {
-                        anchors.fill: parent
-                        anchors.topMargin: 12
-                        anchors.leftMargin: 12
-                        text: "-- Write your SQL query here...\n-- Press Ctrl+Enter to execute"
-                        font: parent.font
-                        color: Theme.mutedForeground
-                        opacity: 0.4
-                        visible: !parent.text && !parent.focus
+                        x: Theme.s12; y: Theme.s8
+                        text: "SELECT * FROM table_name\nWHERE id = 1;"
+                        font: parent.font; color: Theme.fgDim; opacity: 0.35
+                        visible: !parent.text && !parent.activeFocus
                     }
 
-                    // Blinking cursor color
                     cursorDelegate: Rectangle {
-                        width: 2
-                        color: "#8b5cf6"
-                        visible: parent.activeFocus
-
-                        SequentialAnimation on opacity {
-                            loops: Animation.Infinite
-                            NumberAnimation { to: 0; duration: 500 }
-                            NumberAnimation { to: 1; duration: 500 }
-                        }
+                        width: 2; color: Theme.accent; visible: parent.activeFocus
+                        SequentialAnimation on opacity { loops: Animation.Infinite; NumberAnimation { to: 0.2; duration: 500 }; NumberAnimation { to: 1; duration: 400 } }
                     }
                 }
 
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
-                    contentItem: Rectangle {
-                        implicitWidth: 4; radius: 2; color: Theme.border
-                    }
+                    contentItem: Rectangle { implicitWidth: 4; radius: 2; color: Theme.borderLight; opacity: 0.6 }
                 }
             }
         }
     }
 
-    // Ctrl+Enter handler
-    Keys.onPressed: (event) => {
-        if (event.key === Qt.Key_Return && (event.modifiers & Qt.ControlModifier)) {
-            runMouse.clicked(undefined)
-            event.accepted = true
-        }
-    }
+    property real lineHeight: 20
+
+    Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { runMa.clicked(undefined); e.accepted = true } }
 }

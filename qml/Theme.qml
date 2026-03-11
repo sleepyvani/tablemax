@@ -67,4 +67,46 @@ QtObject {
     readonly property int fast: 80
     readonly property int normal: 140
     readonly property int slow: 220
+
+    // ═══════════════════════════════════════════════
+    // Backward compatibility aliases for Flat* controls
+    // ═══════════════════════════════════════════════
+    readonly property color background: bg
+    readonly property color foreground: fg
+    readonly property color primary: accent
+    readonly property color primaryForeground: "#ffffff"
+    readonly property color secondary: bgSurface
+    readonly property color secondaryForeground: fg
+    readonly property color muted: bgSurface
+    readonly property color mutedForeground: fgMuted
+    readonly property color card: bgElevated
+    readonly property color cardForeground: fg
+    readonly property color popover: bgElevated
+    readonly property color popoverForeground: fg
+    readonly property color destructive: error
+    readonly property color destructiveForeground: "#ffffff"
+    readonly property color input: borderLight
+    readonly property color ring: borderFocus
+    readonly property color accentColor: accentDim
+    readonly property color accentForeground: fg
+
+    readonly property string fontFamily: sans
+    readonly property string monoFamily: mono
+    readonly property int fontSizeXs: 10
+    readonly property int fontSizeSm: t12
+    readonly property int fontSize: t13
+    readonly property int fontSizeMd: t14
+    readonly property int fontSizeLg: t16
+    readonly property int fontSizeXl: t20
+    readonly property int fontSize2xl: t24
+
+    readonly property real radius: r6
+    readonly property real radiusSm: r4
+    readonly property real radiusMd: r8
+    readonly property real radiusLg: r12
+    readonly property real radiusFull: rFull
+
+    readonly property int duration: normal
+    readonly property int durationFast: fast
+    readonly property int durationSlow: slow
 }

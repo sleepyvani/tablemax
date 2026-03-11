@@ -2,79 +2,36 @@ import QtQuick
 import QtQuick.Layouts
 
 Rectangle {
-    Layout.fillWidth: true
-    height: 26
-    color: Qt.rgba(Theme.muted.r, Theme.muted.g, Theme.muted.b, 0.15)
+    Layout.fillWidth: true; Layout.preferredHeight: 24; color: Theme.bgElevated
 
-    Rectangle {
-        anchors.top: parent.top
-        width: parent.width; height: 1
-        color: Theme.border
-    }
+    Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
 
     RowLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 12
-        anchors.rightMargin: 12
-        spacing: 12
+        anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s12
 
-        // Connection info
         Text {
             text: {
-                if (!databaseService.connected) return "No connection"
+                if (!databaseService || !databaseService.connected) return "No connection"
                 var c = connectionManager.get(connectionManager.activeIndex)
-                return (c.dbType || "").toUpperCase() + " — " + (c.name || "")
+                return (c && c.dbType ? c.dbType.toUpperCase() : "") + " · " + (c && c.name ? c.name : "")
             }
-            font.family: Theme.fontFamily
-            font.pixelSize: 10
-            color: Theme.mutedForeground
+            font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim
         }
 
-        Rectangle { width: 1; height: 12; color: Theme.border }
+        Rectangle { width: 1; height: 10; color: Theme.border }
 
-        // Row count
         Text {
-            text: resultModel.totalRows > 0
-                ? resultModel.totalRows + " rows × " + resultModel.totalColumns + " cols"
-                : "Ready"
-            font.family: Theme.fontFamily
-            font.pixelSize: 10
-            color: Theme.mutedForeground
+            text: resultModel && resultModel.totalRows > 0 ? resultModel.totalRows + " rows × " + resultModel.totalColumns + " cols" : "Ready"
+            font.family: Theme.mono; font.pixelSize: 10; color: Theme.fgDim
         }
 
         Item { Layout.fillWidth: true }
 
-        // Loading spinner
         Text {
-            text: "⟳"
-            font.pixelSize: 11
-            color: Theme.mutedForeground
-            visible: databaseService.loading
-
-            RotationAnimation on rotation {
-                from: 0; to: 360
-                duration: 1000
-                loops: Animation.Infinite
-                running: databaseService.loading
-            }
+            text: "●"; font.pixelSize: 7
+            color: databaseService && databaseService.error !== "" ? Theme.error : "transparent"
         }
 
-        // Error indicator
-        Text {
-            text: "● Error"
-            font.family: Theme.fontFamily
-            font.pixelSize: 10
-            color: "#ef4444"
-            visible: databaseService.error !== ""
-        }
-
-        // Version
-        Text {
-            text: "v0.2.0"
-            font.family: Theme.fontFamily
-            font.pixelSize: 10
-            color: Theme.mutedForeground
-            opacity: 0.4
-        }
+        Text { text: "v0.2.0"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4 }
     }
 }
