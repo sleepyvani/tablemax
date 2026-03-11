@@ -44,7 +44,7 @@ Rectangle {
             font.weight: Font.Medium
             color: {
                 switch (root.variant) {
-                    case "destructive": return "#ef4444"
+                    case "destructive": return Theme.error
                     case "success": return Theme.success
                     case "warning": return Theme.warning
                     default: return Theme.foreground

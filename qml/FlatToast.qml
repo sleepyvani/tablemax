@@ -72,7 +72,7 @@ Item {
                 color: {
                     switch (root.variant) {
                         case "success": return Theme.success
-                        case "destructive": return "#ef4444"
+                        case "destructive": return Theme.error
                         case "warning": return Theme.warning
                         default: return "transparent"
                     }

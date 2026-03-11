@@ -64,7 +64,7 @@ Item {
             Rectangle {
                 width: root.width
                 height: root.rowHeight
-                color: rowMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.02) : "transparent"
+                color: rowMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.03) : "transparent"
 
                 Behavior on color { ColorAnimation { duration: Theme.durationFast } }
 

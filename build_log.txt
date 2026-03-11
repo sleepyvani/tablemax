@@ -1,129 +1,17 @@
-﻿[1/129] Copying tablemax qml sources into build dir
-[2/129] Copying tablemax qml resources into build dir
-[3/129] Populating .qmlls.ini file at V:/Tauri/tablemax/build/.qt/.qmlls.build.ini
-[4/129] Running qmlimportscanner for tablemax
-[5/129] Building CXX object CMakeFiles/tablemax_core.dir/core/src/logger.cpp.obj
-[6/129] Building CXX object CMakeFiles/mysql.dir/plugins/mysql/mysql_plugin.cpp.obj
-[7/129] Building CXX object CMakeFiles/sqlite.dir/plugins/sqlite/sqlite_plugin.cpp.obj
-[8/129] Building CXX object CMakeFiles/mongo.dir/plugins/mongodb/mongo_plugin.cpp.obj
-[9/129] Building CXX object CMakeFiles/mariadb.dir/plugins/mariadb/mariadb_plugin.cpp.obj
-[10/129] Building CXX object CMakeFiles/postgres.dir/plugins/postgres/postgres_plugin.cpp.obj
-[11/129] Building CXX object CMakeFiles/redis.dir/plugins/redis/redis_plugin.cpp.obj
-[12/129] Building CXX object CMakeFiles/mssql.dir/plugins/mssql/mssql_plugin.cpp.obj
-[13/129] Linking CXX shared library libsqlite.dll
-[14/129] Linking CXX shared library libmysql.dll
-[15/129] Linking CXX shared library libmongo.dll
-[16/129] Linking CXX shared library libmariadb.dll
-[17/129] Linking CXX shared library libpostgres.dll
-[18/129] Linking CXX shared library libredis.dll
-[19/129] Linking CXX shared library libmssql.dll
-[20/129] Building CXX object CMakeFiles/tablemax_core.dir/core/src/query_engine.cpp.obj
-[21/129] Building CXX object CMakeFiles/tablemax_core.dir/core/src/plugin_loader.cpp.obj
-[22/129] Building CXX object CMakeFiles/tablemax_core.dir/core/src/connection_manager.cpp.obj
-[23/129] Linking CXX static library libtablemax_core.a
-[24/129] Automatic MOC and UIC for target tablemax
-[25/129] Running AUTOMOC file extraction for target tablemax
-[26/129] Running rcc for resource qmake_TableMax
-[27/129] Running rcc for resource tablemax_raw_res_0
-[28/129] Generating .rcc/qmlcache/tablemax_qmlcache_loader.cpp
-[29/129] Running rcc for resource tablemax_raw_qml_0
-[30/129] Running moc --collect-json for target tablemax
-[31/129] Automatic QML type registration for target tablemax
-[32/129] Generating .rcc/qmlcache/tablemax_qml/TabBar__qml.cpp, .rcc/qmlcache/tablemax_qml/TabBar__qml.cpp.aotstats
-[33/129] Generating .rcc/qmlcache/tablemax_qml/StatusBar_qml.cpp, .rcc/qmlcache/tablemax_qml/StatusBar_qml.cpp.aotstats
-[34/129] Generating .rcc/qmlcache/tablemax_qml/QueryEditor_qml.cpp, .rcc/qmlcache/tablemax_qml/QueryEditor_qml.cpp.aotstats
-[35/129] Generating .rcc/qmlcache/tablemax_qml/Sidebar_qml.cpp, .rcc/qmlcache/tablemax_qml/Sidebar_qml.cpp.aotstats
-[36/129] Generating .rcc/qmlcache/tablemax_qml/WelcomeView_qml.cpp, .rcc/qmlcache/tablemax_qml/WelcomeView_qml.cpp.aotstats
-[37/129] Generating .rcc/qmlcache/tablemax_qml/DataGrid_qml.cpp, .rcc/qmlcache/tablemax_qml/DataGrid_qml.cpp.aotstats
-[38/129] Generating .rcc/qmlcache/tablemax_qml/SchemaTree_qml.cpp, .rcc/qmlcache/tablemax_qml/SchemaTree_qml.cpp.aotstats
-[39/129] Generating .rcc/qmlcache/tablemax_qml/ConnectionDialog_qml.cpp, .rcc/qmlcache/tablemax_qml/ConnectionDialog_qml.cpp.aotstats
-[40/129] Generating .rcc/qmlcache/tablemax_qml/Main_qml.cpp, .rcc/qmlcache/tablemax_qml/Main_qml.cpp.aotstats
-[41/129] Generating .rcc/qmlcache/tablemax_qml/FlatInput_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatInput_qml.cpp.aotstats
-[42/129] Generating .rcc/qmlcache/tablemax_qml/FlatButton_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatButton_qml.cpp.aotstats
-[43/129] Generating .rcc/qmlcache/tablemax_qml/FlatTextArea_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatTextArea_qml.cpp.aotstats
-[44/129] Generating .rcc/qmlcache/tablemax_qml/FlatSwitch_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSwitch_qml.cpp.aotstats
-[45/129] Generating .rcc/qmlcache/tablemax_qml/FlatSelect_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSelect_qml.cpp.aotstats
-[46/129] Generating .rcc/qmlcache/tablemax_qml/FlatCheckbox_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatCheckbox_qml.cpp.aotstats
-[47/129] Generating .rcc/qmlcache/tablemax_qml/FlatBadge_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatBadge_qml.cpp.aotstats
-[48/129] Generating .rcc/qmlcache/tablemax_qml/FlatRadioButton_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatRadioButton_qml.cpp.aotstats
-[49/129] Generating .rcc/qmlcache/tablemax_qml/FlatCard_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatCard_qml.cpp.aotstats
-[50/129] Generating .rcc/qmlcache/tablemax_qml/FlatDialog_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatDialog_qml.cpp.aotstats
-[51/129] Generating .rcc/qmlcache/tablemax_qml/FlatTabs_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatTabs_qml.cpp.aotstats
-[52/129] Generating .rcc/qmlcache/tablemax_qml/FlatTooltip_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatTooltip_qml.cpp.aotstats
-[53/129] Generating .rcc/qmlcache/tablemax_qml/FlatSeparator_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSeparator_qml.cpp.aotstats
-[54/129] Generating .rcc/qmlcache/tablemax_qml/FlatSkeleton_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSkeleton_qml.cpp.aotstats
-[55/129] Generating .rcc/qmlcache/tablemax_qml/FlatProgress_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatProgress_qml.cpp.aotstats
-[56/129] Generating .rcc/qmlcache/tablemax_qml/FlatSpinner_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSpinner_qml.cpp.aotstats
-[57/129] Generating .rcc/qmlcache/tablemax_qml/FlatScrollArea_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatScrollArea_qml.cpp.aotstats
-[58/129] Generating .rcc/qmlcache/tablemax_qml/FlatLabel_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatLabel_qml.cpp.aotstats
-[59/129] Generating .rcc/qmlcache/tablemax_qml/FlatToast_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatToast_qml.cpp.aotstats
-[60/129] Generating .rcc/qmlcache/tablemax_qml/FlatAlert_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatAlert_qml.cpp.aotstats
-[61/129] Generating .rcc/qmlcache/tablemax_qml/FlatPopover_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatPopover_qml.cpp.aotstats
-[62/129] Generating .rcc/qmlcache/tablemax_qml/FlatAvatar_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatAvatar_qml.cpp.aotstats
-[63/129] Generating .rcc/qmlcache/tablemax_qml/FlatContextMenu_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatContextMenu_qml.cpp.aotstats
-[64/129] Generating .rcc/qmlcache/tablemax_qml/FlatAccordion_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatAccordion_qml.cpp.aotstats
-[65/129] Generating .rcc/qmlcache/tablemax_qml/FlatField_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatField_qml.cpp.aotstats
-[66/129] Generating .rcc/qmlcache/tablemax_qml/FlatTable_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatTable_qml.cpp.aotstats
-[67/129] Generating .rcc/qmlcache/tablemax_qml/FlatSlider_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSlider_qml.cpp.aotstats
-[68/129] Generating .rcc/qmlcache/tablemax_qml/FlatKbd_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatKbd_qml.cpp.aotstats
-[69/129] Generating .rcc/qmlcache/tablemax_qml/FlatSheet_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatSheet_qml.cpp.aotstats
-[70/129] Generating .rcc/qmlcache/tablemax_qml/FlatDropdownMenu_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatDropdownMenu_qml.cpp.aotstats
-[71/129] Generating .rcc/qmlcache/tablemax_qml/FlatToggleGroup_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatToggleGroup_qml.cpp.aotstats
-[72/129] Generating .rcc/qmlcache/tablemax_qml/FlatPagination_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatPagination_qml.cpp.aotstats
-[73/129] Generating .rcc/qmlcache/tablemax_qml/FlatResizable_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatResizable_qml.cpp.aotstats
-[74/129] Generating .rcc/qmlcache/tablemax_qml/FlatEmpty_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatEmpty_qml.cpp.aotstats
-[75/129] Generating .rcc/qmlcache/tablemax_qml/FlatToggle_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatToggle_qml.cpp.aotstats
-[76/129] Generating .rcc/qmlcache/tablemax_qml/FlatColorPicker_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatColorPicker_qml.cpp.aotstats
-[77/129] Building CXX object CMakeFiles/tablemax.dir/build/.qt/rcc/qrc_qmake_TableMax.cpp.obj
-[78/129] Building CXX object CMakeFiles/tablemax.dir/tablemax_qmltyperegistrations.cpp.obj
-[79/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/Main_qml.cpp.obj
-[80/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatTooltip_qml.cpp.obj
-[81/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatInput_qml.cpp.obj
-[82/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/QueryEditor_qml.cpp.obj
-[83/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatTextArea_qml.cpp.obj
-[84/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/SchemaTree_qml.cpp.obj
-[85/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatTabs_qml.cpp.obj
-[86/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSwitch_qml.cpp.obj
-[87/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatButton_qml.cpp.obj
-[88/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/DataGrid_qml.cpp.obj
-[89/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatRadioButton_qml.cpp.obj
-[90/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/StatusBar_qml.cpp.obj
-[91/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/TabBar__qml.cpp.obj
-[92/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatBadge_qml.cpp.obj
-[93/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatDialog_qml.cpp.obj
-[94/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qmlcache_loader.cpp.obj
-[95/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSeparator_qml.cpp.obj
-[96/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatCard_qml.cpp.obj
-[97/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/WelcomeView_qml.cpp.obj
-[98/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatCheckbox_qml.cpp.obj
-[99/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/Sidebar_qml.cpp.obj
-[100/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSelect_qml.cpp.obj
-[101/129] Building CXX object CMakeFiles/tablemax.dir/src/main.cpp.obj
-[102/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/ConnectionDialog_qml.cpp.obj
-[103/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatProgress_qml.cpp.obj
-[104/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatScrollArea_qml.cpp.obj
-[105/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatLabel_qml.cpp.obj
-[106/129] Building CXX object CMakeFiles/tablemax.dir/build/.qt/rcc/qrc_tablemax_raw_qml_0.cpp.obj
-[107/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSpinner_qml.cpp.obj
-[108/129] Building CXX object CMakeFiles/tablemax.dir/build/.qt/rcc/qrc_tablemax_raw_res_0.cpp.obj
-[109/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSkeleton_qml.cpp.obj
-[110/129] Building CXX object CMakeFiles/tablemax.dir/tablemax_autogen/mocs_compilation.cpp.obj
-[111/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatPopover_qml.cpp.obj
-[112/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatAvatar_qml.cpp.obj
-[113/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatAlert_qml.cpp.obj
-[114/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatToast_qml.cpp.obj
-[115/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSlider_qml.cpp.obj
-[116/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatContextMenu_qml.cpp.obj
-[117/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatSheet_qml.cpp.obj
-[118/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatDropdownMenu_qml.cpp.obj
-[119/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatColorPicker_qml.cpp.obj
-[120/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatToggleGroup_qml.cpp.obj
-[121/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatPagination_qml.cpp.obj
-[122/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatKbd_qml.cpp.obj
-[123/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatAccordion_qml.cpp.obj
-[124/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatEmpty_qml.cpp.obj
-[125/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatField_qml.cpp.obj
-[126/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatTable_qml.cpp.obj
-[127/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatResizable_qml.cpp.obj
-[128/129] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatToggle_qml.cpp.obj
-[129/129] Linking CXX executable tablemax.exe
+﻿[1/17] Copying tablemax qml sources into build dir
+[2/17] Running qmlimportscanner for tablemax
+[3/17] Running rcc for resource tablemax_raw_qml_0
+[4/17] Generating .rcc/qmlcache/tablemax_qml/FlatTable_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatTable_qml.cpp.aotstats
+[5/17] Generating .rcc/qmlcache/tablemax_qml/FlatField_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatField_qml.cpp.aotstats
+[6/17] Generating .rcc/qmlcache/tablemax_qml/FlatTabs_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatTabs_qml.cpp.aotstats
+[7/17] Generating .rcc/qmlcache/tablemax_qml/FlatButton_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatButton_qml.cpp.aotstats
+[8/17] Generating .rcc/qmlcache/tablemax_qml/FlatInput_qml.cpp, .rcc/qmlcache/tablemax_qml/FlatInput_qml.cpp.aotstats
+[9/17] Generating .rcc/qmlcache/tablemax_qml/ConnectionDialog_qml.cpp, .rcc/qmlcache/tablemax_qml/ConnectionDialog_qml.cpp.aotstats
+[10/17] Building CXX object CMakeFiles/tablemax.dir/build/.qt/rcc/qrc_tablemax_raw_qml_0.cpp.obj
+[11/17] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatTabs_qml.cpp.obj
+[12/17] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatInput_qml.cpp.obj
+[13/17] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatField_qml.cpp.obj
+[14/17] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatTable_qml.cpp.obj
+[15/17] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/FlatButton_qml.cpp.obj
+[16/17] Building CXX object CMakeFiles/tablemax.dir/build/.rcc/qmlcache/tablemax_qml/ConnectionDialog_qml.cpp.obj
+[17/17] Linking CXX executable tablemax.exe

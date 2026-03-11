@@ -48,7 +48,7 @@ Rectangle {
             text: root.error
             font.family: Theme.fontFamily
             font.pixelSize: Theme.fontSizeXs
-            color: "#ef4444"
+            color: Theme.error
             wrapMode: Text.WordWrap
             visible: text.length > 0
             Layout.fillWidth: true

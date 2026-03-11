@@ -113,10 +113,10 @@ T.Dialog {
                         property bool sel: dlg.dbTypeIdx === index
 
                         color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
-                                   : pillMa.containsMouse ? Qt.rgba(1, 1, 1, 0.04) : "transparent"
+                                   : pillMa.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.04) : "transparent"
                         border.width: 1
                         border.color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.4)
-                                          : pillMa.containsMouse ? Qt.rgba(1, 1, 1, 0.08) : Theme.border
+                                          : pillMa.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08) : Theme.border
 
                         Behavior on color { ColorAnimation { duration: 120 } }
                         Behavior on border.color { ColorAnimation { duration: 120 } }
@@ -205,7 +205,7 @@ T.Dialog {
             Layout.rightMargin: 24
             implicitHeight: formContent.implicitHeight + 32
             radius: 10
-            color: Qt.rgba(1, 1, 1, 0.015)
+            color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
             border.width: 1
             border.color: Theme.border
             visible: dlg.modeIdx === 0
@@ -326,7 +326,7 @@ T.Dialog {
             Layout.rightMargin: 24
             implicitHeight: connStrContent.implicitHeight + 32
             radius: 10
-            color: Qt.rgba(1, 1, 1, 0.015)
+            color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
             border.width: 1
             border.color: Theme.border
             visible: dlg.modeIdx === 1
@@ -394,7 +394,7 @@ T.Dialog {
                     width: 18; height: 18; radius: 9
                     color: modelData
                     border.width: dlg.selectedColor === modelData ? 2 : 0
-                    border.color: "#fff"
+                    border.color: Theme.fg
                     opacity: dlg.selectedColor === modelData ? 1.0 : 0.6
                     scale: colorDotMa.containsMouse ? 1.15 : 1.0
 

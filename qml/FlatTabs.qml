@@ -35,7 +35,7 @@ Item {
                     radius: Theme.radiusSm
                     color: root.currentIndex === index
                            ? Theme.background
-                           : (tabMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.03) : "transparent")
+                           : (tabMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.04) : "transparent")
 
                     Behavior on color { ColorAnimation { duration: Theme.duration } }
 

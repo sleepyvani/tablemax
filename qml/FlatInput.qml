@@ -28,7 +28,7 @@ T.TextField {
         color: Qt.rgba(Theme.input.r, Theme.input.g, Theme.input.b, 0.3)
         border.width: 1
         border.color: {
-            if (root.variant === "error") return "#ef4444"
+            if (root.variant === "error") return Theme.error
             return root.activeFocus ? Theme.ring : Theme.input
         }
 

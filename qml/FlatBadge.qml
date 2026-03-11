@@ -35,7 +35,7 @@ Rectangle {
             switch (root.variant) {
                 case "secondary": return Theme.secondaryForeground
                 case "outline": return Theme.foreground
-                case "destructive": return "#ef4444"
+                case "destructive": return Theme.error
                 case "success": return Theme.success
                 case "warning": return Theme.warning
                 default: return Theme.primaryForeground

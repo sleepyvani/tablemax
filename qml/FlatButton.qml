@@ -76,7 +76,7 @@ T.Button {
                 case "outline": return Theme.foreground
                 case "secondary": return Theme.secondaryForeground
                 case "ghost": return Theme.foreground
-                case "destructive": return "#ef4444"
+                case "destructive": return Theme.error
                 case "link": return Theme.primary
                 default: return Theme.primaryForeground
             }
