@@ -1,18 +1,18 @@
-#include "plugin_interface.h"
-
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#define byte win_byte_override
 #include <windows.h>
 #include <sql.h>
 #include <sqlext.h>
+#undef byte
 #else
-// ODBC on Linux/Mac needs unixODBC
 #include <sql.h>
 #include <sqlext.h>
 #endif
 
+#include "plugin_interface.h"
 #include <chrono>
 #include <sstream>
 
@@ -154,9 +154,8 @@ public:
         vector<ColumnInfo> cols;
         for (SQLSMALLINT i = 1; i <= ncols; ++i) {
             SQLCHAR cname[256];
-            SQLSMALLINT nameLen, dataType, nullable;
-            SQLULEN colSize;
-            SQLSMALLINT decDigits;
+            SQLSMALLINT nameLen, dataType, nullable, decDigits;
+            SQLUINTEGER colSize;
             SQLDescribeColA(stmt, i, cname, sizeof(cname), &nameLen, &dataType, &colSize, &decDigits, &nullable);
             ColumnInfo ci;
             ci.name = string((char*)cname, nameLen);

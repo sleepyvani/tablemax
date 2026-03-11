@@ -1,5 +1,11 @@
-#include "plugin_interface.h"
+#ifdef _WIN32
+#define byte win_byte_override
+#include <winsock2.h>
+#undef byte
+#endif
+
 #include <libpq-fe.h>
+#include "plugin_interface.h"
 #include <chrono>
 #include <sstream>
 

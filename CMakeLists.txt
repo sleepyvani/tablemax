@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(TableMax VERSION 0.2.0 LANGUAGES CXX)
+project(TableMax VERSION 0.2.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,21 +13,148 @@ add_library(tablemax_core STATIC
 )
 target_include_directories(tablemax_core PUBLIC core/include)
 
-# ─── Plugins ───
-macro(add_db_plugin name folder)
-    add_library(${name} SHARED plugins/${folder}/${name}_plugin.cpp)
-    target_include_directories(${name} PRIVATE core/include)
-endmacro()
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  PLUGINS — each with its own dependencies
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-add_db_plugin(postgres postgres)
-add_db_plugin(mysql mysql)
-add_db_plugin(sqlite sqlite)
-add_db_plugin(mongo mongodb)
-add_db_plugin(redis redis)
-add_db_plugin(mssql mssql)
-add_db_plugin(mariadb mariadb)
+# ─── SQLite (bundled sqlite3.c — zero deps) ───
+add_library(sqlite SHARED
+    plugins/sqlite/sqlite_plugin.cpp
+    plugins/sqlite/sqlite3.c
+)
+target_include_directories(sqlite PRIVATE core/include plugins/sqlite)
+if(WIN32)
+    set_target_properties(sqlite PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
-# ─── Qt UI ───
+# ─── PostgreSQL (libpq) ───
+set(PG_ROOT "C:/Program Files/PostgreSQL/18")
+if(EXISTS "${PG_ROOT}/include/libpq-fe.h")
+    add_library(postgres SHARED plugins/postgres/postgres_plugin.cpp)
+    target_include_directories(postgres PRIVATE core/include "${PG_ROOT}/include")
+    target_link_libraries(postgres PRIVATE "${PG_ROOT}/lib/libpq.lib")
+    if(WIN32)
+        set_target_properties(postgres PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+    message(STATUS "PostgreSQL plugin: ENABLED (${PG_ROOT})")
+else()
+    message(WARNING "PostgreSQL plugin: DISABLED (libpq not found at ${PG_ROOT})")
+endif()
+
+# ─── MySQL (MySQL Connector/C) ───
+# Check common locations
+set(MYSQL_SEARCH_PATHS
+    "C:/Program Files/MySQL/MySQL Connector C 8.0"
+    "C:/Program Files/MySQL/MySQL Server 8.0"
+    "C:/mysql"
+    "C:/laragon/bin/mysql/mysql-8.0.30-winx64"
+)
+set(MYSQL_FOUND FALSE)
+foreach(MYSQL_PATH ${MYSQL_SEARCH_PATHS})
+    if(EXISTS "${MYSQL_PATH}/include/mysql.h")
+        # Check for lib
+        if(EXISTS "${MYSQL_PATH}/lib/libmysql.lib" OR EXISTS "${MYSQL_PATH}/lib/mysqlclient.lib" OR EXISTS "${MYSQL_PATH}/lib/libmysql.dll")
+            set(MYSQL_ROOT "${MYSQL_PATH}")
+            set(MYSQL_FOUND TRUE)
+            break()
+        endif()
+    endif()
+endforeach()
+
+if(MYSQL_FOUND)
+    add_library(mysql SHARED plugins/mysql/mysql_plugin.cpp)
+    target_include_directories(mysql PRIVATE core/include "${MYSQL_ROOT}/include")
+    if(EXISTS "${MYSQL_ROOT}/lib/libmysql.lib")
+        target_link_libraries(mysql PRIVATE "${MYSQL_ROOT}/lib/libmysql.lib")
+    elseif(EXISTS "${MYSQL_ROOT}/lib/mysqlclient.lib")
+        target_link_libraries(mysql PRIVATE "${MYSQL_ROOT}/lib/mysqlclient.lib")
+    endif()
+    if(WIN32)
+        set_target_properties(mysql PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+    message(STATUS "MySQL plugin: ENABLED (${MYSQL_ROOT})")
+
+    # MariaDB (reuses MySQL connector)
+    add_library(mariadb SHARED plugins/mariadb/mariadb_plugin.cpp)
+    target_include_directories(mariadb PRIVATE core/include "${MYSQL_ROOT}/include")
+    if(EXISTS "${MYSQL_ROOT}/lib/libmysql.lib")
+        target_link_libraries(mariadb PRIVATE "${MYSQL_ROOT}/lib/libmysql.lib")
+    elseif(EXISTS "${MYSQL_ROOT}/lib/mysqlclient.lib")
+        target_link_libraries(mariadb PRIVATE "${MYSQL_ROOT}/lib/mysqlclient.lib")
+    endif()
+    if(WIN32)
+        set_target_properties(mariadb PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+    message(STATUS "MariaDB plugin: ENABLED (reusing MySQL)")
+else()
+    message(WARNING "MySQL/MariaDB plugins: DISABLED (MySQL Connector/C not found)")
+    message(WARNING "  Install MySQL Connector/C or set MYSQL_ROOT")
+endif()
+
+# ─── Redis (raw TCP — zero deps, needs ws2_32 on Windows) ───
+add_library(redis SHARED plugins/redis/redis_plugin.cpp)
+target_include_directories(redis PRIVATE core/include)
+if(WIN32)
+    target_link_libraries(redis PRIVATE ws2_32)
+    set_target_properties(redis PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
+# ─── MSSQL (Windows ODBC — zero deps) ───
+if(WIN32)
+    add_library(mssql SHARED plugins/mssql/mssql_plugin.cpp)
+    target_include_directories(mssql PRIVATE core/include)
+    target_link_libraries(mssql PRIVATE odbc32 odbccp32)
+    set_target_properties(mssql PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    message(STATUS "MSSQL plugin: ENABLED (Windows ODBC)")
+else()
+    message(WARNING "MSSQL plugin: DISABLED (ODBC not available on this platform)")
+endif()
+
+# ─── MongoDB (mongoc driver) ───
+set(MONGOC_SEARCH_PATHS
+    "C:/mongo-c-driver"
+    "C:/Program Files/mongo-c-driver"
+    "$ENV{USERPROFILE}/Downloads/mongo-c-driver-2.2.3/_install"
+)
+set(MONGOC_FOUND FALSE)
+foreach(MC_PATH ${MONGOC_SEARCH_PATHS})
+    if(EXISTS "${MC_PATH}/include/libmongoc-1.0/mongoc/mongoc.h" OR EXISTS "${MC_PATH}/include/mongoc/mongoc.h")
+        set(MONGOC_ROOT "${MC_PATH}")
+        set(MONGOC_FOUND TRUE)
+        break()
+    endif()
+endforeach()
+
+if(MONGOC_FOUND)
+    add_library(mongo SHARED plugins/mongodb/mongo_plugin.cpp)
+    target_include_directories(mongo PRIVATE core/include
+        "${MONGOC_ROOT}/include/libmongoc-1.0"
+        "${MONGOC_ROOT}/include/libbson-1.0"
+    )
+    if(EXISTS "${MONGOC_ROOT}/lib/mongoc-1.0.lib")
+        target_link_libraries(mongo PRIVATE
+            "${MONGOC_ROOT}/lib/mongoc-1.0.lib"
+            "${MONGOC_ROOT}/lib/bson-1.0.lib"
+        )
+    elseif(EXISTS "${MONGOC_ROOT}/lib/libmongoc-1.0.a")
+        target_link_libraries(mongo PRIVATE
+            "${MONGOC_ROOT}/lib/libmongoc-1.0.a"
+            "${MONGOC_ROOT}/lib/libbson-1.0.a"
+        )
+    endif()
+    if(WIN32)
+        set_target_properties(mongo PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+    message(STATUS "MongoDB plugin: ENABLED (${MONGOC_ROOT})")
+else()
+    message(WARNING "MongoDB plugin: DISABLED (mongoc not found)")
+    message(WARNING "  Build mongoc from source or install via vcpkg")
+endif()
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  Qt UI
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 find_package(Qt6 QUIET COMPONENTS Quick QuickControls2)
 
 if(Qt6_FOUND)

@@ -1,5 +1,3 @@
-#include "plugin_interface.h"
-
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -20,6 +18,8 @@
 #define SOCKET_ERROR -1
 #define closesocket close
 #endif
+
+#include "plugin_interface.h"
 
 #include <chrono>
 #include <sstream>
