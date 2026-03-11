@@ -6,6 +6,7 @@ Rectangle {
 
     // Subtle grid pattern — blueprint feel
     Canvas {
+        id: gridCanvas
         anchors.fill: parent
         opacity: Theme.darkMode ? 0.03 : 0.04
         onPaint: {
@@ -20,8 +21,8 @@ Rectangle {
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke()
             }
         }
-        Component.onCompleted: requestPaint()
-        Connections { target: Theme; function onThemeChanged() { requestPaint() } }
+        Component.onCompleted: gridCanvas.requestPaint()
+        Connections { target: Theme; function onThemeChanged() { gridCanvas.requestPaint() } }
     }
 
     ColumnLayout {

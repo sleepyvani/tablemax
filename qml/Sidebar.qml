@@ -9,6 +9,15 @@ Rectangle {
     // Clipboard helper
     TextEdit { id: clipHelper; visible: false }
 
+    // Schema refresh helper
+    Connections {
+        target: databaseService
+        function onConnectedChanged() {
+            if (databaseService.connected)
+                schemaService.refresh(databaseService)
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -17,8 +26,7 @@ Rectangle {
         RowLayout {
             Layout.fillWidth: true
             Layout.preferredHeight: 42
-            Layout.leftMargin: 12
-            Layout.rightMargin: 8
+            Layout.leftMargin: 12; Layout.rightMargin: 8
             spacing: 8
 
             Rectangle {
@@ -52,11 +60,7 @@ Rectangle {
                 color: themeSbMa.containsMouse ? Theme.bgHover : "transparent"
                 Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                Text {
-                    anchors.centerIn: parent
-                    text: Theme.darkMode ? "☾" : "☀"
-                    font.pixelSize: 12; color: Theme.fgMuted
-                }
+                Text { anchors.centerIn: parent; text: Theme.darkMode ? "☾" : "☀"; font.pixelSize: 12; color: Theme.fgMuted }
                 MouseArea {
                     id: themeSbMa; anchors.fill: parent; hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor; onClicked: Theme.toggleTheme()
@@ -69,10 +73,7 @@ Rectangle {
                 color: addMa.containsMouse ? Theme.bgHover : "transparent"
                 Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                Text {
-                    anchors.centerIn: parent; text: "+"
-                    font.pixelSize: 15; color: Theme.fgMuted
-                }
+                Text { anchors.centerIn: parent; text: "+"; font.pixelSize: 15; color: Theme.fgMuted }
                 MouseArea {
                     id: addMa; anchors.fill: parent; hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor; onClicked: connDialog.open()
@@ -84,8 +85,8 @@ Rectangle {
 
         // ─── Search ───
         Item {
-            Layout.fillWidth: true; Layout.preferredHeight: 44
-            Layout.leftMargin: 8; Layout.rightMargin: 8
+            Layout.fillWidth: true; Layout.preferredHeight: 40
+            Layout.leftMargin: 8; Layout.rightMargin: 8; Layout.topMargin: 4
 
             Rectangle {
                 anchors.centerIn: parent; width: parent.width; height: 30
@@ -105,12 +106,16 @@ Rectangle {
                         verticalAlignment: TextInput.AlignVCenter
                         font.family: Theme.sans; font.pixelSize: 12; color: Theme.fg
                         selectByMouse: true; clip: true
+                        activeFocusOnPress: true
+                        focus: false
 
                         Text {
                             anchors.fill: parent; verticalAlignment: Text.AlignVCenter
                             text: "Search connections..."; font: parent.font; color: Theme.fgDim
                             visible: !parent.text && !parent.activeFocus
                         }
+
+                        Keys.onEscapePressed: { searchField.text = ""; searchField.focus = false; sb.forceActiveFocus() }
                     }
 
                     // Kbd hint
@@ -125,12 +130,23 @@ Rectangle {
                         }
                     }
                 }
+
+                // Click away from search → lose focus
+                MouseArea {
+                    anchors.fill: parent; z: -1
+                    onPressed: function(mouse) {
+                        if (!searchField.activeFocus) {
+                            searchField.forceActiveFocus()
+                        }
+                        mouse.accepted = false
+                    }
+                }
             }
         }
 
         // ─── Section: CONNECTIONS ───
         Item {
-            Layout.fillWidth: true; Layout.preferredHeight: 28; Layout.leftMargin: 12
+            Layout.fillWidth: true; Layout.preferredHeight: 24; Layout.leftMargin: 12; Layout.topMargin: 4
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
@@ -142,17 +158,28 @@ Rectangle {
 
         // ─── Connection List ───
         FlatScrollArea {
-            Layout.fillWidth: true; Layout.fillHeight: true
-            Layout.maximumHeight: sb.height * 0.45
+            Layout.fillWidth: true
+            Layout.preferredHeight: Math.min(connListCol.implicitHeight + 6, sb.height * 0.4)
+            Layout.minimumHeight: 60
 
             ColumnLayout {
+                id: connListCol
                 width: parent.width; spacing: 2
 
                 Repeater {
-                    model: connectionManager ? connectionManager.connections : []
+                    model: {
+                        if (!connectionManager) return []
+                        var all = connectionManager.connections
+                        if (!searchField.text) return all
+                        var q = searchField.text.toLowerCase()
+                        return all.filter(function(c) {
+                            return (c.name || "").toLowerCase().indexOf(q) >= 0 ||
+                                   (c.dbType || "").toLowerCase().indexOf(q) >= 0
+                        })
+                    }
 
                     Rectangle {
-                        Layout.fillWidth: true; Layout.preferredHeight: 42
+                        Layout.fillWidth: true; Layout.preferredHeight: 40
                         Layout.leftMargin: 6; Layout.rightMargin: 6
                         radius: Theme.r6
 
@@ -163,7 +190,6 @@ Rectangle {
                              : isHovered ? Theme.bgHover : "transparent"
                         border.width: isActive ? 1 : 0
                         border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.18)
-
                         Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                         RowLayout {
@@ -208,7 +234,7 @@ Rectangle {
                                 }
                             }
 
-                            // Delete
+                            // Delete button
                             Rectangle {
                                 Layout.preferredWidth: 20; Layout.preferredHeight: 20; radius: Theme.r4
                                 visible: isHovered && !isActive
@@ -223,6 +249,10 @@ Rectangle {
                             id: cMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; z: -1
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             onClicked: function(mouse) {
+                                // Unfocus search when clicking connection
+                                searchField.focus = false
+                                sb.forceActiveFocus()
+
                                 if (mouse.button === Qt.RightButton) {
                                     connCtxMenu.connIndex = index
                                     connCtxMenu.x = mouse.x
@@ -296,19 +326,48 @@ Rectangle {
 
         // ─── Section: SCHEMA ───
         Item {
-            Layout.fillWidth: true; Layout.preferredHeight: 28
+            Layout.fillWidth: true; Layout.preferredHeight: 24
             Layout.leftMargin: 12; Layout.topMargin: 4
 
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: "SCHEMA"
-                font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
-                font.letterSpacing: 1.2; color: Theme.fgDim
+            RowLayout {
+                anchors.fill: parent; anchors.rightMargin: 8
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "SCHEMA"
+                    font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                    font.letterSpacing: 1.2; color: Theme.fgDim
+                }
+
+                Item { Layout.fillWidth: true }
+
+                // Refresh button
+                Rectangle {
+                    visible: databaseService && databaseService.connected
+                    width: 20; height: 20; radius: Theme.r4
+                    color: refreshMa.containsMouse ? Theme.bgHover : "transparent"
+
+                    Text { anchors.centerIn: parent; text: "↻"; font.pixelSize: 12; color: Theme.fgDim }
+                    MouseArea {
+                        id: refreshMa; anchors.fill: parent; hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: schemaService.refresh(databaseService)
+                    }
+                }
             }
         }
 
         SchemaTree {
             Layout.fillWidth: true; Layout.fillHeight: true
+        }
+    }
+
+    // Click anywhere on sidebar background → unfocus search
+    MouseArea {
+        anchors.fill: parent; z: -10
+        onClicked: {
+            searchField.focus = false
+            sb.forceActiveFocus()
         }
     }
 }
