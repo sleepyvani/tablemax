@@ -36,15 +36,12 @@ if(Qt6_FOUND)
 
     qt_add_executable(tablemax src/main.cpp)
 
-    # Theme is a singleton
-    set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
     qt_add_qml_module(tablemax
         URI TableMax
         VERSION 1.0
         QML_FILES
             qml/Main.qml
-            qml/Theme.qml
             qml/Sidebar.qml
             qml/ConnectionDialog.qml
             qml/QueryEditor.qml
@@ -93,6 +90,7 @@ if(Qt6_FOUND)
             src/DatabaseService.h
             src/TabManager.h
             src/SchemaService.h
+            src/ThemeProvider.h
             src/models/QueryResultModel.h
     )
 

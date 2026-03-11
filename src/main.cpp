@@ -7,6 +7,7 @@
 #include "DatabaseService.h"
 #include "TabManager.h"
 #include "SchemaService.h"
+#include "ThemeProvider.h"
 #include "models/QueryResultModel.h"
 
 int main(int argc, char* argv[]) {
@@ -21,6 +22,7 @@ int main(int argc, char* argv[]) {
     TabManager tabManager;
     SchemaService schemaService;
     QueryResultModel resultModel;
+    ThemeProvider theme;
 
     // QML engine
     QQmlApplicationEngine engine;
@@ -32,6 +34,7 @@ int main(int argc, char* argv[]) {
     ctx->setContextProperty("tabManager", &tabManager);
     ctx->setContextProperty("schemaService", &schemaService);
     ctx->setContextProperty("resultModel", &resultModel);
+    ctx->setContextProperty("Theme", &theme);
 
     // Load QML
     engine.addImportPath("qrc:/");
