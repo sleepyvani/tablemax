@@ -218,99 +218,78 @@ T.Dialog {
                 anchors.margins: 16
                 spacing: 14
 
-                // Host + Port
+                // ── SQLite: File Path ──
+                ColumnLayout {
+                    Layout.fillWidth: true; spacing: 5
+                    visible: dlg.dbTypes[dlg.dbTypeIdx] === "sqlite"
+
+                    Text { text: "Database File"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
+                    FlatInput { id: sqliteFileIn; placeholderText: "C:\\path\\to\\database.db"; Layout.fillWidth: true }
+                    Text { text: "Enter the full path to your SQLite database file"; font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim }
+                }
+
+                // ── Host + Port (all except SQLite) ──
                 RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 10
+                    Layout.fillWidth: true; spacing: 10
+                    visible: dlg.dbTypes[dlg.dbTypeIdx] !== "sqlite"
 
                     ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 5
-
-                        Text {
-                            text: "Host"
-                            font.family: Theme.fontFamily; font.pixelSize: 12
-                            color: Theme.mutedForeground
-                        }
-                        FlatInput {
-                            id: hostIn
-                            placeholderText: "localhost"
-                            Layout.fillWidth: true
-                        }
+                        Layout.fillWidth: true; spacing: 5
+                        Text { text: "Host"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
+                        FlatInput { id: hostIn; placeholderText: "localhost"; Layout.fillWidth: true }
                     }
 
                     ColumnLayout {
-                        Layout.preferredWidth: 90
-                        Layout.maximumWidth: 90
-                        spacing: 5
-
-                        Text {
-                            text: "Port"
-                            font.family: Theme.fontFamily; font.pixelSize: 12
-                            color: Theme.mutedForeground
-                        }
+                        Layout.preferredWidth: 90; Layout.maximumWidth: 90; spacing: 5
+                        Text { text: "Port"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
                         FlatInput {
                             id: portIn
-                            placeholderText: {
-                                return ["5432","3306","","27017","6379","1433","3306"][dlg.dbTypeIdx] || ""
-                            }
+                            placeholderText: { return ["5432","3306","","27017","6379","1433","3306"][dlg.dbTypeIdx] || "" }
                             Layout.fillWidth: true
                         }
                     }
                 }
 
-                // Username + Password
+                // ── Username + Password (not SQLite, not Redis) ──
                 RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 10
+                    Layout.fillWidth: true; spacing: 10
+                    visible: dlg.dbTypes[dlg.dbTypeIdx] !== "sqlite" && dlg.dbTypes[dlg.dbTypeIdx] !== "redis"
 
                     ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 5
-
-                        Text {
-                            text: "Username"
-                            font.family: Theme.fontFamily; font.pixelSize: 12
-                            color: Theme.mutedForeground
-                        }
+                        Layout.fillWidth: true; spacing: 5
+                        Text { text: "Username"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
                         FlatInput {
                             id: userIn
-                            placeholderText: "admin"
+                            placeholderText: { var t = dlg.dbTypes[dlg.dbTypeIdx]; return t === "postgres" ? "postgres" : t === "mongodb" ? "admin" : "root" }
                             Layout.fillWidth: true
                         }
                     }
 
                     ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 5
-
-                        Text {
-                            text: "Password"
-                            font.family: Theme.fontFamily; font.pixelSize: 12
-                            color: Theme.mutedForeground
-                        }
-                        FlatInput {
-                            id: passIn
-                            placeholderText: "••••••••"
-                            echoMode: TextInput.Password
-                            Layout.fillWidth: true
-                        }
+                        Layout.fillWidth: true; spacing: 5
+                        Text { text: "Password"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
+                        FlatInput { id: passIn; placeholderText: "••••••••"; echoMode: TextInput.Password; Layout.fillWidth: true }
                     }
                 }
 
-                // Database
+                // ── Redis: Password only ──
                 ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 5
+                    Layout.fillWidth: true; spacing: 5
+                    visible: dlg.dbTypes[dlg.dbTypeIdx] === "redis"
 
-                    Text {
-                        text: "Database"
-                        font.family: Theme.fontFamily; font.pixelSize: 12
-                        color: Theme.mutedForeground
-                    }
+                    Text { text: "Password (optional)"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
+                    FlatInput { id: redisPassIn; placeholderText: "Leave empty if no auth"; echoMode: TextInput.Password; Layout.fillWidth: true }
+                }
+
+                // ── Database name (not SQLite, not Redis) ──
+                ColumnLayout {
+                    Layout.fillWidth: true; spacing: 5
+                    visible: dlg.dbTypes[dlg.dbTypeIdx] !== "sqlite" && dlg.dbTypes[dlg.dbTypeIdx] !== "redis"
+
+                    Text { text: "Database"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
                     FlatInput {
                         id: dbNameIn
-                        placeholderText: "mydb"
+                        placeholderText: { var t = dlg.dbTypes[dlg.dbTypeIdx]; return t === "postgres" ? "postgres" : t === "mongodb" ? "admin" : "mydb" }
                         Layout.fillWidth: true
                     }
                 }
@@ -497,17 +476,20 @@ T.Dialog {
 
     function buildConnStr(): string {
         if (dlg.modeIdx === 1) return connStrIn.text
+        var t = dlg.dbTypes[dlg.dbTypeIdx]
+        if (t === "sqlite") return sqliteFileIn.text
         var h = hostIn.text || "localhost"
         var p = portIn.text || ""
         var u = userIn.text || ""
         var pw = passIn.text || ""
         var db = dbNameIn.text || ""
-        var t = dlg.dbTypes[dlg.dbTypeIdx]
+        if (t === "redis") {
+            var rp = redisPassIn.text || ""
+            return "redis://" + (rp ? ":" + rp + "@" : "") + h + (p ? ":" + p : "")
+        }
         if (t === "postgres") return "postgresql://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
         if (t === "mysql" || t === "mariadb") return "mysql://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
         if (t === "mongodb") return "mongodb://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
-        if (t === "redis") return "redis://" + h + (p ? ":" + p : "")
-        if (t === "sqlite") return db || h
         if (t === "mssql") return "Server=" + h + (p ? "," + p : "") + ";Database=" + db + (u ? ";User=" + u : "") + (pw ? ";Password=" + pw : "")
         return h
     }
@@ -542,6 +524,8 @@ T.Dialog {
         passIn.text = ""
         dbNameIn.text = ""
         connStrIn.text = ""
+        sqliteFileIn.text = ""
+        redisPassIn.text = ""
         dlg.dbTypeIdx = 0
         dlg.modeIdx = 0
         dlg.testStatus = ""

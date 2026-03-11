@@ -6,6 +6,9 @@ Rectangle {
     id: sb
     color: Theme.bgSidebar
 
+    // Clipboard helper
+    TextEdit { id: clipHelper; visible: false }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -166,20 +169,16 @@ Rectangle {
                         RowLayout {
                             anchors.fill: parent; anchors.leftMargin: 10; anchors.rightMargin: 8; spacing: 8
 
-                            // Color dot with pulse for active
-                            Item {
-                                Layout.preferredWidth: 10; Layout.preferredHeight: 10
-
-                                Rectangle {
-                                    anchors.centerIn: parent; width: 8; height: 8; radius: 4
-                                    color: modelData.color || Theme.accent
+                            // Database icon
+                            Image {
+                                Layout.preferredWidth: 18; Layout.preferredHeight: 18
+                                source: {
+                                    var t = (modelData.dbType || "postgres").toLowerCase()
+                                    return "qrc:/TableMax/icons/" + t + ".svg"
                                 }
-                                Rectangle {
-                                    anchors.centerIn: parent; width: 12; height: 12; radius: 6
-                                    color: "transparent"; border.width: isActive ? 1.5 : 0
-                                    border.color: Qt.rgba((modelData.color || Theme.accent).r, (modelData.color || Theme.accent).g, (modelData.color || Theme.accent).b, 0.3)
-                                    visible: isActive
-                                }
+                                sourceSize: Qt.size(18, 18)
+                                fillMode: Image.PreserveAspectFit
+                                opacity: isActive ? 1.0 : 0.6
                             }
 
                             ColumnLayout {
@@ -222,7 +221,52 @@ Rectangle {
 
                         MouseArea {
                             id: cMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; z: -1
-                            onClicked: { connectionManager.activeIndex = index; databaseService.connect(modelData.dbType, modelData.connectionString) }
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked: function(mouse) {
+                                if (mouse.button === Qt.RightButton) {
+                                    connCtxMenu.connIndex = index
+                                    connCtxMenu.x = mouse.x
+                                    connCtxMenu.y = mouse.y
+                                    connCtxMenu.open()
+                                } else {
+                                    connectionManager.activeIndex = index
+                                    databaseService.connect(modelData.dbType, modelData.connectionString)
+                                }
+                            }
+                        }
+
+                        FlatContextMenu {
+                            id: connCtxMenu
+                            property int connIndex: -1
+                            menuModel: ["Connect", "Edit", "-", "Copy Connection String", "Duplicate", "-", "Delete"]
+                            onMenuItemClicked: function(idx, text) {
+                                var ci = connCtxMenu.connIndex
+                                if (text === "Connect") {
+                                    connectionManager.activeIndex = ci
+                                    var c = connectionManager.get(ci)
+                                    databaseService.connect(c.dbType, c.connectionString)
+                                } else if (text === "Edit") {
+                                    connDialog.editIdx = ci
+                                    connDialog.open()
+                                } else if (text === "Copy Connection String") {
+                                    var cc = connectionManager.get(ci)
+                                    if (cc) {
+                                        clipHelper.text = cc.connectionString || ""
+                                        clipHelper.selectAll()
+                                        clipHelper.copy()
+                                    }
+                                } else if (text === "Duplicate") {
+                                    var dc = connectionManager.get(ci)
+                                    if (dc) connectionManager.add({
+                                        name: (dc.name || "Untitled") + " (copy)",
+                                        dbType: dc.dbType,
+                                        connectionString: dc.connectionString,
+                                        color: dc.color
+                                    })
+                                } else if (text === "Delete") {
+                                    connectionManager.remove(ci)
+                                }
+                            }
                         }
                     }
                 }
