@@ -68,7 +68,7 @@ Rectangle {
         // ─── Section: Connections ───
         Item {
             Layout.fillWidth: true; Layout.preferredHeight: 28; Layout.leftMargin: Theme.s12
-            Text { anchors.verticalCenter: parent.verticalCenter; text: "CONNECTIONS"; font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium; letterSpacing: 1; color: Theme.fgDim }
+            Text { anchors.verticalCenter: parent.verticalCenter; text: "CONNECTIONS"; font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium; font.letterSpacing: 1; color: Theme.fgDim }
         }
 
         // ─── List ───
@@ -106,7 +106,7 @@ Rectangle {
                             ColumnLayout {
                                 spacing: 0; Layout.fillWidth: true
                                 Text { text: modelData.name || "Unnamed"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: active ? Font.DemiBold : Font.Normal; color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true }
-                                Text { text: (modelData.dbType || "").toUpperCase(); font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim; letterSpacing: 0.3 }
+                                Text { text: (modelData.dbType || "").toUpperCase(); font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim; font.letterSpacing: 0.3 }
                             }
 
                             Rectangle {
@@ -143,7 +143,7 @@ Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 28; Layout.leftMargin: Theme.s12; Layout.topMargin: Theme.s4
             RowLayout {
                 anchors.fill: parent
-                Text { text: "SCHEMA"; font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium; letterSpacing: 1; color: Theme.fgDim; Layout.fillWidth: true }
+                Text { text: "SCHEMA"; font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium; font.letterSpacing: 1; color: Theme.fgDim; Layout.fillWidth: true }
                 Rectangle {
                     width: 22; height: 22; radius: Theme.r4; Layout.rightMargin: Theme.s8
                     color: refMa.containsMouse ? Theme.bgHover : "transparent"

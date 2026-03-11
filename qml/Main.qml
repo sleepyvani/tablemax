@@ -62,7 +62,7 @@ ApplicationWindow {
                             Rectangle {
                                 anchors.fill: parent; anchors.topMargin: 4; anchors.bottomMargin: 0
                                 anchors.leftMargin: 2; anchors.rightMargin: 2
-                                radius: Qt.size(Theme.r6, Theme.r6)
+                                radius: Theme.r6
                                 color: active ? Theme.bgSurface : tabMa.containsMouse ? Theme.bgHover : "transparent"
                                 Behavior on color { ColorAnimation { duration: Theme.fast } }
 
