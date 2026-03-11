@@ -110,45 +110,31 @@ else()
     message(WARNING "MSSQL plugin: DISABLED (ODBC not available on this platform)")
 endif()
 
-# ─── MongoDB (mongoc driver) ───
-set(MONGOC_SEARCH_PATHS
-    "C:/mongo-c-driver"
-    "C:/Program Files/mongo-c-driver"
-    "$ENV{USERPROFILE}/Downloads/mongo-c-driver-2.2.3/_install"
-)
-set(MONGOC_FOUND FALSE)
-foreach(MC_PATH ${MONGOC_SEARCH_PATHS})
-    if(EXISTS "${MC_PATH}/include/libmongoc-1.0/mongoc/mongoc.h" OR EXISTS "${MC_PATH}/include/mongoc/mongoc.h")
-        set(MONGOC_ROOT "${MC_PATH}")
-        set(MONGOC_FOUND TRUE)
-        break()
-    endif()
-endforeach()
-
-if(MONGOC_FOUND)
+# ─── MongoDB (mongoc v2 driver) ───
+set(MONGOC_ROOT "C:/mongo-c-driver")
+if(EXISTS "${MONGOC_ROOT}/include/mongoc-2.2.3/mongoc/mongoc.h")
     add_library(mongo SHARED plugins/mongodb/mongo_plugin.cpp)
     target_include_directories(mongo PRIVATE core/include
-        "${MONGOC_ROOT}/include/libmongoc-1.0"
-        "${MONGOC_ROOT}/include/libbson-1.0"
+        "${MONGOC_ROOT}/include/mongoc-2.2.3"
+        "${MONGOC_ROOT}/include/bson-2.2.3"
     )
-    if(EXISTS "${MONGOC_ROOT}/lib/mongoc-1.0.lib")
-        target_link_libraries(mongo PRIVATE
-            "${MONGOC_ROOT}/lib/mongoc-1.0.lib"
-            "${MONGOC_ROOT}/lib/bson-1.0.lib"
-        )
-    elseif(EXISTS "${MONGOC_ROOT}/lib/libmongoc-1.0.a")
-        target_link_libraries(mongo PRIVATE
-            "${MONGOC_ROOT}/lib/libmongoc-1.0.a"
-            "${MONGOC_ROOT}/lib/libbson-1.0.a"
-        )
-    endif()
+    target_link_libraries(mongo PRIVATE
+        "${MONGOC_ROOT}/lib/libmongoc2.dll.lib"
+        "${MONGOC_ROOT}/lib/libbson2.dll.lib"
+    )
     if(WIN32)
         set_target_properties(mongo PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+        # Copy mongoc DLLs to build dir
+        add_custom_command(TARGET mongo POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${MONGOC_ROOT}/bin/libmongoc2.dll"
+                "${MONGOC_ROOT}/bin/libbson2.dll"
+                $<TARGET_FILE_DIR:mongo>
+        )
     endif()
     message(STATUS "MongoDB plugin: ENABLED (${MONGOC_ROOT})")
 else()
-    message(WARNING "MongoDB plugin: DISABLED (mongoc not found)")
-    message(WARNING "  Build mongoc from source or install via vcpkg")
+    message(WARNING "MongoDB plugin: DISABLED (mongoc not found at ${MONGOC_ROOT})")
 endif()
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

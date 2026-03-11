@@ -6,6 +6,7 @@
 #include <QString>
 #include <QThread>
 #include "../core/include/engine.h"
+#include "models/QueryResultModel.h"
 
 using namespace std;
 
@@ -53,6 +54,65 @@ public:
         if (!ok) setError(QString::fromStdString(engine_.last_error()));
         else setError("");
         return ok;
+    }
+
+    Q_INVOKABLE QVariantMap executeQuery(const QString& query, QObject* model) {
+        QVariantMap result;
+        result["success"] = false;
+        result["rowCount"] = 0;
+        result["execTime"] = 0.0;
+        result["error"] = "";
+
+        if (connId_ < 0) {
+            result["error"] = "Not connected";
+            setError("Not connected");
+            return result;
+        }
+
+        setLoading(true);
+
+        auto stream = engine_.execute(connId_, query.toStdString());
+        if (!stream) {
+            auto err = QString::fromStdString(engine_.last_error());
+            result["error"] = err;
+            setError(err);
+            setLoading(false);
+            return result;
+        }
+
+        // Read columns
+        auto cols = stream->columns();
+        QStringList colNames;
+        for (auto& c : cols) colNames << QString::fromStdString(c.name);
+
+        // Read all rows
+        QVariantList rows;
+        while (stream->has_more()) {
+            auto chunk = stream->next_chunk(500);
+            for (auto& row : chunk) {
+                QVariantList rowData;
+                for (auto& [key, val] : row) {
+                    rowData << QString::fromStdString(val);
+                }
+                rows << QVariant(rowData);
+            }
+        }
+
+        auto meta = stream->meta();
+        stream->close();
+
+        // Populate the model
+        auto* rm = qobject_cast<QueryResultModel*>(model);
+        if (rm) {
+            rm->setData(colNames, rows);
+        }
+
+        result["success"] = true;
+        result["rowCount"] = (int)rows.size();
+        result["execTime"] = meta.execution_time_ms;
+        setError("");
+        setLoading(false);
+        return result;
     }
 
     Q_INVOKABLE QStringList listDatabases() {

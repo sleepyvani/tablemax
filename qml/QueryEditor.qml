@@ -5,6 +5,20 @@ import QtQuick.Layouts
 Rectangle {
     color: Theme.bg
 
+    function executeCurrentQuery() {
+        if (!tabManager || !databaseService || !databaseService.connected) return
+        var t = tabManager.getTab(tabManager.currentIndex)
+        var query = (t.content || "").trim()
+        if (!query) return
+
+        var res = databaseService.executeQuery(query, resultModel)
+        if (res.success) {
+            root.toast(res.rowCount + " rows returned (" + res.execTime.toFixed(1) + " ms)", "success")
+        } else {
+            root.toast("Error: " + res.error, "error")
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent; spacing: 0
 
@@ -19,6 +33,7 @@ Rectangle {
                 Rectangle {
                     width: runContent.implicitWidth + 20; height: 26; radius: Theme.r6
                     color: runMa.containsMouse ? Theme.accentHover : Theme.accent
+                    opacity: databaseService && databaseService.connected ? 1.0 : 0.4
                     scale: runMa.pressed ? 0.96 : 1
                     Behavior on scale { NumberAnimation { duration: Theme.fast } }
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
@@ -30,7 +45,7 @@ Rectangle {
                     }
                     MouseArea {
                         id: runMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                        onClicked: { if (tabManager) { var t = tabManager.getTab(tabManager.currentIndex); if (t.content) console.log("EXEC:", t.content) } }
+                        onClicked: executeCurrentQuery()
                     }
                 }
 
@@ -129,5 +144,5 @@ Rectangle {
 
     property real lineHeight: 20
 
-    Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { runMa.clicked(undefined); e.accepted = true } }
+    Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { executeCurrentQuery(); e.accepted = true } }
 }
