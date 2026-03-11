@@ -428,9 +428,13 @@ T.Dialog {
 
             Behavior on Layout.preferredHeight { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
-            color: dlg.testStatus === "ok" ? "#0d2818" : dlg.testStatus === "fail" ? "#2d0f0f" : Qt.rgba(1,1,1,0.03)
+            color: dlg.testStatus === "ok" ? Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.08)
+                 : dlg.testStatus === "fail" ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.08)
+                 : Qt.rgba(Theme.fgMuted.r, Theme.fgMuted.g, Theme.fgMuted.b, 0.05)
             border.width: 1
-            border.color: dlg.testStatus === "ok" ? "#1a4d2e" : dlg.testStatus === "fail" ? "#4d1a1a" : Theme.border
+            border.color: dlg.testStatus === "ok" ? Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.2)
+                        : dlg.testStatus === "fail" ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.2)
+                        : Theme.border
 
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 6
@@ -438,12 +442,12 @@ T.Dialog {
                 Text {
                     text: dlg.testStatus === "ok" ? "✓" : dlg.testStatus === "fail" ? "✗" : "⟳"
                     font.pixelSize: 13; font.weight: Font.Bold
-                    color: dlg.testStatus === "ok" ? "#4ade80" : dlg.testStatus === "fail" ? "#f87171" : Theme.mutedForeground
+                    color: dlg.testStatus === "ok" ? Theme.success : dlg.testStatus === "fail" ? Theme.error : Theme.fgMuted
                 }
                 Text {
                     text: dlg.testMsg
                     font.family: Theme.fontFamily; font.pixelSize: 12
-                    color: dlg.testStatus === "ok" ? "#4ade80" : dlg.testStatus === "fail" ? "#f87171" : Theme.mutedForeground
+                    color: dlg.testStatus === "ok" ? Theme.success : dlg.testStatus === "fail" ? Theme.error : Theme.fgMuted
                     Layout.fillWidth: true; elide: Text.ElideRight
                 }
             }

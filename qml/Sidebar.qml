@@ -10,180 +10,210 @@ Rectangle {
         anchors.fill: parent
         spacing: 0
 
-        // Header
+        // ─── Header ───
         RowLayout {
             Layout.fillWidth: true
-            Layout.preferredHeight: 38
-            Layout.leftMargin: Theme.s12
-            Layout.rightMargin: Theme.s8
-            spacing: Theme.s8
+            Layout.preferredHeight: 42
+            Layout.leftMargin: 12
+            Layout.rightMargin: 8
+            spacing: 8
 
             Rectangle {
-                Layout.preferredWidth: 22
-                Layout.preferredHeight: 22
-                radius: 6
+                Layout.preferredWidth: 24; Layout.preferredHeight: 24; radius: 7
                 gradient: Gradient {
                     GradientStop { position: 0; color: "#6366f1" }
                     GradientStop { position: 1; color: "#8b5cf6" }
                 }
-                Text { anchors.centerIn: parent; text: "T"; font.pixelSize: 11; font.weight: Font.Bold; color: "#fff" }
+                Text {
+                    anchors.centerIn: parent; text: "T"
+                    font.pixelSize: 12; font.weight: Font.Bold; color: "#fff"; font.family: Theme.sans
+                }
             }
 
-            Text {
-                text: "TableMax"
-                font.family: Theme.sans
-                font.pixelSize: Theme.t14
-                font.weight: Font.DemiBold
-                color: Theme.fg
-                Layout.fillWidth: true
+            ColumnLayout {
+                Layout.fillWidth: true; spacing: 0
+                Text {
+                    text: "TableMax"
+                    font.family: Theme.sans; font.pixelSize: 13; font.weight: Font.DemiBold
+                    color: Theme.fg; font.letterSpacing: -0.2
+                }
+                Text {
+                    text: "v0.2.0"
+                    font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim
+                }
             }
 
+            // Theme toggle
             Rectangle {
-                Layout.preferredWidth: 24
-                Layout.preferredHeight: 24
-                radius: Theme.r6
+                Layout.preferredWidth: 24; Layout.preferredHeight: 24; radius: Theme.r6
+                color: themeSbMa.containsMouse ? Theme.bgHover : "transparent"
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: Theme.darkMode ? "☾" : "☀"
+                    font.pixelSize: 12; color: Theme.fgMuted
+                }
+                MouseArea {
+                    id: themeSbMa; anchors.fill: parent; hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor; onClicked: Theme.toggleTheme()
+                }
+            }
+
+            // Add connection
+            Rectangle {
+                Layout.preferredWidth: 24; Layout.preferredHeight: 24; radius: Theme.r6
                 color: addMa.containsMouse ? Theme.bgHover : "transparent"
-                Text { anchors.centerIn: parent; text: "+"; font.pixelSize: 15; color: Theme.fgMuted }
-                MouseArea { id: addMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: connDialog.open() }
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
+
+                Text {
+                    anchors.centerIn: parent; text: "+"
+                    font.pixelSize: 15; color: Theme.fgMuted
+                }
+                MouseArea {
+                    id: addMa; anchors.fill: parent; hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor; onClicked: connDialog.open()
+                }
             }
         }
 
         Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border }
 
-        // Search
+        // ─── Search ───
         Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 44
-            Layout.leftMargin: Theme.s8
-            Layout.rightMargin: Theme.s8
+            Layout.fillWidth: true; Layout.preferredHeight: 44
+            Layout.leftMargin: 8; Layout.rightMargin: 8
 
             Rectangle {
-                anchors.centerIn: parent
-                width: parent.width; height: 30
-                radius: Theme.r6
-                color: Theme.bgSurface
+                anchors.centerIn: parent; width: parent.width; height: 30
+                radius: Theme.r6; color: Theme.bgSurface
                 border.width: 1
                 border.color: searchField.activeFocus ? Theme.borderFocus : Theme.border
                 Behavior on border.color { ColorAnimation { duration: Theme.normal } }
 
                 RowLayout {
-                    anchors.fill: parent
-                    anchors.leftMargin: Theme.s8
-                    anchors.rightMargin: Theme.s8
-                    spacing: Theme.s6
+                    anchors.fill: parent; anchors.leftMargin: 8; anchors.rightMargin: 8; spacing: 6
 
                     Text { text: "⌕"; font.pixelSize: 12; color: Theme.fgDim }
 
                     TextInput {
                         id: searchField
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        Layout.fillWidth: true; Layout.fillHeight: true
                         verticalAlignment: TextInput.AlignVCenter
-                        font.family: Theme.sans
-                        font.pixelSize: Theme.t12
-                        color: Theme.fg
-                        selectByMouse: true
-                        clip: true
+                        font.family: Theme.sans; font.pixelSize: 12; color: Theme.fg
+                        selectByMouse: true; clip: true
 
                         Text {
-                            anchors.fill: parent
-                            verticalAlignment: Text.AlignVCenter
-                            text: "Search..."
-                            font: parent.font
-                            color: Theme.fgDim
+                            anchors.fill: parent; verticalAlignment: Text.AlignVCenter
+                            text: "Search connections..."; font: parent.font; color: Theme.fgDim
                             visible: !parent.text && !parent.activeFocus
+                        }
+                    }
+
+                    // Kbd hint
+                    Rectangle {
+                        visible: !searchField.activeFocus && !searchField.text
+                        height: 16; width: 18; radius: 3
+                        color: Theme.bgHover; border.width: 1; border.color: Theme.border
+
+                        Text {
+                            anchors.centerIn: parent; text: "/"
+                            font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim
                         }
                     }
                 }
             }
         }
 
-        // Section label
+        // ─── Section: CONNECTIONS ───
         Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 28
-            Layout.leftMargin: Theme.s12
+            Layout.fillWidth: true; Layout.preferredHeight: 28; Layout.leftMargin: 12
+
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 text: "CONNECTIONS"
-                font.family: Theme.sans
-                font.pixelSize: 10
-                font.weight: Font.Medium
-                font.letterSpacing: 1
-                color: Theme.fgDim
+                font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                font.letterSpacing: 1.2; color: Theme.fgDim
             }
         }
 
-        // Connection list
+        // ─── Connection List ───
         FlatScrollArea {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.fillWidth: true; Layout.fillHeight: true
             Layout.maximumHeight: sb.height * 0.45
 
             ColumnLayout {
-                width: parent.width
-                spacing: Theme.s2
+                width: parent.width; spacing: 2
 
                 Repeater {
                     model: connectionManager ? connectionManager.connections : []
 
                     Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 40
-                        Layout.leftMargin: Theme.s6
-                        Layout.rightMargin: Theme.s6
+                        Layout.fillWidth: true; Layout.preferredHeight: 42
+                        Layout.leftMargin: 6; Layout.rightMargin: 6
                         radius: Theme.r6
 
                         property bool isActive: connectionManager.activeIndex === index
                         property bool isHovered: cMa.containsMouse
 
-                        color: isActive ? Theme.accentDim : isHovered ? Theme.bgHover : "transparent"
+                        color: isActive ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
+                             : isHovered ? Theme.bgHover : "transparent"
                         border.width: isActive ? 1 : 0
-                        border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2)
+                        border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.18)
 
                         Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                         RowLayout {
-                            anchors.fill: parent
-                            anchors.leftMargin: 10
-                            anchors.rightMargin: 8
-                            spacing: Theme.s8
+                            anchors.fill: parent; anchors.leftMargin: 10; anchors.rightMargin: 8; spacing: 8
 
-                            Rectangle {
-                                Layout.preferredWidth: 8
-                                Layout.preferredHeight: 8
-                                radius: 4
-                                color: modelData.color || Theme.accent
+                            // Color dot with pulse for active
+                            Item {
+                                Layout.preferredWidth: 10; Layout.preferredHeight: 10
+
+                                Rectangle {
+                                    anchors.centerIn: parent; width: 8; height: 8; radius: 4
+                                    color: modelData.color || Theme.accent
+                                }
+                                Rectangle {
+                                    anchors.centerIn: parent; width: 12; height: 12; radius: 6
+                                    color: "transparent"; border.width: isActive ? 1.5 : 0
+                                    border.color: Qt.rgba((modelData.color || Theme.accent).r, (modelData.color || Theme.accent).g, (modelData.color || Theme.accent).b, 0.3)
+                                    visible: isActive
+                                }
                             }
 
                             ColumnLayout {
-                                Layout.fillWidth: true
-                                spacing: 1
+                                Layout.fillWidth: true; spacing: 1
 
                                 Text {
                                     text: modelData.name || "Unnamed"
-                                    font.family: Theme.sans
-                                    font.pixelSize: Theme.t12
+                                    font.family: Theme.sans; font.pixelSize: 12
                                     font.weight: isActive ? Font.DemiBold : Font.Normal
-                                    color: Theme.fg
-                                    elide: Text.ElideRight
-                                    Layout.fillWidth: true
+                                    color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true
                                 }
                                 Text {
                                     text: (modelData.dbType || "").toUpperCase()
-                                    font.family: Theme.sans
-                                    font.pixelSize: 10
-                                    color: Theme.fgDim
-                                    font.letterSpacing: 0.3
+                                    font.family: Theme.mono; font.pixelSize: 9
+                                    color: Theme.fgDim; font.letterSpacing: 0.5
                                 }
                             }
 
+                            // Status pill
                             Rectangle {
-                                Layout.preferredWidth: 20
-                                Layout.preferredHeight: 20
-                                radius: Theme.r4
-                                visible: isHovered || isActive
-                                color: delMa.containsMouse ? Qt.rgba(1, 0.3, 0.3, 0.12) : "transparent"
+                                visible: isActive && databaseService.connected
+                                Layout.preferredHeight: 14; Layout.preferredWidth: 14; radius: 7
+                                color: Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.15)
+
+                                Rectangle {
+                                    anchors.centerIn: parent; width: 6; height: 6; radius: 3; color: Theme.success
+                                }
+                            }
+
+                            // Delete
+                            Rectangle {
+                                Layout.preferredWidth: 20; Layout.preferredHeight: 20; radius: Theme.r4
+                                visible: isHovered && !isActive
+                                color: delMa.containsMouse ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.1) : "transparent"
 
                                 Text { anchors.centerIn: parent; text: "×"; font.pixelSize: 12; color: delMa.containsMouse ? Theme.error : Theme.fgDim }
                                 MouseArea { id: delMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: connectionManager.remove(index) }
@@ -191,30 +221,28 @@ Rectangle {
                         }
 
                         MouseArea {
-                            id: cMa
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            z: -1
-                            onClicked: {
-                                connectionManager.activeIndex = index
-                                databaseService.connect(modelData.dbType, modelData.connectionString)
-                            }
+                            id: cMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; z: -1
+                            onClicked: { connectionManager.activeIndex = index; databaseService.connect(modelData.dbType, modelData.connectionString) }
                         }
                     }
                 }
 
                 // Empty state
                 Item {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 50
+                    Layout.fillWidth: true; Layout.preferredHeight: 60
                     visible: !connectionManager || connectionManager.connections.length === 0
 
                     ColumnLayout {
-                        anchors.centerIn: parent
-                        spacing: 2
-                        Text { text: "No connections"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter }
-                        Text { text: "Press + to add"; font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.5; Layout.alignment: Qt.AlignHCenter }
+                        anchors.centerIn: parent; spacing: 4
+
+                        Rectangle {
+                            Layout.alignment: Qt.AlignHCenter; width: 32; height: 32; radius: Theme.r8
+                            color: Theme.bgSurface; border.width: 1; border.color: Theme.border
+
+                            Text { anchors.centerIn: parent; text: "⊕"; font.pixelSize: 14; color: Theme.fgDim }
+                        }
+                        Text { text: "No connections"; font.family: Theme.sans; font.pixelSize: 12; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter }
+                        Text { text: "Press + to add one"; font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim; opacity: 0.5; Layout.alignment: Qt.AlignHCenter }
                     }
                 }
             }
@@ -222,27 +250,21 @@ Rectangle {
 
         Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border }
 
-        // Schema
+        // ─── Section: SCHEMA ───
         Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 28
-            Layout.leftMargin: Theme.s12
-            Layout.topMargin: Theme.s4
+            Layout.fillWidth: true; Layout.preferredHeight: 28
+            Layout.leftMargin: 12; Layout.topMargin: 4
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 text: "SCHEMA"
-                font.family: Theme.sans
-                font.pixelSize: 10
-                font.weight: Font.Medium
-                font.letterSpacing: 1
-                color: Theme.fgDim
+                font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                font.letterSpacing: 1.2; color: Theme.fgDim
             }
         }
 
         SchemaTree {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.fillWidth: true; Layout.fillHeight: true
         }
     }
 }

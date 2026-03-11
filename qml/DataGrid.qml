@@ -45,7 +45,7 @@ Rectangle {
 
             delegate: Rectangle {
                 implicitWidth: 100; implicitHeight: 28
-                color: row === 0 ? Theme.bgElevated : row % 2 === 0 ? "transparent" : Qt.rgba(1, 1, 1, 0.008)
+                color: row === 0 ? Theme.bgElevated : row % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
 
                 Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.4 }
                 Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.3 }

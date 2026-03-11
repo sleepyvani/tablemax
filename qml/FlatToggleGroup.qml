@@ -32,7 +32,7 @@ Rectangle {
 
                 color: root.currentIndex === index
                        ? Theme.background
-                       : (toggleMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.03) : "transparent")
+                       : (toggleMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.04) : "transparent")
 
                 Behavior on color {
                     ColorAnimation { duration: Theme.duration; easing.type: Easing.OutCubic }

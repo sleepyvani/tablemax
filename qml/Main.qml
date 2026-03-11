@@ -76,4 +76,5 @@ ApplicationWindow {
     Shortcut { sequence: "Ctrl+N"; onActivated: tabManager.addTab() }
     Shortcut { sequence: "Ctrl+W"; onActivated: tabManager.closeTab(tabManager.currentIndex) }
     Shortcut { sequence: "Ctrl+B"; onActivated: root.showSidebar = !root.showSidebar }
+    Shortcut { sequence: "Ctrl+T"; onActivated: Theme.toggleTheme() }
 }

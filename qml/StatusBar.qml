@@ -27,6 +27,31 @@ Rectangle {
 
         Item { Layout.fillWidth: true }
 
+        // Theme toggle
+        Rectangle {
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 16
+            radius: Theme.r4
+            color: themeMa.containsMouse ? Theme.bgHover : "transparent"
+
+            Text {
+                anchors.centerIn: parent
+                text: Theme.darkMode ? "☾" : "☀"
+                font.pixelSize: 10
+                color: Theme.fgMuted
+            }
+
+            MouseArea {
+                id: themeMa
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: Theme.toggleTheme()
+            }
+        }
+
+        Rectangle { width: 1; height: 10; color: Theme.border }
+
         Text {
             text: "●"; font.pixelSize: 7
             color: databaseService && databaseService.error !== "" ? Theme.error : "transparent"
