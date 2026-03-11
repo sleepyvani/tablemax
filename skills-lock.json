@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "pyside6-qml-architecture": {
+      "source": "ds-codi/project-memory-mcp",
+      "sourceType": "github",
+      "computedHash": "349c458b19774cf0e3560a07b2dcdc673d58dd0ec281ff4aa341742dd40f36cd"
+    },
+    "pyside6-qml-views": {
+      "source": "ds-codi/project-memory-mcp",
+      "sourceType": "github",
+      "computedHash": "e7a74bc668991c37045cea8d21192db1837e2aa9f11d3e97bf4ad082185044a6"
+    },
+    "qt-qml": {
+      "source": "l3digital-net/claude-code-plugins",
+      "sourceType": "github",
+      "computedHash": "03fa8cb9deb46db3983b792f1665a72749f369d1c368434818cdf5d37f68271b"
+    }
+  }
+}
