@@ -109,4 +109,5 @@ QtObject {
     readonly property int duration: normal
     readonly property int durationFast: fast
     readonly property int durationSlow: slow
+    readonly property int durationModal: slow
 }

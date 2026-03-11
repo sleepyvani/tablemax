@@ -13,7 +13,10 @@ Rectangle {
 
             Rectangle {
                 anchors.fill: parent; radius: 14
-                gradient: Gradient { GradientStop { position: 0; color: "#6366f1" }; GradientStop { position: 1; color: "#8b5cf6" } }
+                gradient: Gradient {
+                    GradientStop { position: 0; color: "#6366f1" }
+                    GradientStop { position: 1; color: "#8b5cf6" }
+                }
                 Text { anchors.centerIn: parent; text: "T"; font.pixelSize: 24; font.weight: Font.Bold; color: "#fff" }
             }
 

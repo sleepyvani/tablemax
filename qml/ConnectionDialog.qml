@@ -40,7 +40,11 @@ FlatDialog {
             Rectangle {
                 width: testRow.implicitWidth + 16; height: 28; radius: Theme.r6
                 color: testMa.containsMouse ? Theme.bgHover : "transparent"; border.width: 1; border.color: Theme.border
-                RowLayout { id: testRow; anchors.centerIn: parent; spacing: Theme.s4; Text { text: "⚡"; font.pixelSize: 11 }; Text { text: "Test"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg } }
+                RowLayout {
+                    id: testRow; anchors.centerIn: parent; spacing: Theme.s4
+                    Text { text: "⚡"; font.pixelSize: 11 }
+                    Text { text: "Test"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg }
+                }
                 MouseArea { id: testMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { var ok = databaseService.testConnection(dbType.currentText, connStr.text); root.toast(ok ? "Connection OK!" : "Failed", ok ? "success" : "error") } }
             }
 

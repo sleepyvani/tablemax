@@ -111,7 +111,11 @@ Rectangle {
 
                     cursorDelegate: Rectangle {
                         width: 2; color: Theme.accent; visible: parent.activeFocus
-                        SequentialAnimation on opacity { loops: Animation.Infinite; NumberAnimation { to: 0.2; duration: 500 }; NumberAnimation { to: 1; duration: 400 } }
+                        SequentialAnimation on opacity {
+                            loops: Animation.Infinite
+                            NumberAnimation { to: 0.2; duration: 500 }
+                            NumberAnimation { to: 1; duration: 400 }
+                        }
                     }
                 }
 
