@@ -1,4 +1,14 @@
 #include "plugin_interface.h"
+
+#ifdef _WIN32
+    #ifndef NOMINMAX
+    #define NOMINMAX
+    #endif
+    #define byte win_byte_override
+    #include <windows.h>
+    #undef byte
+#endif
+
 #include <mongoc/mongoc.h>
 #include <bson/bson.h>
 #include <chrono>
@@ -144,7 +154,7 @@ public:
         auto t1 = chrono::steady_clock::now();
 
         // Convert reply to rows
-        char* json = bson_as_json(&reply, nullptr);
+        char* json = bson_as_relaxed_extended_json(&reply, nullptr);
         bson_destroy(&reply);
 
         vector<ColumnInfo> cols = {{ "result", "json", true, false, "" }};
