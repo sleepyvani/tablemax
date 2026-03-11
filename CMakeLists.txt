@@ -42,6 +42,7 @@ if(Qt6_FOUND)
         VERSION 1.0
         QML_FILES
             qml/Main.qml
+            qml/TabBar_.qml
             qml/Sidebar.qml
             qml/ConnectionDialog.qml
             qml/QueryEditor.qml
@@ -92,6 +93,14 @@ if(Qt6_FOUND)
             src/SchemaService.h
             src/ThemeProvider.h
             src/models/QueryResultModel.h
+        RESOURCES
+            icons/postgres.svg
+            icons/mysql.svg
+            icons/sqlite.svg
+            icons/mongodb.svg
+            icons/redis.svg
+            icons/mssql.svg
+            icons/mariadb.svg
     )
 
     target_link_libraries(tablemax PRIVATE

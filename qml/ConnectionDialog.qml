@@ -6,13 +6,15 @@ T.Dialog {
     id: dlg
 
     property int editIdx: -1
-    property int modeIdx: 0           // 0 = Form, 1 = Connection String
-    property string testStatus: ""    // "", "testing", "ok", "fail"
+    property int modeIdx: 0
+    property string testStatus: ""
     property string testMsg: ""
+    property int dbTypeIdx: 0
+    property var dbTypes: ["postgres", "mysql", "sqlite", "mongodb", "redis", "mssql", "mariadb"]
 
     anchors.centerIn: parent
     modal: true; dim: true
-    implicitWidth: 480
+    implicitWidth: 500
     padding: 0
 
     enter: Transition {
@@ -40,17 +42,25 @@ T.Dialog {
         Behavior on opacity { NumberAnimation { duration: Theme.durationSlow } }
     }
 
+    // Use Connections to avoid "duplicate method" error on onOpened
+    Connections {
+        target: dlg
+        function onOpened() { dlg.initForm() }
+    }
+
     contentItem: ColumnLayout {
         spacing: 0
 
         // ─── Header ───
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24; Layout.topMargin: 24
+            Layout.topMargin: 24
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
             spacing: 4
 
             Text {
-                text: editIdx >= 0 ? "Edit Connection" : "New Connection"
+                text: dlg.editIdx >= 0 ? "Edit Connection" : "New Connection"
                 font.family: Theme.fontFamily
                 font.pixelSize: Theme.fontSizeLg
                 font.weight: Font.DemiBold
@@ -69,7 +79,8 @@ T.Dialog {
         // ─── Database Type ───
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
             spacing: 8
 
             Text {
@@ -80,29 +91,32 @@ T.Dialog {
                 color: Theme.foreground
             }
 
-            // Type cards
             GridLayout {
                 Layout.fillWidth: true
-                columns: 4; rowSpacing: 6; columnSpacing: 6
+                columns: 4
+                rowSpacing: 6
+                columnSpacing: 6
 
                 Repeater {
                     model: [
-                        { key: "postgres", label: "PostgreSQL", abbr: "PG", clr: "#336791" },
-                        { key: "mysql",    label: "MySQL",      abbr: "MY", clr: "#00758f" },
-                        { key: "sqlite",   label: "SQLite",     abbr: "SQ", clr: "#003b57" },
-                        { key: "mongodb",  label: "MongoDB",    abbr: "MO", clr: "#47A248" },
-                        { key: "redis",    label: "Redis",      abbr: "RE", clr: "#DC382D" },
-                        { key: "mssql",    label: "MSSQL",      abbr: "MS", clr: "#CC2927" },
-                        { key: "mariadb",  label: "MariaDB",    abbr: "MA", clr: "#003545" }
+                        { key: "postgres", label: "PostgreSQL", icon: "qrc:/TableMax/icons/postgres.svg" },
+                        { key: "mysql",    label: "MySQL",      icon: "qrc:/TableMax/icons/mysql.svg" },
+                        { key: "sqlite",   label: "SQLite",     icon: "qrc:/TableMax/icons/sqlite.svg" },
+                        { key: "mongodb",  label: "MongoDB",    icon: "qrc:/TableMax/icons/mongodb.svg" },
+                        { key: "redis",    label: "Redis",      icon: "qrc:/TableMax/icons/redis.svg" },
+                        { key: "mssql",    label: "MSSQL",      icon: "qrc:/TableMax/icons/mssql.svg" },
+                        { key: "mariadb",  label: "MariaDB",    icon: "qrc:/TableMax/icons/mariadb.svg" }
                     ]
 
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 44
+                        Layout.preferredHeight: 52
                         radius: Theme.radius
-                        property bool sel: dbTypeIdx === index
 
-                        color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08) : dbCardMa.containsMouse ? Theme.muted : "transparent"
+                        property bool sel: dlg.dbTypeIdx === index
+
+                        color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
+                                   : cardMa.containsMouse ? Theme.muted : "transparent"
                         border.width: 1
                         border.color: sel ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3) : Theme.border
 
@@ -110,21 +124,18 @@ T.Dialog {
                         Behavior on border.color { ColorAnimation { duration: Theme.durationFast } }
 
                         ColumnLayout {
-                            anchors.centerIn: parent; spacing: 2
+                            anchors.centerIn: parent
+                            spacing: 4
 
-                            Rectangle {
+                            Image {
                                 Layout.alignment: Qt.AlignHCenter
-                                width: 14; height: 14; radius: 3
-                                color: modelData.clr
-
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: modelData.abbr.substring(0, 1)
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: 7; font.weight: Font.Bold
-                                    color: "#fff"
-                                }
+                                Layout.preferredWidth: 22
+                                Layout.preferredHeight: 22
+                                source: modelData.icon
+                                sourceSize: Qt.size(22, 22)
+                                smooth: true
                             }
+
                             Text {
                                 Layout.alignment: Qt.AlignHCenter
                                 text: modelData.label
@@ -135,9 +146,11 @@ T.Dialog {
                         }
 
                         MouseArea {
-                            id: dbCardMa; anchors.fill: parent
-                            hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                            onClicked: dbTypeIdx = index
+                            id: cardMa
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: dlg.dbTypeIdx = index
                         }
                     }
                 }
@@ -146,16 +159,24 @@ T.Dialog {
 
         Item { Layout.preferredHeight: 16 }
 
-        // ─── Name ───
-        FlatField {
-            label: "Connection Name"
+        // ─── Connection Name ───
+        ColumnLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
+            spacing: 6
 
+            Text {
+                text: "Connection Name"
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSize
+                font.weight: Font.Medium
+                color: Theme.foreground
+            }
             FlatInput {
                 id: nameIn
                 placeholderText: "e.g. Production DB"
-                Layout.fillWidth: true
+                width: parent.width
             }
         }
 
@@ -164,10 +185,11 @@ T.Dialog {
         // ─── Mode Toggle ───
         FlatToggleGroup {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
             model: ["Form", "Connection String"]
-            currentIndex: modeIdx
-            onToggled: function(idx) { modeIdx = idx }
+            currentIndex: dlg.modeIdx
+            onToggled: function(idx) { dlg.modeIdx = idx }
         }
 
         Item { Layout.preferredHeight: 14 }
@@ -175,176 +197,236 @@ T.Dialog {
         // ─── Form Mode ───
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
-            spacing: 10
-            visible: modeIdx === 0
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
+            spacing: 12
+            visible: dlg.modeIdx === 0
 
+            // Host + Port
             RowLayout {
-                Layout.fillWidth: true; spacing: 10
+                Layout.fillWidth: true
+                spacing: 10
 
-                FlatField {
-                    label: "Host"
+                ColumnLayout {
                     Layout.fillWidth: true
+                    spacing: 6
 
+                    Text {
+                        text: "Host"
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize
+                        font.weight: Font.Medium
+                        color: Theme.foreground
+                    }
                     FlatInput {
                         id: hostIn
                         placeholderText: "localhost"
-                        Layout.fillWidth: true
+                        width: parent.width
                     }
                 }
 
-                FlatField {
-                    label: "Port"
-                    Layout.preferredWidth: 90
+                ColumnLayout {
+                    Layout.preferredWidth: 100
+                    spacing: 6
 
+                    Text {
+                        text: "Port"
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize
+                        font.weight: Font.Medium
+                        color: Theme.foreground
+                    }
                     FlatInput {
                         id: portIn
                         placeholderText: {
                             var ports = ["5432", "3306", "0", "27017", "6379", "1433", "3306"]
-                            return ports[dbTypeIdx] || "5432"
+                            return ports[dlg.dbTypeIdx] || "5432"
                         }
-                        Layout.fillWidth: true
+                        width: parent.width
                     }
                 }
             }
 
+            // Username + Password
             RowLayout {
-                Layout.fillWidth: true; spacing: 10
+                Layout.fillWidth: true
+                spacing: 10
 
-                FlatField {
-                    label: "Username"
+                ColumnLayout {
                     Layout.fillWidth: true
+                    spacing: 6
 
+                    Text {
+                        text: "Username"
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize
+                        font.weight: Font.Medium
+                        color: Theme.foreground
+                    }
                     FlatInput {
                         id: userIn
                         placeholderText: "admin"
-                        Layout.fillWidth: true
+                        width: parent.width
                     }
                 }
 
-                FlatField {
-                    label: "Password"
+                ColumnLayout {
                     Layout.fillWidth: true
+                    spacing: 6
 
+                    Text {
+                        text: "Password"
+                        font.family: Theme.fontFamily
+                        font.pixelSize: Theme.fontSize
+                        font.weight: Font.Medium
+                        color: Theme.foreground
+                    }
                     FlatInput {
                         id: passIn
                         placeholderText: "••••••••"
                         echoMode: TextInput.Password
-                        Layout.fillWidth: true
+                        width: parent.width
                     }
                 }
             }
 
-            FlatField {
-                label: "Database"
+            // Database
+            ColumnLayout {
                 Layout.fillWidth: true
+                spacing: 6
 
+                Text {
+                    text: "Database"
+                    font.family: Theme.fontFamily
+                    font.pixelSize: Theme.fontSize
+                    font.weight: Font.Medium
+                    color: Theme.foreground
+                }
                 FlatInput {
                     id: dbNameIn
                     placeholderText: "mydb"
-                    Layout.fillWidth: true
+                    width: parent.width
                 }
             }
         }
 
         // ─── Connection String Mode ───
-        FlatField {
-            label: "Connection String"
-            description: {
-                var examples = [
-                    "postgresql://user:pass@localhost:5432/mydb",
-                    "mysql://user:pass@localhost:3306/mydb",
-                    "/path/to/database.db",
-                    "mongodb://user:pass@localhost:27017/mydb",
-                    "redis://localhost:6379",
-                    "Server=localhost;Database=mydb;User=sa;Password=pass",
-                    "mysql://user:pass@localhost:3306/mydb"
-                ]
-                return "e.g. " + (examples[dbTypeIdx] || examples[0])
-            }
+        ColumnLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
-            visible: modeIdx === 1
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
+            spacing: 6
+            visible: dlg.modeIdx === 1
 
+            Text {
+                text: "Connection String"
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSize
+                font.weight: Font.Medium
+                color: Theme.foreground
+            }
             FlatInput {
                 id: connStrIn
                 placeholderText: "Enter connection string..."
+                width: parent.width
+            }
+            Text {
+                text: {
+                    var examples = [
+                        "e.g. postgresql://user:pass@localhost:5432/mydb",
+                        "e.g. mysql://user:pass@localhost:3306/mydb",
+                        "e.g. /path/to/database.db",
+                        "e.g. mongodb://user:pass@localhost:27017/mydb",
+                        "e.g. redis://localhost:6379",
+                        "e.g. Server=localhost;Database=mydb;User=sa;Password=pass",
+                        "e.g. mysql://user:pass@localhost:3306/mydb"
+                    ]
+                    return examples[dlg.dbTypeIdx] || examples[0]
+                }
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSizeXs
+                color: Theme.mutedForeground
+                wrapMode: Text.Wrap
                 Layout.fillWidth: true
             }
         }
 
         Item { Layout.preferredHeight: 14 }
 
-        // ─── Color ───
-        FlatField {
-            label: "Color"
+        // ─── Color Picker ───
+        ColumnLayout {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
+            spacing: 6
 
+            Text {
+                text: "Color"
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSize
+                font.weight: Font.Medium
+                color: Theme.foreground
+            }
             FlatColorPicker {
                 id: colorPick
-                Layout.fillWidth: true
+                width: parent.width
             }
         }
 
         Item { Layout.preferredHeight: 14 }
 
-        // ─── Test Result ───
+        // ─── Test Result Banner ───
         Rectangle {
             Layout.fillWidth: true
-            Layout.leftMargin: 24; Layout.rightMargin: 24
-            Layout.preferredHeight: testStatus !== "" ? 36 : 0
+            Layout.leftMargin: 24
+            Layout.rightMargin: 24
+            Layout.preferredHeight: dlg.testStatus !== "" ? 36 : 0
             radius: Theme.radius
-            visible: testStatus !== ""
+            visible: dlg.testStatus !== ""
             clip: true
 
-            Behavior on Layout.preferredHeight { NumberAnimation { duration: Theme.durationSlow; easing.type: Easing.OutCubic } }
+            Behavior on Layout.preferredHeight {
+                NumberAnimation { duration: Theme.durationSlow; easing.type: Easing.OutCubic }
+            }
 
             color: {
-                if (testStatus === "ok") return Qt.rgba(0.2, 0.83, 0.6, 0.08)
-                if (testStatus === "fail") return Qt.rgba(0.97, 0.44, 0.44, 0.08)
+                if (dlg.testStatus === "ok") return Qt.rgba(0.2, 0.83, 0.6, 0.08)
+                if (dlg.testStatus === "fail") return Qt.rgba(0.97, 0.44, 0.44, 0.08)
                 return Theme.muted
             }
             border.width: 1
             border.color: {
-                if (testStatus === "ok") return Qt.rgba(0.2, 0.83, 0.6, 0.2)
-                if (testStatus === "fail") return Qt.rgba(0.97, 0.44, 0.44, 0.2)
+                if (dlg.testStatus === "ok") return Qt.rgba(0.2, 0.83, 0.6, 0.2)
+                if (dlg.testStatus === "fail") return Qt.rgba(0.97, 0.44, 0.44, 0.2)
                 return Theme.border
             }
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 12; anchors.rightMargin: 12
+                anchors.leftMargin: 12
+                anchors.rightMargin: 12
                 spacing: 8
 
                 Text {
                     text: {
-                        if (testStatus === "testing") return "⟳"
-                        if (testStatus === "ok") return "✓"
-                        if (testStatus === "fail") return "✗"
-                        return ""
+                        if (dlg.testStatus === "ok") return "✓"
+                        if (dlg.testStatus === "fail") return "✗"
+                        return "⟳"
                     }
                     font.pixelSize: 13
                     color: {
-                        if (testStatus === "ok") return Theme.success
-                        if (testStatus === "fail") return Theme.error
+                        if (dlg.testStatus === "ok") return Theme.success
+                        if (dlg.testStatus === "fail") return Theme.error
                         return Theme.mutedForeground
                     }
-
-                    RotationAnimation on rotation {
-                        from: 0; to: 360; duration: 800
-                        loops: Animation.Infinite
-                        running: testStatus === "testing"
-                    }
                 }
-
                 Text {
-                    text: testMsg
+                    text: dlg.testMsg
                     font.family: Theme.fontFamily
                     font.pixelSize: Theme.fontSizeSm
                     color: {
-                        if (testStatus === "ok") return Theme.success
-                        if (testStatus === "fail") return Theme.error
+                        if (dlg.testStatus === "ok") return Theme.success
+                        if (dlg.testStatus === "fail") return Theme.error
                         return Theme.mutedForeground
                     }
                     Layout.fillWidth: true
@@ -358,7 +440,8 @@ T.Dialog {
         // ─── Separator ───
         Rectangle {
             Layout.fillWidth: true
-            height: 1; color: Theme.border
+            Layout.preferredHeight: 1
+            color: Theme.border
         }
 
         // ─── Footer ───
@@ -370,7 +453,7 @@ T.Dialog {
             FlatButton {
                 text: "Test Connection"
                 variant: "outline"
-                onClicked: doTest()
+                onClicked: dlg.runTest()
             }
 
             Item { Layout.fillWidth: true }
@@ -382,26 +465,24 @@ T.Dialog {
             }
 
             FlatButton {
-                text: editIdx >= 0 ? "Update" : "Save"
-                onClicked: doSave()
+                text: dlg.editIdx >= 0 ? "Update" : "Save"
+                onClicked: dlg.saveConn()
             }
         }
     }
 
-    property int dbTypeIdx: 0
-    property var dbTypes: ["postgres", "mysql", "sqlite", "mongodb", "redis", "mssql", "mariadb"]
+    // ─── Functions (named to avoid base class conflicts) ───
 
-    function buildConnStr() {
-        if (modeIdx === 1) return connStrIn.text
+    function buildConnStr(): string {
+        if (dlg.modeIdx === 1) return connStrIn.text
         var h = hostIn.text || "localhost"
         var p = portIn.text || ""
         var u = userIn.text || ""
         var pw = passIn.text || ""
         var db = dbNameIn.text || ""
-        var t = dbTypes[dbTypeIdx]
-        if (t === "postgres" || t === "mysql" || t === "mariadb") {
+        var t = dlg.dbTypes[dlg.dbTypeIdx]
+        if (t === "postgres" || t === "mysql" || t === "mariadb")
             return t + "://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
-        }
         if (t === "mongodb") return "mongodb://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
         if (t === "redis") return "redis://" + h + (p ? ":" + p : "")
         if (t === "sqlite") return db || h
@@ -409,34 +490,29 @@ T.Dialog {
         return h
     }
 
-    function doTest() {
-        testStatus = "testing"
-        testMsg = "Testing connection..."
-        var cs = buildConnStr()
-        var t = dbTypes[dbTypeIdx]
+    function runTest(): void {
+        dlg.testStatus = "testing"
+        dlg.testMsg = "Testing connection..."
+        var cs = dlg.buildConnStr()
+        var t = dlg.dbTypes[dlg.dbTypeIdx]
         var ok = databaseService.testConnection(t, cs)
-        if (ok) {
-            testStatus = "ok"
-            testMsg = "Connection successful!"
-        } else {
-            testStatus = "fail"
-            testMsg = databaseService.error || "Connection failed"
-        }
+        dlg.testStatus = ok ? "ok" : "fail"
+        dlg.testMsg = ok ? "Connection successful!" : (databaseService.error || "Connection failed")
     }
 
-    function doSave() {
+    function saveConn(): void {
         var c = {
             name: nameIn.text || "Untitled",
-            dbType: dbTypes[dbTypeIdx],
-            connectionString: buildConnStr(),
+            dbType: dlg.dbTypes[dlg.dbTypeIdx],
+            connectionString: dlg.buildConnStr(),
             color: colorPick.selectedColor.toString()
         }
-        if (editIdx >= 0) connectionManager.update(editIdx, c)
+        if (dlg.editIdx >= 0) connectionManager.update(dlg.editIdx, c)
         else connectionManager.add(c)
         dlg.close()
     }
 
-    function reset() {
+    function clearForm(): void {
         nameIn.text = ""
         hostIn.text = ""
         portIn.text = ""
@@ -444,22 +520,22 @@ T.Dialog {
         passIn.text = ""
         dbNameIn.text = ""
         connStrIn.text = ""
-        dbTypeIdx = 0
-        modeIdx = 0
-        testStatus = ""
-        testMsg = ""
+        dlg.dbTypeIdx = 0
+        dlg.modeIdx = 0
+        dlg.testStatus = ""
+        dlg.testMsg = ""
     }
 
-    onOpened: {
-        if (editIdx >= 0) {
-            var c = connectionManager.get(editIdx)
+    function initForm(): void {
+        if (dlg.editIdx >= 0) {
+            var c = connectionManager.get(dlg.editIdx)
             nameIn.text = c.name || ""
             connStrIn.text = c.connectionString || ""
-            var idx = dbTypes.indexOf(c.dbType || "postgres")
-            dbTypeIdx = idx >= 0 ? idx : 0
-            modeIdx = 1
+            var idx = dlg.dbTypes.indexOf(c.dbType || "postgres")
+            dlg.dbTypeIdx = idx >= 0 ? idx : 0
+            dlg.modeIdx = 1
         } else {
-            reset()
+            dlg.clearForm()
         }
     }
 }
