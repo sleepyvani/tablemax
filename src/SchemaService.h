@@ -74,7 +74,8 @@ private:
         auto schema = db->getTableSchema(table);
         for (auto& c : schema) {
             auto m = c.toMap();
-            m["type"] = "column";
+            m["colType"] = m["type"];  // preserve SQL type (e.g. "varchar") for display
+            m["type"] = "column";      // node type for tree rendering
             cols.append(m);
         }
         return cols;

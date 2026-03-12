@@ -1,9 +1,17 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import "DbHelper.js" as DB
 
 Rectangle {
     color: Theme.bg
+
+    // Active DB type
+    property string _dbType: {
+        if (!connectionManager) return ""
+        var c = connectionManager.get(connectionManager.activeIndex)
+        return c ? (c.dbType || "") : ""
+    }
 
     // ── Sync syntax highlighter with editor document ──
     Connections {
@@ -112,12 +120,26 @@ Rectangle {
                     Text { id: kbdText; anchors.centerIn: parent; text: "Ctrl+Enter"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
                 }
 
+                // Query mode badge
+                Rectangle {
+                    height: 18; width: _modeText.implicitWidth + 10; radius: Theme.r4
+                    color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
+                    border.width: 1; border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12)
+                    visible: databaseService && databaseService.connected
+                    Text {
+                        id: _modeText; anchors.centerIn: parent
+                        text: DB.queryMode(_dbType)
+                        font.family: Theme.mono; font.pixelSize: 9; font.weight: Font.Bold; color: Theme.accent
+                    }
+                }
+
                 Item { Layout.fillWidth: true }
 
-                // Format
+                // Format — SQL only
                 Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: fmtMa.containsMouse ? Theme.bgHover : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
+                    visible: DB.isSQL(_dbType)
 
                     Text { anchors.centerIn: parent; text: "{}"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgMuted }
                     MouseArea {
@@ -195,10 +217,10 @@ Rectangle {
                             tabManager.updateContent(tabManager.currentIndex, text)
                     }
 
-                    // Placeholder
+                    // Placeholder — DB-aware
                     Text {
                         x: Theme.s12; y: Theme.s8
-                        text: "SELECT * FROM table_name\nWHERE id = 1;"
+                        text: DB.queryPlaceholder(_dbType)
                         font: parent.font; color: Theme.fgDim; opacity: 0.35
                         visible: !parent.text && !parent.activeFocus
                     }

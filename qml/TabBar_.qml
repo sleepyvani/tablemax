@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import "DbHelper.js" as DB
 
 Rectangle {
     Layout.fillWidth: true

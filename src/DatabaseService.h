@@ -141,8 +141,8 @@ public:
             m["name"] = QString::fromStdString(col.name);
             m["type"] = QString::fromStdString(col.type);
             m["nullable"] = col.nullable;
-            m["primary_key"] = col.primary_key;
-            m["default_value"] = QString::fromStdString(col.default_value);
+            m["primaryKey"] = col.primary_key;
+            m["defaultValue"] = QString::fromStdString(col.default_value);
             result << m;
         }
         return result;

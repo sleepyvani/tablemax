@@ -1,8 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
+import "DbHelper.js" as DB
 
 Rectangle {
+    id: welcomeRoot
     color: Theme.bg
+    opacity: 0
 
     // Subtle grid pattern — blueprint feel
     Canvas {
@@ -26,9 +29,8 @@ Rectangle {
     }
 
     // Fade-in on load
-    opacity: 0
     Component.onCompleted: fadeIn.start()
-    NumberAnimation { id: fadeIn; target: parent; property: "opacity"; from: 0; to: 1; duration: 400; easing.type: Easing.OutCubic }
+    NumberAnimation { id: fadeIn; target: welcomeRoot; property: "opacity"; from: 0; to: 1; duration: 400; easing.type: Easing.OutCubic }
 
     Flickable {
         anchors.fill: parent; contentHeight: mainCol.height + 80
@@ -212,7 +214,7 @@ Rectangle {
                                     color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true
                                 }
                                 Text {
-                                    text: (modelData.dbType || "").charAt(0).toUpperCase() + (modelData.dbType || "").slice(1)
+                                    text: DB.displayName(modelData.dbType || "")
                                     font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim
                                 }
                             }

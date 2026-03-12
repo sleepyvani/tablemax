@@ -74,6 +74,7 @@ Item {
                         case "success": return Theme.success
                         case "destructive": return Theme.error
                         case "warning": return Theme.warning
+                        case "info": return Theme.info
                         default: return "transparent"
                     }
                 }

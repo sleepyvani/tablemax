@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import "DbHelper.js" as DB
 
 Rectangle {
     id: sidebar
@@ -172,7 +173,7 @@ Rectangle {
                         if (!connectionManager || connectionManager.activeIndex < 0) return ""
                         var c = connectionManager.get(connectionManager.activeIndex)
                         if (!c) return ""
-                        var t = (c.dbType || "").charAt(0).toUpperCase() + (c.dbType || "").slice(1)
+                        var t = DB.displayName(c.dbType || "")
                         return t + " · Connected"
                     }
                     font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim
@@ -398,8 +399,7 @@ Rectangle {
                                 Layout.fillWidth: true
                             }
                             Text {
-                                text: (modelData.dbType || "").charAt(0).toUpperCase() +
-                                      (modelData.dbType || "").slice(1)
+                                text: DB.displayName(modelData.dbType || "")
                                 font.family: Theme.mono; font.pixelSize: 9
                                 color: Theme.fgDim
                             }
@@ -555,7 +555,13 @@ Rectangle {
                 anchors.fill: parent; spacing: 6
 
                 Text {
-                    text: "EXPLORER"
+                    text: {
+                        if (!connectionManager) return "EXPLORER"
+                        var c = connectionManager.get(connectionManager.activeIndex)
+                        return databaseService && databaseService.connected
+                            ? DB.tableLabel(c ? c.dbType : "")
+                            : "EXPLORER"
+                    }
                     font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
                     font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
                     Layout.fillWidth: true
@@ -648,7 +654,7 @@ Rectangle {
                     text: {
                         if (databaseService && databaseService.connected) {
                             var c = connectionManager.get(connectionManager.activeIndex)
-                            if (c) return (c.dbType || "").toUpperCase() + " · " + (c.name || "")
+                            if (c) return DB.displayName(c.dbType || "") + " · " + (c.name || "")
                             return "Connected"
                         }
                         return "Disconnected"

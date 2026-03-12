@@ -163,6 +163,7 @@ if(Qt6_FOUND)
             qml/SchemaTree.qml
             qml/StatusBar.qml
             qml/WelcomeView.qml
+            qml/DbHelper.js
             qml/FlatButton.qml
             qml/FlatInput.qml
             qml/FlatTextArea.qml

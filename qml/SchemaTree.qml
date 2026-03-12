@@ -1,9 +1,17 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import "DbHelper.js" as DB
 
 Rectangle {
     color: "transparent"
+
+    // Active DB type helper
+    property string _dbType: {
+        if (!connectionManager) return ""
+        var c = connectionManager.get(connectionManager.activeIndex)
+        return c ? (c.dbType || "") : ""
+    }
 
     // ── Loading indicator ──
     Rectangle {
@@ -37,7 +45,7 @@ Rectangle {
                     Layout.fillWidth: true; spacing: 0
                     property bool open: true
 
-                    // ── Parent node (database or table) ──
+                    // ── Parent node (database or table/collection/key) ──
                     Rectangle {
                         Layout.fillWidth: true; Layout.preferredHeight: 28
                         color: _ndMa.containsMouse ? Theme.bgHover : "transparent"
@@ -58,7 +66,7 @@ Rectangle {
                                 rotation: open ? 0 : -90
                             }
 
-                            // Type badge
+                            // Type badge — DB-aware
                             Rectangle {
                                 width: 16; height: 16; radius: 4
                                 color: Qt.rgba(
@@ -70,7 +78,7 @@ Rectangle {
                                 Text {
                                     anchors.centerIn: parent
                                     font.family: Theme.mono; font.pixelSize: 8; font.weight: Font.Bold
-                                    text: modelData.type === "database" ? "D" : "T"
+                                    text: DB.nodeBadge(_dbType, modelData.type)
                                     color: modelData.type === "database" ? Theme.info : Theme.synKeyword
                                 }
                             }
@@ -111,15 +119,15 @@ Rectangle {
                                     return
                                 }
                                 open = !open
-                                // If it's a table, execute SELECT * on click
+                                // Click table/collection → execute query
                                 if (modelData.type === "table" && databaseService && databaseService.connected) {
-                                    var tableName = modelData.name
-                                    var query = "SELECT * FROM \"" + tableName + "\" LIMIT 100"
+                                    var entityName = modelData.name
+                                    var query = DB.buildSelectQuery(_dbType, entityName)
                                     if (tabManager.tabs.length === 0) tabManager.addTab()
                                     tabManager.updateContent(tabManager.currentIndex, query)
                                     var res = databaseService.executeQuery(query, resultModel)
                                     if (res.success) {
-                                        root.toast(res.rowCount + " rows from " + tableName, "success")
+                                        root.toast(res.rowCount + " rows from " + entityName, "success")
                                     } else {
                                         root.toast("Error: " + res.error, "destructive")
                                     }
@@ -128,7 +136,7 @@ Rectangle {
                         }
                     }
 
-                    // ── Children (tables under database, or columns under table) ──
+                    // ── Children (tables under database, or columns/fields under table) ──
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: 0
                         visible: open; clip: true
@@ -146,7 +154,7 @@ Rectangle {
                                     anchors.leftMargin: 32; anchors.rightMargin: 8
                                     spacing: 6
 
-                                    // Icon
+                                    // Icon — DB-aware badge
                                     Rectangle {
                                         width: 14; height: 14; radius: 3
                                         color: Qt.rgba(
@@ -164,8 +172,7 @@ Rectangle {
                                         )
                                         Text {
                                             anchors.centerIn: parent
-                                            text: modelData.type === "table" ? "T"
-                                                : modelData.type === "column" ? "C" : "·"
+                                            text: DB.nodeBadge(_dbType, modelData.type)
                                             font.family: Theme.mono; font.pixelSize: 7; font.weight: Font.Bold
                                             color: modelData.type === "table" ? Theme.synKeyword : Theme.fgDim
                                         }
@@ -179,7 +186,7 @@ Rectangle {
                                         elide: Text.ElideRight; Layout.fillWidth: true
                                     }
 
-                                    // Type info for columns — use colType field
+                                    // Type info for columns/fields — show colType badge
                                     Rectangle {
                                         visible: modelData.type === "column" && (modelData.colType || "").length > 0
                                         height: 14; width: _colTypeText.implicitWidth + 8; radius: Theme.r4
@@ -215,7 +222,7 @@ Rectangle {
                                         }
                                         if (modelData.type === "table" && databaseService && databaseService.connected) {
                                             var tName = modelData.name
-                                            var sql = "SELECT * FROM \"" + tName + "\" LIMIT 100"
+                                            var sql = DB.buildSelectQuery(_dbType, tName)
                                             if (tabManager.tabs.length === 0) tabManager.addTab()
                                             tabManager.updateContent(tabManager.currentIndex, sql)
                                             var r = databaseService.executeQuery(sql, resultModel)
@@ -225,7 +232,7 @@ Rectangle {
                                                 root.toast("Error: " + r.error, "destructive")
                                             }
                                         } else if (modelData.type === "column") {
-                                            // Click column → insert column name into editor
+                                            // Click column/field → insert name into editor
                                             if (tabManager && tabManager.tabs.length > 0) {
                                                 var t = tabManager.getTab(tabManager.currentIndex)
                                                 tabManager.updateContent(tabManager.currentIndex,
@@ -240,7 +247,7 @@ Rectangle {
                 }
             }
 
-            // ── Empty state ──
+            // ── Empty state — DB-aware ──
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 72
                 visible: !schemaService || schemaService.tree.length === 0
@@ -250,13 +257,16 @@ Rectangle {
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: databaseService && databaseService.connected ? "Empty schema" : "Not connected"
+                        text: databaseService && databaseService.connected
+                            ? "Empty " + DB.entitySingular(_dbType)
+                            : "Not connected"
                         font.family: Theme.sans; font.pixelSize: 12; color: Theme.fgDim
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: databaseService && databaseService.connected
-                            ? "No tables found" : "Connect to a database to explore"
+                            ? "No " + DB.tableLabel(_dbType).toLowerCase() + " found"
+                            : "Connect to a database to explore"
                         font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim; opacity: 0.5
                     }
                 }
@@ -264,25 +274,32 @@ Rectangle {
         }
     }
 
-    // ── Context Menu ──
+    // ── Context Menu — DB-aware ──
     FlatContextMenu {
         id: _treeCtx
         property string nodeName: ""
         property string nodeType: ""
 
         menuModel: {
-            if (nodeType === "table") return ["SELECT TOP 100", "Copy Table Name", "-", "View Schema"]
-            if (nodeType === "column") return ["Copy Column Name", "Insert into Query"]
+            if (nodeType === "table") {
+                var selectLabel = DB.isRedis(_dbType) ? "GET Key" : DB.isMongo(_dbType) ? "Find Documents" : "SELECT TOP 100"
+                var copyLabel = DB.isMongo(_dbType) ? "Copy Collection Name" : DB.isRedis(_dbType) ? "Copy Key Name" : "Copy Table Name"
+                return [selectLabel, copyLabel, "-", "View Schema"]
+            }
+            if (nodeType === "column") {
+                var colCopyLabel = DB.isMongo(_dbType) ? "Copy Field Name" : "Copy Column Name"
+                return [colCopyLabel, "Insert into Query"]
+            }
             if (nodeType === "database") return ["Copy Database Name"]
             return []
         }
 
         onMenuItemClicked: function(idx, text) {
-            if (text === "Copy Table Name" || text === "Copy Column Name" || text === "Copy Database Name") {
+            if (text.indexOf("Copy") === 0) {
                 _clipHelper.text = nodeName; _clipHelper.selectAll(); _clipHelper.copy()
                 root.toast("Copied: " + nodeName, "success")
-            } else if (text === "SELECT TOP 100" && databaseService && databaseService.connected) {
-                var sql = "SELECT * FROM \"" + nodeName + "\" LIMIT 100"
+            } else if (idx === 0 && nodeType === "table" && databaseService && databaseService.connected) {
+                var sql = DB.buildSelectQuery(_dbType, nodeName)
                 if (tabManager.tabs.length === 0) tabManager.addTab()
                 tabManager.updateContent(tabManager.currentIndex, sql)
                 var r = databaseService.executeQuery(sql, resultModel)
