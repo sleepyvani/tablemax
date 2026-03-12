@@ -185,7 +185,7 @@ private:
         });
         // Double-quoted identifiers
         rules_.append({
-            QRegularExpression(R"("(?:[^"\\]|\\.)*")"),
+            QRegularExpression("\"(?:[^\"\\\\]|\\\\.)*\""),
             strFmt
         });
         formatCount_[FmtString] = 2;
