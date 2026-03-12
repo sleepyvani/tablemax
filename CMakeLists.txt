@@ -147,7 +147,13 @@ if(Qt6_FOUND)
     message(STATUS "Qt6 found — building full app")
     qt_standard_project_setup()
 
-    qt_add_executable(tablemax src/main.cpp)
+    # Manual MOC for header-only Q_OBJECT (AUTOMOC can't detect it)
+    qt_wrap_cpp(MOC_SOURCES src/SyntaxHighlighter.h)
+
+    qt_add_executable(tablemax
+        src/main.cpp
+        ${MOC_SOURCES}
+    )
 
 
     qt_add_qml_module(tablemax
