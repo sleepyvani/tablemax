@@ -26,12 +26,15 @@ Rectangle {
         }
     }
 
-    // ── Search shortcut: press / to focus search ──
-    Shortcut {
-        sequence: "/"
-        enabled: !_search.activeFocus
-        onActivated: _search.forceActiveFocus()
+    // BUG FIX: Search shortcut scoped to sidebar focus only
+    // (global Shortcut would intercept '/' while typing in QueryEditor)
+    Keys.onPressed: function(event) {
+        if (event.key === Qt.Key_Slash && !_search.activeFocus) {
+            _search.forceActiveFocus()
+            event.accepted = true
+        }
     }
+    focus: false
 
     // ════════════════════════════════════════════
     //  LAYOUT
@@ -330,14 +333,19 @@ Rectangle {
 
                             // Connected indicator (pulsing dot)
                             Rectangle {
+                                id: _connDot
                                 visible: _row.active && databaseService.connected
                                 width: 7; height: 7; radius: 4
                                 color: Theme.success
 
-                                SequentialAnimation on opacity {
-                                    loops: Animation.Infinite; running: _row.active && databaseService.connected
-                                    NumberAnimation { to: 0.4; duration: 1500 }
-                                    NumberAnimation { to: 1; duration: 1500 }
+                                // BUG FIX: Explicit animation control (not "on opacity")
+                                SequentialAnimation {
+                                    id: _pulseAnim
+                                    loops: Animation.Infinite
+                                    running: _row.active && databaseService.connected
+                                    NumberAnimation { target: _connDot; property: "opacity"; to: 0.4; duration: 1500 }
+                                    NumberAnimation { target: _connDot; property: "opacity"; to: 1; duration: 1500 }
+                                    onStopped: _connDot.opacity = 1
                                 }
                             }
 
@@ -423,9 +431,10 @@ Rectangle {
                                 _ctx.x = mouse.x; _ctx.y = mouse.y
                                 _ctx.open()
                             } else {
+                                // BUG FIX: Skip reconnect if already active + connected
+                                if (connectionManager.activeIndex === index && databaseService.connected) return
                                 connectionManager.activeIndex = index
-                                // FIX #1: Toast feedback for connection attempt
-                                root.toast("Connecting to " + (modelData.name || "database") + "…", "info")
+                                // connect() is synchronous — success/error toast comes from Connections handler
                                 databaseService.connect(modelData.dbType, modelData.connectionString)
                             }
                         }
@@ -443,9 +452,10 @@ Rectangle {
                         onMenuItemClicked: function(idx, label) {
                             var ci = _ctx.connIdx
                             if (label === "Connect") {
+                                // BUG FIX: Guard against reconnecting same connection
+                                if (connectionManager.activeIndex === ci && databaseService.connected) return
                                 connectionManager.activeIndex = ci
                                 var c = connectionManager.get(ci)
-                                root.toast("Connecting to " + (c.name || "database") + "…", "info")
                                 databaseService.connect(c.dbType, c.connectionString)
                             } else if (label === "Disconnect") {
                                 databaseService.disconnect()
