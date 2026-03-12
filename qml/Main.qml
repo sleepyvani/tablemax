@@ -72,8 +72,8 @@ ApplicationWindow {
     // ── Keyboard Shortcuts Overlay ──
     FlatDialog {
         id: shortcutsDialog
-        title: "Keyboard Shortcuts"
-        description: "All available shortcuts"
+        dialogTitle: "Keyboard Shortcuts"
+        dialogDescription: "All available shortcuts"
 
         contentItem: Column {
             spacing: 2; width: 340

@@ -390,20 +390,20 @@ Rectangle {
                             Behavior on color { ColorAnimation { duration: 100 } }
                             Behavior on border.color { ColorAnimation { duration: 100 } }
 
-                            Row {
-                                anchors.centerIn: parent; spacing: 4
-                                Text {
-                                    text: "⏻"; font.pixelSize: 9
-                                    color: _inlineDiscoMa.containsMouse ? Theme.error : Theme.fgDim
-                                    Behavior on color { ColorAnimation { duration: 100 } }
-                                }
-                                Text {
-                                    text: "Disconnect"
-                                    font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium
-                                    color: _inlineDiscoMa.containsMouse ? Theme.error : Theme.fgDim
-                                    Behavior on color { ColorAnimation { duration: 100 } }
-                                }
-                            }
+                            // Row {
+                            //     anchors.centerIn: parent; spacing: 4
+                            //     Text {
+                            //         text: "⏻"; font.pixelSize: 9
+                            //         color: _inlineDiscoMa.containsMouse ? Theme.error : Theme.fgDim
+                            //         Behavior on color { ColorAnimation { duration: 100 } }
+                            //     }
+                            //     Text {
+                            //         text: "Disconnect"
+                            //         font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium
+                            //         color: _inlineDiscoMa.containsMouse ? Theme.error : Theme.fgDim
+                            //         Behavior on color { ColorAnimation { duration: 100 } }
+                            //     }
+                            // }
                             MouseArea {
                                 id: _inlineDiscoMa; anchors.fill: parent; z: 2
                                 hoverEnabled: true; cursorShape: Qt.PointingHandCursor
