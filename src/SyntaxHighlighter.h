@@ -5,7 +5,7 @@
 #include <QRegularExpression>
 #include <QQuickTextDocument>
 
-class ThemeProvider;
+#include "ThemeProvider.h"
 
 class SyntaxHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
