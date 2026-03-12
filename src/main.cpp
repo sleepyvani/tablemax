@@ -8,6 +8,7 @@
 #include "TabManager.h"
 #include "SchemaService.h"
 #include "ThemeProvider.h"
+#include "SyntaxHighlighter.h"
 #include "models/QueryResultModel.h"
 
 int main(int argc, char* argv[]) {
@@ -23,6 +24,8 @@ int main(int argc, char* argv[]) {
     SchemaService schemaService;
     QueryResultModel resultModel;
     ThemeProvider theme;
+    SyntaxHighlighter syntaxHighlighter;
+    syntaxHighlighter.setTheme(&theme);
 
     // Auto-load database plugins from app directory
     QString pluginDir = QCoreApplication::applicationDirPath();
@@ -40,6 +43,7 @@ int main(int argc, char* argv[]) {
     ctx->setContextProperty("schemaService", &schemaService);
     ctx->setContextProperty("resultModel", &resultModel);
     ctx->setContextProperty("Theme", &theme);
+    ctx->setContextProperty("syntaxHighlighter", &syntaxHighlighter);
 
     // Load QML
     engine.addImportPath("qrc:/");

@@ -205,6 +205,7 @@ if(Qt6_FOUND)
             src/TabManager.h
             src/SchemaService.h
             src/ThemeProvider.h
+            src/SyntaxHighlighter.h
             src/models/QueryResultModel.h
         RESOURCES
             icons/postgres.svg

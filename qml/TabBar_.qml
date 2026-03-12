@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls.Basic
 import QtQuick.Layouts
 
 Rectangle {
@@ -22,6 +23,7 @@ Rectangle {
                 anchors.centerIn: parent
                 width: 28; height: 28; radius: Theme.r6
                 color: sbToggle.containsMouse ? Theme.bgHover : "transparent"
+                Behavior on color { ColorAnimation { duration: 80 } }
 
                 Text {
                     anchors.centerIn: parent
@@ -44,7 +46,7 @@ Rectangle {
             model: tabManager ? tabManager.tabs : []
 
             Rectangle {
-                Layout.preferredWidth: Math.min(tabLabel.implicitWidth + 52, 160)
+                Layout.preferredWidth: Math.min(tabLabel.implicitWidth + 52, 180)
                 Layout.preferredHeight: 38
                 color: "transparent"
 
@@ -60,7 +62,7 @@ Rectangle {
 
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                    // Active indicator
+                    // Active indicator line
                     Rectangle {
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -75,9 +77,19 @@ Rectangle {
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.leftMargin: 12
+                        anchors.leftMargin: 10
                         anchors.rightMargin: 6
-                        spacing: 6
+                        spacing: 4
+
+                        // Modified indicator dot
+                        Rectangle {
+                            width: 5; height: 5; radius: 3
+                            color: Theme.accent; opacity: 0.6
+                            visible: {
+                                var t = tabManager.getTab(index)
+                                return t && t.content && t.content.trim().length > 0
+                            }
+                        }
 
                         Text {
                             id: tabLabel
@@ -108,7 +120,15 @@ Rectangle {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: tabManager.closeTab(index)
+                                onClicked: {
+                                    var t = tabManager.getTab(index)
+                                    if (t && t.content && t.content.trim().length > 0) {
+                                        _closeDlg.closeIdx = index
+                                        _closeDlg.open()
+                                    } else {
+                                        tabManager.closeTab(index)
+                                    }
+                                }
                             }
                         }
                     }
@@ -120,7 +140,16 @@ Rectangle {
                     hoverEnabled: true
                     z: -1
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: tabManager.currentIndex = index
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: function(mouse) {
+                        if (mouse.button === Qt.RightButton) {
+                            _tabCtx.tabIdx = index
+                            _tabCtx.x = mouse.x; _tabCtx.y = mouse.y
+                            _tabCtx.open()
+                        } else {
+                            tabManager.currentIndex = index
+                        }
+                    }
                 }
             }
         }
@@ -135,11 +164,13 @@ Rectangle {
                 anchors.centerIn: parent
                 width: 24; height: 24; radius: Theme.r6
                 color: newTabMa.containsMouse ? Theme.bgHover : "transparent"
+                Behavior on color { ColorAnimation { duration: 80 } }
 
                 Text {
                     anchors.centerIn: parent
                     text: "+"; font.pixelSize: 16
-                    color: Theme.fgMuted
+                    color: newTabMa.containsMouse ? Theme.accent : Theme.fgMuted
+                    Behavior on color { ColorAnimation { duration: 80 } }
                 }
             }
 
@@ -154,22 +185,38 @@ Rectangle {
 
         Item { Layout.fillWidth: true }
 
-        // Connection status pill
+        // Active DB pill
         Rectangle {
             Layout.preferredHeight: 22
-            Layout.preferredWidth: connPillText.implicitWidth + 20
+            Layout.preferredWidth: connPillRow.implicitWidth + 16
             radius: Theme.rFull
-            color: databaseService.connected ? Qt.rgba(0.2, 0.83, 0.6, 0.1) : Theme.bgSurface
+            color: databaseService.connected ? Qt.rgba(0.2, 0.83, 0.6, 0.08) : Theme.bgSurface
             border.width: 1
-            border.color: databaseService.connected ? Qt.rgba(0.2, 0.83, 0.6, 0.2) : Theme.border
+            border.color: databaseService.connected ? Qt.rgba(0.2, 0.83, 0.6, 0.15) : Theme.border
 
-            Text {
-                id: connPillText
+            Row {
+                id: connPillRow
                 anchors.centerIn: parent
-                font.family: Theme.sans
-                font.pixelSize: 10
-                text: databaseService.connected ? "● Connected" : "Disconnected"
-                color: databaseService.connected ? Theme.success : Theme.fgDim
+                spacing: 5
+
+                Rectangle {
+                    width: 5; height: 5; radius: 3; anchors.verticalCenter: parent.verticalCenter
+                    color: databaseService.connected ? Theme.success : Theme.fgDim
+                    opacity: databaseService.connected ? 1 : 0.3
+                }
+
+                Text {
+                    font.family: Theme.sans
+                    font.pixelSize: 10
+                    text: {
+                        if (databaseService.connected && connectionManager) {
+                            var c = connectionManager.get(connectionManager.activeIndex)
+                            return c ? (c.name || "Connected") : "Connected"
+                        }
+                        return "No connection"
+                    }
+                    color: databaseService.connected ? Theme.success : Theme.fgDim
+                }
             }
         }
     }
@@ -179,5 +226,61 @@ Rectangle {
         anchors.bottom: parent.bottom
         width: parent.width; height: 1
         color: Theme.border
+    }
+
+    // ── Tab Context Menu ──
+    FlatContextMenu {
+        id: _tabCtx
+        property int tabIdx: -1
+        menuModel: ["Close Tab", "Close Other Tabs", "Close All Tabs"]
+        onMenuItemClicked: function(idx, label) {
+            if (label === "Close Tab") {
+                var t = tabManager.getTab(_tabCtx.tabIdx)
+                if (t && t.content && t.content.trim().length > 0) {
+                    _closeDlg.closeIdx = _tabCtx.tabIdx
+                    _closeDlg.open()
+                } else {
+                    tabManager.closeTab(_tabCtx.tabIdx)
+                }
+            } else if (label === "Close Other Tabs") {
+                // Close all tabs except the one right-clicked
+                var keep = _tabCtx.tabIdx
+                var total = tabManager.tabs.length
+                for (var i = total - 1; i >= 0; i--) {
+                    if (i !== keep) tabManager.closeTab(i)
+                }
+            } else if (label === "Close All Tabs") {
+                var cnt = tabManager.tabs.length
+                for (var j = cnt - 1; j >= 0; j--) tabManager.closeTab(j)
+            }
+        }
+    }
+
+    // ── Close tab confirmation ──
+    FlatDialog {
+        id: _closeDlg
+        property int closeIdx: -1
+        dialogTitle: "Close Tab"
+        dialogDescription: "This tab has unsaved query content. Close anyway?"
+
+        contentItem: RowLayout {
+            spacing: 8
+            Item { Layout.fillWidth: true }
+            FlatButton {
+                text: "Cancel"
+                variant: "ghost"
+                size: "sm"
+                onClicked: _closeDlg.close()
+            }
+            FlatButton {
+                text: "Close Tab"
+                variant: "destructive"
+                size: "sm"
+                onClicked: {
+                    tabManager.closeTab(_closeDlg.closeIdx)
+                    _closeDlg.close()
+                }
+            }
+        }
     }
 }

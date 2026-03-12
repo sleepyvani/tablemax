@@ -5,6 +5,31 @@ import QtQuick.Layouts
 Rectangle {
     color: Theme.bg
 
+    // ── Sync syntax highlighter with editor document ──
+    Connections {
+        target: editor
+        function onTextDocumentChanged() {
+            if (syntaxHighlighter && editor.textDocument)
+                syntaxHighlighter.document = editor.textDocument
+        }
+    }
+
+    // ── Load content when switching tabs ──
+    Connections {
+        target: tabManager
+        function onCurrentIndexChanged() {
+            if (!tabManager) return
+            var t = tabManager.getTab(tabManager.currentIndex)
+            if (t) {
+                loadingContent_ = true
+                editor.text = t.content || ""
+                loadingContent_ = false
+            }
+        }
+    }
+
+    property bool loadingContent_: false
+
     function executeCurrentQuery() {
         if (!tabManager || !databaseService || !databaseService.connected) return
         var t = tabManager.getTab(tabManager.currentIndex)
@@ -15,8 +40,40 @@ Rectangle {
         if (res.success) {
             root.toast(res.rowCount + " rows returned (" + res.execTime.toFixed(1) + " ms)", "success")
         } else {
-            root.toast("Error: " + res.error, "error")
+            root.toast("Error: " + res.error, "destructive")
         }
+    }
+
+    function formatSql() {
+        if (!editor.text.trim()) return
+        var sql = editor.text
+
+        // Uppercase SQL keywords
+        var keywords = [
+            "SELECT","FROM","WHERE","INSERT","INTO","UPDATE","SET","DELETE","DROP",
+            "CREATE","ALTER","TABLE","JOIN","INNER","LEFT","RIGHT","OUTER","CROSS",
+            "ON","AND","OR","NOT","IN","EXISTS","BETWEEN","LIKE","IS","NULL","AS",
+            "DISTINCT","ORDER","BY","GROUP","HAVING","LIMIT","OFFSET","UNION",
+            "INTERSECT","EXCEPT","CASE","WHEN","THEN","ELSE","END","VALUES",
+            "PRIMARY","KEY","FOREIGN","REFERENCES","CONSTRAINT","UNIQUE","CHECK",
+            "ASC","DESC","WITH","RECURSIVE","BEGIN","COMMIT","ROLLBACK","FULL"
+        ]
+
+        for (var i = 0; i < keywords.length; i++) {
+            var re = new RegExp("\\b" + keywords[i] + "\\b", "gi")
+            sql = sql.replace(re, keywords[i])
+        }
+
+        // Add newlines before major clauses
+        var clauses = ["SELECT","FROM","WHERE","JOIN","INNER JOIN","LEFT JOIN","RIGHT JOIN",
+                       "ORDER BY","GROUP BY","HAVING","LIMIT","UNION","INSERT INTO","UPDATE",
+                       "SET","DELETE FROM","VALUES"]
+        for (var j = 0; j < clauses.length; j++) {
+            var cre = new RegExp("\\s+" + clauses[j].replace(/ /g, "\\s+") + "\\b", "gi")
+            sql = sql.replace(cre, "\n" + clauses[j])
+        }
+
+        editor.text = sql.trim()
     }
 
     ColumnLayout {
@@ -60,15 +117,27 @@ Rectangle {
                 // Format
                 Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: fmtMa.containsMouse ? Theme.bgHover : "transparent"
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
+
                     Text { anchors.centerIn: parent; text: "{}"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgMuted }
-                    MouseArea { id: fmtMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor }
+                    MouseArea {
+                        id: fmtMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: formatSql()
+                    }
+                    FlatTooltip { visible: fmtMa.containsMouse; text: "Format SQL"; y: -30 }
                 }
 
                 // Clear
                 Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: clrMa.containsMouse ? Theme.bgHover : "transparent"
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
+
                     Text { anchors.centerIn: parent; text: "⌫"; font.pixelSize: 13; color: Theme.fgMuted }
-                    MouseArea { id: clrMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: editor.text = "" }
+                    MouseArea {
+                        id: clrMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: editor.text = ""
+                    }
+                    FlatTooltip { visible: clrMa.containsMouse; text: "Clear editor"; y: -30 }
                 }
             }
 
@@ -83,16 +152,22 @@ Rectangle {
             Rectangle {
                 Layout.fillHeight: true; Layout.preferredWidth: 48; color: Theme.bgElevated
 
-                Column {
-                    anchors.fill: parent; anchors.topMargin: Theme.s8
+                Flickable {
+                    anchors.fill: parent
+                    contentY: editorFlick.contentY
+                    clip: true; interactive: false
 
-                    Repeater {
-                        model: Math.max(1, editor.text.split("\n").length)
-                        delegate: Item {
-                            width: 48; height: lineHeight
-                            Text {
-                                anchors.right: parent.right; anchors.rightMargin: Theme.s12; anchors.verticalCenter: parent.verticalCenter
-                                text: index + 1; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
+                    Column {
+                        anchors.fill: parent; anchors.topMargin: Theme.s8
+
+                        Repeater {
+                            model: Math.max(1, editor.text.split("\n").length)
+                            delegate: Item {
+                                width: 48; height: lineHeight
+                                Text {
+                                    anchors.right: parent.right; anchors.rightMargin: Theme.s12; anchors.verticalCenter: parent.verticalCenter
+                                    text: index + 1; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
+                                }
                             }
                         }
                     }
@@ -113,8 +188,12 @@ Rectangle {
                     font.family: Theme.mono; font.pixelSize: Theme.t13; color: Theme.fg
                     selectionColor: Theme.accentDim; selectedTextColor: Theme.fg
                     wrapMode: TextEdit.NoWrap; selectByMouse: true; focus: true
+                    textFormat: TextEdit.PlainText
 
-                    onTextChanged: { if (tabManager) tabManager.updateContent(tabManager.currentIndex, text) }
+                    onTextChanged: {
+                        if (!loadingContent_ && tabManager)
+                            tabManager.updateContent(tabManager.currentIndex, text)
+                    }
 
                     // Placeholder
                     Text {
@@ -140,9 +219,34 @@ Rectangle {
                 }
             }
         }
+
+        // ─── Loading overlay ───
+        Rectangle {
+            Layout.fillWidth: true; Layout.preferredHeight: databaseService && databaseService.loading ? 3 : 0
+            color: "transparent"; clip: true
+
+            Rectangle {
+                id: loadingBar
+                width: parent.width * 0.3
+                height: 3; radius: 2
+                color: Theme.accent
+                visible: databaseService && databaseService.loading
+
+                SequentialAnimation on x {
+                    loops: Animation.Infinite
+                    running: databaseService && databaseService.loading
+                    NumberAnimation { from: -loadingBar.width; to: loadingBar.parent.width; duration: 1200; easing.type: Easing.InOutQuad }
+                }
+            }
+        }
     }
 
     property real lineHeight: 20
 
     Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { executeCurrentQuery(); e.accepted = true } }
+
+    Component.onCompleted: {
+        if (syntaxHighlighter && editor.textDocument)
+            syntaxHighlighter.document = editor.textDocument
+    }
 }
