@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic as T
 import QtQuick.Layouts
+import "ConnHelper.js" as Conn
 
 T.Dialog {
     id: dlg
@@ -244,7 +245,7 @@ T.Dialog {
                         Text { text: "Port"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
                         FlatInput {
                             id: portIn
-                            placeholderText: { return ["5432","3306","","27017","6379","1433","3306"][dlg.dbTypeIdx] || "" }
+                            placeholderText: Conn.defaultPort(dlg.dbTypes[dlg.dbTypeIdx])
                             Layout.fillWidth: true
                         }
                     }
@@ -260,7 +261,7 @@ T.Dialog {
                         Text { text: "Username"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
                         FlatInput {
                             id: userIn
-                            placeholderText: { var t = dlg.dbTypes[dlg.dbTypeIdx]; return t === "postgres" ? "postgres" : t === "mongodb" ? "admin" : "root" }
+                            placeholderText: Conn.defaultUser(dlg.dbTypes[dlg.dbTypeIdx])
                             Layout.fillWidth: true
                         }
                     }
@@ -289,7 +290,7 @@ T.Dialog {
                     Text { text: "Database"; font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.mutedForeground }
                     FlatInput {
                         id: dbNameIn
-                        placeholderText: { var t = dlg.dbTypes[dlg.dbTypeIdx]; return t === "postgres" ? "postgres" : t === "mongodb" ? "admin" : "mydb" }
+                        placeholderText: Conn.defaultDatabase(dlg.dbTypes[dlg.dbTypeIdx])
                         Layout.fillWidth: true
                     }
                 }
@@ -325,20 +326,11 @@ T.Dialog {
                 }
                 FlatInput {
                     id: connStrIn
-                    placeholderText: "Enter connection string..."
+                    placeholderText: Conn.connStrPlaceholder(dlg.dbTypes[dlg.dbTypeIdx])
                     Layout.fillWidth: true
                 }
                 Text {
-                    text: {
-                        var ex = ["postgresql://user:pass@host:5432/db",
-                                  "mysql://user:pass@host:3306/db",
-                                  "/path/to/database.db",
-                                  "mongodb://user:pass@host:27017/db",
-                                  "redis://host:6379",
-                                  "Server=host;Database=db;User=sa;Password=pass",
-                                  "mysql://user:pass@host:3306/db"]
-                        return ex[dlg.dbTypeIdx] || ex[0]
-                    }
+                    text: Conn.connStrPlaceholder(dlg.dbTypes[dlg.dbTypeIdx])
                     font.family: Theme.fontFamily; font.pixelSize: 11
                     color: Theme.mutedForeground; opacity: 0.5
                     wrapMode: Text.Wrap
@@ -478,20 +470,7 @@ T.Dialog {
         if (dlg.modeIdx === 1) return connStrIn.text
         var t = dlg.dbTypes[dlg.dbTypeIdx]
         if (t === "sqlite") return sqliteFileIn.text
-        var h = hostIn.text || "localhost"
-        var p = portIn.text || ""
-        var u = userIn.text || ""
-        var pw = passIn.text || ""
-        var db = dbNameIn.text || ""
-        if (t === "redis") {
-            var rp = redisPassIn.text || ""
-            return "redis://" + (rp ? ":" + rp + "@" : "") + h + (p ? ":" + p : "")
-        }
-        if (t === "postgres") return "postgresql://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
-        if (t === "mysql" || t === "mariadb") return "mysql://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
-        if (t === "mongodb") return "mongodb://" + (u ? u + (pw ? ":" + pw : "") + "@" : "") + h + (p ? ":" + p : "") + "/" + db
-        if (t === "mssql") return "Server=" + h + (p ? "," + p : "") + ";Database=" + db + (u ? ";User=" + u : "") + (pw ? ";Password=" + pw : "")
-        return h
+        return Conn.buildConnStr(t, hostIn.text, portIn.text, userIn.text, passIn.text, dbNameIn.text, redisPassIn.text)
     }
 
     function runTest(): void {

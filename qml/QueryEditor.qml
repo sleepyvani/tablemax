@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
+import "FormatHelper.js" as Fmt
 
 Rectangle {
     color: Theme.bg
@@ -46,7 +47,7 @@ Rectangle {
 
         var res = databaseService.executeQuery(query, resultModel)
         if (res.success) {
-            root.toast(res.rowCount + " rows returned (" + res.execTime.toFixed(1) + " ms)", "success")
+            root.toast(Fmt.formatNumber(res.rowCount) + " rows returned (" + Fmt.formatExecTime(res.execTime) + ")", "success")
         } else {
             root.toast("Error: " + res.error, "destructive")
         }

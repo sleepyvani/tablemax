@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "DbHelper.js" as DB
+import "FormatHelper.js" as Fmt
 
 Rectangle {
     Layout.fillWidth: true; Layout.preferredHeight: 24; color: Theme.bgElevated
@@ -43,7 +44,9 @@ Rectangle {
         Text {
             id: _execTime
             visible: databaseService && databaseService.lastExecTime > 0
-            text: databaseService ? databaseService.lastExecTime.toFixed(1) + " ms" : ""
+            text: databaseService && databaseService.lastExecTime > 0
+                ? Fmt.formatExecTime(databaseService.lastExecTime)
+                : ""
             font.family: Theme.mono; font.pixelSize: 10; color: Theme.fgDim
         }
 

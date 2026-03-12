@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import "FormatHelper.js" as Fmt
+import "DbHelper.js" as DB
 
 Rectangle {
     color: Theme.bg
@@ -8,13 +10,21 @@ Rectangle {
     // Hidden clipboard helper
     TextEdit { id: _csvClip; visible: false }
 
+    // Active DB type
+    property string _dbType: {
+        if (!connectionManager) return ""
+        var c = connectionManager.get(connectionManager.activeIndex)
+        return c ? (c.dbType || "") : ""
+    }
+
     property var columnWidths: []
 
     function calcColWidth(colIdx) {
         if (!resultModel) return 100
         var total = resultModel.totalColumns
         if (total <= 0) return 100
-        return Math.max(120, tv.width / total)
+        // Account for row number column width (48px)
+        return Math.max(120, (tv.width - 48) / total)
     }
 
     ColumnLayout {
@@ -31,7 +41,7 @@ Rectangle {
 
                 Rectangle {
                     height: 16; width: rcText.implicitWidth + 10; radius: Theme.rFull; color: Theme.bgSurface; visible: resultModel && resultModel.totalRows > 0
-                    Text { id: rcText; anchors.centerIn: parent; text: (resultModel ? resultModel.totalRows : 0) + " rows"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
+                    Text { id: rcText; anchors.centerIn: parent; text: Fmt.formatRowCount(resultModel ? resultModel.totalRows : 0); font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
                 }
 
                 Item { Layout.fillWidth: true }
@@ -46,7 +56,7 @@ Rectangle {
                         onClicked: {
                             var csv = databaseService.exportCsv(resultModel)
                             _csvClip.text = csv; _csvClip.selectAll(); _csvClip.copy()
-                            root.toast("Copied " + resultModel.totalRows + " rows to clipboard", "success")
+                            root.toast("Copied " + Fmt.formatNumber(resultModel.totalRows) + " rows to clipboard", "success")
                         }
                     }
                     FlatTooltip { visible: copyMa.containsMouse; text: "Copy as CSV"; x: copyMa.mouseX; y: -30 }
@@ -83,6 +93,17 @@ Rectangle {
             Row {
                 x: -tv.contentX
                 height: parent.height
+
+                // Row number header
+                Rectangle {
+                    width: 48; height: 28; color: "transparent"
+                    Text {
+                        anchors.centerIn: parent
+                        text: "#"; font.family: Theme.mono; font.pixelSize: 9; font.weight: Font.Bold
+                        color: Theme.fgDim; opacity: 0.6
+                    }
+                    Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
+                }
 
                 Repeater {
                     model: resultModel ? resultModel.totalColumns : 0
@@ -126,6 +147,36 @@ Rectangle {
             columnWidthProvider: function(c) { return calcColWidth(c) }
             rowHeightProvider: function() { return 28 }
 
+            // Row numbers overlay
+            Column {
+                z: 2; y: -tv.contentY
+                width: 48
+                visible: resultModel && resultModel.totalRows > 0
+
+                Repeater {
+                    model: resultModel ? resultModel.totalRows : 0
+
+                    Rectangle {
+                        width: 48; height: 28
+                        color: index % 2 === 0 ? Theme.bgElevated : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
+                        border.width: 0
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: (index + 1).toString()
+                            font.family: Theme.mono; font.pixelSize: 9
+                            color: Theme.fgDim; opacity: 0.5
+                        }
+
+                        Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                        Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
+                    }
+                }
+            }
+
+            // Data cells — shifted right by row number column width
+            leftMargin: 48
+
             delegate: Rectangle {
                 implicitWidth: 120; implicitHeight: 28
                 color: row % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
@@ -138,13 +189,14 @@ Rectangle {
                     text: display !== undefined ? String(display) : ""
                     font.family: Theme.mono; font.pixelSize: Theme.t12
                     color: {
-                        if (display === null || display === "NULL") return Theme.fgDim
-                        if (display === "true" || display === "false") return Theme.success
-                        if (!isNaN(display) && display !== "") return Theme.info
+                        var vt = Fmt.valueType(display)
+                        if (vt === "null") return Theme.fgDim
+                        if (vt === "bool") return Theme.success
+                        if (vt === "number") return Theme.info
                         return Theme.fg
                     }
-                    font.italic: display === null || display === "NULL"
-                    elide: Text.ElideRight; opacity: (display === null || display === "NULL") ? 0.5 : 1
+                    font.italic: Fmt.valueType(display) === "null"
+                    elide: Text.ElideRight; opacity: Fmt.valueType(display) === "null" ? 0.5 : 1
                 }
 
                 // Hover highlight + click to copy
@@ -158,7 +210,7 @@ Rectangle {
                     onClicked: {
                         var val = display !== undefined ? String(display) : ""
                         _csvClip.text = val; _csvClip.selectAll(); _csvClip.copy()
-                        root.toast("Copied: " + (val.length > 40 ? val.substring(0, 40) + "…" : val), "success")
+                        root.toast("Copied: " + Fmt.truncate(val, 40), "success")
                     }
                 }
             }
@@ -173,7 +225,7 @@ Rectangle {
             }
         }
 
-        // ─── Empty ───
+        // ─── Empty — DB-aware ───
         Item {
             Layout.fillWidth: true; Layout.fillHeight: true; visible: !resultModel || resultModel.totalRows === 0
 
@@ -185,7 +237,12 @@ Rectangle {
                     Text { anchors.centerIn: parent; text: "⊞"; font.pixelSize: 18; color: Theme.fgDim }
                 }
                 Text { text: "No results"; font.family: Theme.sans; font.pixelSize: Theme.t14; font.weight: Font.DemiBold; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter }
-                Text { text: "Run a query to see data here"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter }
+                Text {
+                    text: databaseService && databaseService.connected
+                        ? "Execute a " + DB.queryMode(_dbType) + " query to see data"
+                        : "Connect to a database first"
+                    font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter
+                }
             }
         }
     }

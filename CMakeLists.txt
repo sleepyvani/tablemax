@@ -164,6 +164,8 @@ if(Qt6_FOUND)
             qml/StatusBar.qml
             qml/WelcomeView.qml
             qml/DbHelper.js
+            qml/ConnHelper.js
+            qml/FormatHelper.js
             qml/FlatButton.qml
             qml/FlatInput.qml
             qml/FlatTextArea.qml

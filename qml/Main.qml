@@ -69,6 +69,59 @@ ApplicationWindow {
     ConnectionDialog { id: connDialog }
     FlatToast { id: toastBar }
 
+    // ── Keyboard Shortcuts Overlay ──
+    FlatDialog {
+        id: shortcutsDialog
+        title: "Keyboard Shortcuts"
+        description: "All available shortcuts"
+
+        contentItem: Column {
+            spacing: 2; width: 340
+
+            Repeater {
+                model: [
+                    { keys: "Ctrl+N", desc: "New query tab" },
+                    { keys: "Ctrl+W", desc: "Close current tab" },
+                    { keys: "Ctrl+Enter", desc: "Execute query" },
+                    { keys: "Ctrl+B", desc: "Toggle sidebar" },
+                    { keys: "Ctrl+T", desc: "Toggle dark/light theme" },
+                    { keys: "Ctrl+/", desc: "Show shortcuts" }
+                ]
+
+                Rectangle {
+                    width: parent.width; height: 32; radius: 4
+                    color: index % 2 === 0 ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02) : "transparent"
+
+                    RowLayout {
+                        anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 8
+
+                        // Key badges
+                        Row {
+                            spacing: 4; Layout.preferredWidth: 130
+                            Repeater {
+                                model: modelData.keys.split("+")
+                                Rectangle {
+                                    width: kbdT.implicitWidth + 12; height: 20; radius: 4
+                                    color: Theme.bgSurface; border.width: 1; border.color: Theme.border
+                                    Text {
+                                        id: kbdT; anchors.centerIn: parent
+                                        text: modelData; font.family: Theme.mono; font.pixelSize: 10; font.weight: Font.Medium
+                                        color: Theme.fg
+                                    }
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: modelData.desc; font.family: Theme.sans; font.pixelSize: 12
+                            color: Theme.fgMuted; Layout.fillWidth: true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     Component.onCompleted: {
         if (tabManager && tabManager.tabs.length === 0) tabManager.addTab()
     }
@@ -87,4 +140,5 @@ ApplicationWindow {
     }
     Shortcut { sequence: "Ctrl+B"; onActivated: root.showSidebar = !root.showSidebar }
     Shortcut { sequence: "Ctrl+T"; onActivated: Theme.toggleTheme() }
+    Shortcut { sequence: "Ctrl+/"; onActivated: shortcutsDialog.open() }
 }
