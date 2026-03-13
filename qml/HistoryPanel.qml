@@ -143,7 +143,7 @@ Rectangle {
                 anchors.centerIn: parent
                 visible: filteredEntries.length === 0
                 icon: Icons.clock; title: searchQuery ? "No results" : "No history yet"
-                subtitle: searchQuery ? "Try a different search" : "Run some queries to see them here"
+                description: searchQuery ? "Try a different search" : "Run some queries to see them here"
             }
         }
 

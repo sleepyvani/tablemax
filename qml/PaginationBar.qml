@@ -18,7 +18,7 @@ Rectangle {
     property var pageSizes: [25, 50, 100, 250, 500, 1000]
 
     signal pageChanged(int page)
-    signal pageSizeChanged(int size)
+    signal rowsPerPageChanged(int size)
 
     Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
 
@@ -44,7 +44,7 @@ Rectangle {
             model: pageSizes
             currentIndex: pageSizes.indexOf(pageSize)
             onCurrentIndexChanged: {
-                if (currentIndex >= 0) pageSizeChanged(pageSizes[currentIndex])
+                if (currentIndex >= 0) rowsPerPageChanged(pageSizes[currentIndex])
             }
         }
 
