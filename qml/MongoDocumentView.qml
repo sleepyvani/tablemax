@@ -204,7 +204,7 @@ Rectangle {
         // Empty state
         FlatEmpty {
             anchors.centerIn: parent; visible: totalRows === 0
-            icon: Icons.database; title: "No documents"; subtitle: "Run a query to see results"
+            icon: Icons.database; title: "No documents"; description: "Run a query to see results"
         }
     }
 

@@ -39,8 +39,12 @@ int main(int argc, char* argv[]) {
     databaseService.loadPlugins(pluginDir);
     qDebug() << "Loaded plugins from:" << pluginDir;
 
-    // Load bundled icon font
-    int fontId = QFontDatabase::addApplicationFont(":/resources/fonts/Phosphor.ttf");
+    // Load bundled icon font — try with QML module prefix first
+    int fontId = QFontDatabase::addApplicationFont(":/TableMax/resources/fonts/Phosphor.ttf");
+    if (fontId < 0)
+        fontId = QFontDatabase::addApplicationFont(":/resources/fonts/Phosphor.ttf");
+    if (fontId < 0)
+        fontId = QFontDatabase::addApplicationFont("qrc:/TableMax/resources/fonts/Phosphor.ttf");
     if (fontId < 0)
         qWarning() << "Failed to load Phosphor icon font";
     else
