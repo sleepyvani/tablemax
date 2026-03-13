@@ -15,7 +15,10 @@ ApplicationWindow {
     property bool showInfoPanel: false
     property bool showFilterPanel: false
     property bool showHistoryPanel: false
+    property bool showRowDetail: false
+    property bool showSearchBar: false
     property bool executing: false
+    property string currentTableName: ""
 
     // Active DB type helper
     property string activeDbType: {
@@ -53,6 +56,21 @@ ApplicationWindow {
             spacing: 0
 
             TabBar_ {}
+
+            // ── Breadcrumb Navigation ──
+            BreadcrumbNav {
+                Layout.fillWidth: true
+                visible: databaseService && databaseService.connected && tabManager && tabManager.tabs.length > 0
+                serverName: {
+                    if (!connectionManager) return ""
+                    var c = connectionManager.get(connectionManager.activeIndex)
+                    return c ? (c.name || "Server") : "Server"
+                }
+                databaseName: databaseService && databaseService.connected ? (databaseService.currentDatabase || "") : ""
+                tableName: root.currentTableName
+                dbType: activeDbType
+                onDatabaseClicked: dbSwitcher.open()
+            }
 
             // ── Toolbar ──
             Toolbar {
@@ -148,6 +166,15 @@ ApplicationWindow {
                                 ColumnLayout {
                                     anchors.fill: parent; spacing: 0
 
+                                    // ── In-grid search ──
+                                    SearchFilterBar {
+                                        id: searchBar
+                                        Layout.fillWidth: true
+                                        isOpen: root.showSearchBar
+                                        resultModel: resultModel
+                                        onClosed: root.showSearchBar = false
+                                    }
+
                                     // SQL Table Grid (default)
                                     DataGrid {
                                         Layout.fillWidth: true; Layout.fillHeight: true
@@ -178,7 +205,6 @@ ApplicationWindow {
                                         pageSize: appSettings ? appSettings.pageSize : 100
                                         onPageChanged: function(page) {
                                             root.toast("Page " + (page + 1), "info")
-                                            // TODO: re-query with OFFSET
                                         }
                                     }
                                 }
@@ -196,7 +222,7 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
             color: Theme.border
-            visible: root.showInfoPanel || root.showHistoryPanel
+            visible: root.showInfoPanel || root.showHistoryPanel || root.showRowDetail
         }
 
         // Info Panel
@@ -226,6 +252,28 @@ ApplicationWindow {
             }
             onPanelClosed: root.showHistoryPanel = false
         }
+
+        // Row Detail Drawer
+        RowDetailDrawer {
+            id: rowDetail
+            Layout.preferredWidth: root.showRowDetail ? 340 : 0
+            Layout.fillHeight: true
+            clip: true
+            isOpen: root.showRowDetail
+            resultModel: resultModel
+            tableName: root.currentTableName
+            Behavior on Layout.preferredWidth { NumberAnimation { duration: Theme.slow; easing.type: Easing.OutCubic } }
+            onClosed: root.showRowDetail = false
+            onRowDeleted: function(row) {
+                if (changeTracker) {
+                    var originalRow = []
+                    for (var i = 0; i < resultModel.totalColumns; i++)
+                        originalRow.push(resultModel.data(resultModel.index(row, i), 0))
+                    changeTracker.recordRowDeletion(row, originalRow)
+                }
+                root.toast("Row marked for deletion", "info")
+            }
+        }
     }
 
     // ── Dialogs ──
@@ -242,6 +290,15 @@ ApplicationWindow {
     SettingsDialog {
         id: settingsDialog
         appSettings: appSettings
+    }
+
+    SQLPreviewDialog {
+        id: sqlPreview
+        changeTracker: changeTracker
+        onConfirmed: {
+            root.toast("Executing " + sqlPreview.statements.length + " statements...", "info")
+            // TODO: execute via databaseService
+        }
     }
 
     QuickSwitcher {
@@ -373,7 +430,13 @@ ApplicationWindow {
     Shortcut { sequence: "Ctrl+T"; onActivated: Theme.toggleTheme() }
     Shortcut { sequence: "Ctrl+/"; onActivated: shortcutsDialog.open() }
     Shortcut { sequence: "Ctrl+,"; onActivated: settingsDialog.open() }
-    Shortcut { sequence: "Ctrl+S"; onActivated: { if (changeTracker && changeTracker.hasChanges) toolbar.saveChanges() } }
+    Shortcut { sequence: "Ctrl+S"; onActivated: {
+        if (changeTracker && changeTracker.hasChanges) {
+            var stmts = changeTracker.generateSQL()
+            sqlPreview.showPreview(stmts)
+        }
+    }}
     Shortcut { sequence: "Ctrl+Z"; onActivated: { if (changeTracker) changeTracker.undo() } }
     Shortcut { sequence: "Ctrl+Y"; onActivated: { if (changeTracker) changeTracker.redo() } }
+    Shortcut { sequence: "Ctrl+G"; onActivated: { root.showSearchBar = true; if (searchBar) searchBar.focusSearch() } }
 }

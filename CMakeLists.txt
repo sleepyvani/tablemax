@@ -258,6 +258,11 @@ if(Qt6_FOUND)
             qml/RedisKeyBrowser.qml
             qml/CellEditor.qml
             qml/Toolbar.qml
+            qml/RowDetailDrawer.qml
+            qml/SQLPreviewDialog.qml
+            qml/SearchFilterBar.qml
+            qml/TableStructureView.qml
+            qml/BreadcrumbNav.qml
         SOURCES
             src/ConnectionManager.h
             src/DatabaseService.h
