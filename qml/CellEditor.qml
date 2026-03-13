@@ -131,8 +131,8 @@ Rectangle {
                 FlatIcon { icon: Icons.code; size: 12; color: Theme.accent }
                 Text { text: "JSON Editor"; font.pixelSize: 11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
                 Item { Layout.fillWidth: true }
-                FlatButton { text: "Format"; flat: true; size: "small"; onClicked: jsonTextArea.text = tryPrettyJson(jsonTextArea.text) }
-                FlatButton { text: "Save"; size: "small"; onClicked: root.commit() }
+                FlatButton { text: "Format"; variant: "ghost"; size: "sm"; onClicked: jsonTextArea.text = tryPrettyJson(jsonTextArea.text) }
+                FlatButton { text: "Save"; size: "sm"; onClicked: root.commit() }
             }
             Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }

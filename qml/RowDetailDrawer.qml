@@ -248,7 +248,7 @@ Rectangle {
 
                 Item { Layout.fillWidth: true }
 
-                FlatButton { text: "Delete"; variant: "destructive"; size: "small"; onClicked: root.rowDeleted(selectedRow) }
+                FlatButton { text: "Delete"; variant: "destructive"; size: "sm"; onClicked: root.rowDeleted(selectedRow) }
             }
         }
     }
