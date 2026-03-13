@@ -107,7 +107,7 @@ FlatDialog {
                 // SQL options
                 RowLayout {
                     visible: selectedFormat === "sql"; spacing: 12
-                    FlatField { id: tableNameField; placeholderText: "Table name"; text: "exported_table"
+                    FlatInput { id: tableNameField; placeholderText: "Table name"; text: "exported_table"
                         implicitWidth: 200; onTextChanged: refreshPreview() }
                 }
 
@@ -174,7 +174,6 @@ FlatDialog {
 
             FlatButton {
                 text: "Save File"
-                highlighted: true
                 onClicked: saveDialog.open()
             }
         }

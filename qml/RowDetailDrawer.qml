@@ -244,7 +244,7 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14; spacing: 8
 
-                FlatButton { text: "Duplicate Row"; flat: true; size: "small"; onClicked: root.rowDuplicated(selectedRow) }
+                FlatButton { text: "Duplicate Row"; variant: "ghost"; size: "sm"; onClicked: root.rowDuplicated(selectedRow) }
 
                 Item { Layout.fillWidth: true }
 
