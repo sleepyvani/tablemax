@@ -3,6 +3,7 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "FormatHelper.js" as Fmt
 import "DbHelper.js" as DB
+import "Icons.js" as Icons
 
 Rectangle {
     color: Theme.bg
@@ -23,7 +24,6 @@ Rectangle {
         if (!resultModel) return 100
         var total = resultModel.totalColumns
         if (total <= 0) return 100
-        // Account for row number column width (48px)
         return Math.max(120, (tv.width - 48) / total)
     }
 
@@ -50,7 +50,7 @@ Rectangle {
                 Rectangle {
                     width: 24; height: 24; radius: Theme.r4; color: copyMa.containsMouse ? Theme.bgHover : "transparent"; visible: resultModel && resultModel.totalRows > 0
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
-                    Text { anchors.centerIn: parent; text: "⧉"; font.pixelSize: 13; color: Theme.fgMuted }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.copy; size: 13; color: Theme.fgMuted }
                     MouseArea {
                         id: copyMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: {
@@ -66,7 +66,7 @@ Rectangle {
                 Rectangle {
                     width: 24; height: 24; radius: Theme.r4; color: exportMa.containsMouse ? Theme.bgHover : "transparent"; visible: resultModel && resultModel.totalRows > 0
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
-                    Text { anchors.centerIn: parent; text: "↓"; font.pixelSize: 13; color: Theme.fgMuted }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.download; size: 13; color: Theme.fgMuted }
                     MouseArea {
                         id: exportMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: {
@@ -158,7 +158,11 @@ Rectangle {
 
                     Rectangle {
                         width: 48; height: 28
-                        color: index % 2 === 0 ? Theme.bgElevated : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
+                        color: {
+                            if (changeTracker && changeTracker.isRowDeleted(index)) return Qt.rgba(1, 0, 0, 0.08)
+                            if (changeTracker && changeTracker.isRowInserted(index)) return Qt.rgba(0, 1, 0, 0.08)
+                            return index % 2 === 0 ? Theme.bgElevated : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
+                        }
                         border.width: 0
 
                         Text {
@@ -166,6 +170,13 @@ Rectangle {
                             text: (index + 1).toString()
                             font.family: Theme.mono; font.pixelSize: 9
                             color: Theme.fgDim; opacity: 0.5
+                        }
+
+                        // Row state indicator
+                        Rectangle {
+                            anchors.left: parent.left; width: 3; height: parent.height; radius: 1
+                            visible: changeTracker && (changeTracker.isRowDeleted(index) || changeTracker.isRowInserted(index))
+                            color: changeTracker && changeTracker.isRowDeleted(index) ? Theme.error : Theme.success
                         }
 
                         Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
@@ -179,10 +190,30 @@ Rectangle {
 
             delegate: Rectangle {
                 implicitWidth: 120; implicitHeight: 28
-                color: row % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
+                color: {
+                    if (changeTracker && changeTracker.isRowDeleted(row)) return Qt.rgba(1, 0, 0, 0.06)
+                    if (changeTracker && changeTracker.isRowInserted(row)) return Qt.rgba(0, 1, 0, 0.06)
+                    if (changeTracker && changeTracker.isCellModified(row, column)) return Qt.rgba(1, 0.7, 0, 0.08)
+                    return row % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
+                }
 
                 Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.4 }
                 Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.3 }
+
+                // Modified cell indicator (top-right triangle)
+                Canvas {
+                    anchors.right: parent.right; anchors.top: parent.top
+                    width: 8; height: 8; visible: changeTracker && changeTracker.isCellModified(row, column)
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.fillStyle = Theme.warning
+                        ctx.beginPath()
+                        ctx.moveTo(width, 0)
+                        ctx.lineTo(width, height)
+                        ctx.lineTo(0, 0)
+                        ctx.fill()
+                    }
+                }
 
                 Text {
                     anchors.fill: parent; anchors.leftMargin: Theme.s8; verticalAlignment: Text.AlignVCenter
@@ -197,9 +228,10 @@ Rectangle {
                     }
                     font.italic: Fmt.valueType(display) === "null"
                     elide: Text.ElideRight; opacity: Fmt.valueType(display) === "null" ? 0.5 : 1
+                    font.strikeout: changeTracker !== undefined && changeTracker !== null && changeTracker.isRowDeleted(row)
                 }
 
-                // Hover highlight + click to copy
+                // Hover highlight + click to copy + double-click to edit
                 Rectangle {
                     anchors.fill: parent
                     color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, _cellMa.containsMouse ? 0.04 : 0)
@@ -211,6 +243,14 @@ Rectangle {
                         var val = display !== undefined ? String(display) : ""
                         _csvClip.text = val; _csvClip.selectAll(); _csvClip.copy()
                         root.toast("Copied: " + Fmt.truncate(val, 40), "success")
+                    }
+                    onDoubleClicked: {
+                        // Inline edit via CellEditor overlay
+                        if (typeof cellEditor !== "undefined" && cellEditor) {
+                            var globalPos = mapToItem(null, 0, 0)
+                            var colName = resultModel ? resultModel.columnName(column) : ""
+                            cellEditor.startEdit(row, column, display !== undefined ? String(display) : "", colName, "", globalPos.x, globalPos.y, width, height)
+                        }
                     }
                 }
             }
@@ -234,7 +274,7 @@ Rectangle {
 
                 Rectangle {
                     Layout.alignment: Qt.AlignHCenter; width: 40; height: 40; radius: Theme.r8; color: Theme.bgSurface
-                    Text { anchors.centerIn: parent; text: "⊞"; font.pixelSize: 18; color: Theme.fgDim }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.grid; size: 18; color: Theme.fgDim }
                 }
                 Text { text: "No results"; font.family: Theme.sans; font.pixelSize: Theme.t14; font.weight: Font.DemiBold; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter }
                 Text {
