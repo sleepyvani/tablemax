@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickStyle>
 #include <QDir>
 #include <QFontDatabase>
 
@@ -49,6 +50,9 @@ int main(int argc, char* argv[]) {
         qWarning() << "Failed to load Phosphor icon font";
     else
         qDebug() << "Loaded Phosphor Icons:" << QFontDatabase::applicationFontFamilies(fontId);
+
+    // Force Basic style — our Flat* components require it
+    QQuickStyle::setStyle("Basic");
 
     // QML engine
     QQmlApplicationEngine engine;

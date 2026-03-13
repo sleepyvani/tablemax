@@ -250,7 +250,7 @@ ApplicationWindow {
                 if (t) t.query = query
                 root.toast("Query loaded to editor", "success")
             }
-            onPanelClosed: root.showHistoryPanel = false
+            onClose: root.showHistoryPanel = false
         }
 
         // Row Detail Drawer
