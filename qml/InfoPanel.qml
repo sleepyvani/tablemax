@@ -89,7 +89,7 @@ Rectangle {
 
         // ── Column List Header ──
         Rectangle {
-            Layout.fillWidth: true; Layout.margins: 12; Layout.marginTop: 0
+            Layout.fillWidth: true; Layout.margins: 12; Layout.topMargin: 0
             Layout.preferredHeight: 28; color: "transparent"
             RowLayout {
                 anchors.verticalCenter: parent.verticalCenter; x: 4; spacing: 6
