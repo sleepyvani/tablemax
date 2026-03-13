@@ -137,6 +137,44 @@ else()
     message(WARNING "MongoDB plugin: DISABLED (mongoc not found at ${MONGOC_ROOT})")
 endif()
 
+# ─── ClickHouse (HTTP via WinHTTP — zero deps on Windows) ───
+if(WIN32)
+    add_library(clickhouse SHARED plugins/clickhouse/clickhouse_plugin.cpp)
+    target_include_directories(clickhouse PRIVATE core/include)
+    target_link_libraries(clickhouse PRIVATE winhttp)
+    set_target_properties(clickhouse PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    message(STATUS "ClickHouse plugin: ENABLED (WinHTTP)")
+else()
+    message(WARNING "ClickHouse plugin: DISABLED (WinHTTP not available)")
+endif()
+
+# ─── DuckDB (embedded C API — needs libduckdb) ─────────────
+set(DUCKDB_DIR "${CMAKE_SOURCE_DIR}/plugins/duckdb")
+if(EXISTS "${DUCKDB_DIR}/duckdb.dll" OR EXISTS "${DUCKDB_DIR}/libduckdb.dll")
+    add_library(duckdb_plugin SHARED plugins/duckdb/duckdb_plugin.cpp)
+    target_include_directories(duckdb_plugin PRIVATE core/include plugins/duckdb)
+    if(EXISTS "${DUCKDB_DIR}/duckdb.dll")
+        target_link_libraries(duckdb_plugin PRIVATE "${DUCKDB_DIR}/duckdb.dll")
+    else()
+        target_link_libraries(duckdb_plugin PRIVATE "${DUCKDB_DIR}/libduckdb.dll")
+    endif()
+    set_target_properties(duckdb_plugin PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON OUTPUT_NAME "duckdb")
+    message(STATUS "DuckDB plugin: ENABLED")
+else()
+    message(WARNING "DuckDB plugin: DISABLED (download libduckdb from https://github.com/duckdb/duckdb/releases to plugins/duckdb/)")
+endif()
+
+# ─── Oracle (via ODBC — requires Oracle ODBC driver) ────────
+if(WIN32)
+    add_library(oracle SHARED plugins/oracle/oracle_plugin.cpp)
+    target_include_directories(oracle PRIVATE core/include)
+    target_link_libraries(oracle PRIVATE odbc32)
+    set_target_properties(oracle PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    message(STATUS "Oracle plugin: ENABLED (ODBC)")
+else()
+    message(WARNING "Oracle plugin: DISABLED (ODBC not available)")
+endif()
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #  Qt UI
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -166,9 +204,17 @@ if(Qt6_FOUND)
             qml/SchemaTree.qml
             qml/StatusBar.qml
             qml/WelcomeView.qml
+            qml/ExportDialog.qml
+            qml/ImportDialog.qml
+            qml/FilterPanel.qml
+            qml/DatabaseSwitcher.qml
+            qml/QuickSwitcher.qml
+            qml/InfoPanel.qml
             qml/DbHelper.js
             qml/ConnHelper.js
             qml/FormatHelper.js
+            qml/Icons.js
+            qml/FlatIcon.qml
             qml/FlatButton.qml
             qml/FlatInput.qml
             qml/FlatTextArea.qml
@@ -205,6 +251,13 @@ if(Qt6_FOUND)
             qml/FlatToggleGroup.qml
             qml/FlatEmpty.qml
             qml/FlatColorPicker.qml
+            qml/PaginationBar.qml
+            qml/HistoryPanel.qml
+            qml/SettingsDialog.qml
+            qml/MongoDocumentView.qml
+            qml/RedisKeyBrowser.qml
+            qml/CellEditor.qml
+            qml/Toolbar.qml
         SOURCES
             src/ConnectionManager.h
             src/DatabaseService.h
@@ -212,6 +265,9 @@ if(Qt6_FOUND)
             src/SchemaService.h
             src/ThemeProvider.h
             src/SyntaxHighlighter.h
+            src/ChangeTracker.h
+            src/HistoryService.h
+            src/AppSettings.h
             src/models/QueryResultModel.h
         RESOURCES
             icons/postgres.svg
@@ -221,6 +277,7 @@ if(Qt6_FOUND)
             icons/redis.svg
             icons/mssql.svg
             icons/mariadb.svg
+            resources/fonts/Phosphor.ttf
     )
 
     target_link_libraries(tablemax PRIVATE

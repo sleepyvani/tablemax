@@ -148,27 +148,139 @@ public:
         return result;
     }
 
-    Q_INVOKABLE QString exportCsv(QObject* model) {
+    Q_INVOKABLE QString exportCsv(QObject* model, const QString& delimiter = ",", bool includeHeaders = true) {
         auto* rm = qobject_cast<QueryResultModel*>(model);
         if (!rm) return "";
         QString csv;
         int cols = rm->totalColumns();
         int rows = rm->totalRows();
-        // Header
-        for (int c = 0; c < cols; ++c) {
-            if (c > 0) csv += ",";
-            csv += escapeCsvField(rm->columnName(c));
+        if (includeHeaders) {
+            for (int c = 0; c < cols; ++c) {
+                if (c > 0) csv += delimiter;
+                csv += escapeCsvField(rm->columnName(c));
+            }
+            csv += "\n";
         }
-        csv += "\n";
-        // Rows
         for (int r = 0; r < rows; ++r) {
             for (int c = 0; c < cols; ++c) {
-                if (c > 0) csv += ",";
+                if (c > 0) csv += delimiter;
                 csv += escapeCsvField(rm->cellValue(r, c).toString());
             }
             csv += "\n";
         }
         return csv;
+    }
+
+    Q_INVOKABLE QString exportJson(QObject* model, bool prettyPrint = true) {
+        auto* rm = qobject_cast<QueryResultModel*>(model);
+        if (!rm) return "[]";
+        int cols = rm->totalColumns();
+        int rows = rm->totalRows();
+        QString indent = prettyPrint ? "  " : "";
+        QString nl = prettyPrint ? "\n" : "";
+        QString json = "[" + nl;
+        for (int r = 0; r < rows; ++r) {
+            if (r > 0) json += "," + nl;
+            json += indent + "{";
+            for (int c = 0; c < cols; ++c) {
+                if (c > 0) json += ", ";
+                QString name = rm->columnName(c);
+                QString val = rm->cellValue(r, c).toString();
+                json += "\"" + escapeJsonString(name) + "\": " + formatJsonValue(val);
+            }
+            json += "}";
+        }
+        json += nl + "]";
+        return json;
+    }
+
+    Q_INVOKABLE QString exportSql(QObject* model, const QString& tableName = "exported_table", int batchSize = 100) {
+        auto* rm = qobject_cast<QueryResultModel*>(model);
+        if (!rm) return "";
+        int cols = rm->totalColumns();
+        int rows = rm->totalRows();
+        // Build column list
+        QStringList colList;
+        for (int c = 0; c < cols; ++c)
+            colList << ("\"" + rm->columnName(c) + "\"");
+        QString colStr = colList.join(", ");
+        QString sql = "-- TableMax SQL Export\n-- Table: " + tableName + "\n\n";
+        int batch = 0;
+        for (int r = 0; r < rows; ++r) {
+            if (batch == 0)
+                sql += "INSERT INTO \"" + tableName + "\" (" + colStr + ") VALUES\n";
+            QStringList vals;
+            for (int c = 0; c < cols; ++c) {
+                QString v = rm->cellValue(r, c).toString();
+                if (v == "NULL" || v.isEmpty()) vals << "NULL";
+                else vals << ("'" + v.replace("'", "''") + "'");
+            }
+            sql += "  (" + vals.join(", ") + ")";
+            batch++;
+            if (batch >= batchSize || r == rows - 1) {
+                sql += ";\n\n";
+                batch = 0;
+            } else {
+                sql += ",\n";
+            }
+        }
+        return sql;
+    }
+
+    Q_INVOKABLE bool exportToFile(const QString& filePath, const QString& content) {
+        QFile f(filePath);
+        if (!f.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
+        f.write(content.toUtf8());
+        f.close();
+        return true;
+    }
+
+    Q_INVOKABLE QVariantMap importSqlFile(const QString& filePath) {
+        QVariantMap result;
+        result["success"] = false;
+        result["executed"] = 0;
+        result["error"] = "";
+        if (connId_ < 0) { result["error"] = "Not connected"; return result; }
+
+        QFile f(filePath);
+        if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            result["error"] = "Cannot open file";
+            return result;
+        }
+        QString content = QString::fromUtf8(f.readAll());
+        f.close();
+
+        // Split by semicolons, execute each non-empty statement
+        QStringList statements = content.split(';', Qt::SkipEmptyParts);
+        int count = 0;
+        for (auto& stmt : statements) {
+            QString trimmed = stmt.trimmed();
+            if (trimmed.isEmpty() || trimmed.startsWith("--")) continue;
+            auto stream = engine_.execute(connId_, trimmed.toStdString());
+            if (!stream) {
+                result["error"] = QString::fromStdString(engine_.last_error());
+                result["executed"] = count;
+                return result;
+            }
+            stream->close();
+            count++;
+        }
+        result["success"] = true;
+        result["executed"] = count;
+        return result;
+    }
+
+    Q_INVOKABLE bool switchDatabase(const QString& dbName) {
+        if (connId_ < 0) return false;
+        // Execute USE database for SQL databases
+        auto stream = engine_.execute(connId_, "USE " + dbName.toStdString());
+        if (!stream) {
+            // Try SET search_path for PostgreSQL
+            stream = engine_.execute(connId_, "SET search_path TO " + dbName.toStdString());
+            if (!stream) return false;
+        }
+        stream->close();
+        return true;
     }
 
 signals:
@@ -194,5 +306,24 @@ private:
             return "\"" + e + "\"";
         }
         return f;
+    }
+
+    QString escapeJsonString(const QString& s) {
+        QString r = s;
+        r.replace("\\", "\\\\").replace("\"", "\\\"")
+         .replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
+        return r;
+    }
+
+    QString formatJsonValue(const QString& val) {
+        if (val == "NULL" || val.isEmpty()) return "null";
+        if (val == "true" || val == "false") return val;
+        // Try number
+        bool ok;
+        val.toLongLong(&ok);
+        if (ok) return val;
+        val.toDouble(&ok);
+        if (ok) return val;
+        return "\"" + escapeJsonString(val) + "\"";
     }
 };

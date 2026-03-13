@@ -1,0 +1,147 @@
+// Toolbar.qml — Main toolbar with connection status + action buttons
+// Ported from TablePro TableProToolbarView.swift
+
+import QtQuick
+import QtQuick.Controls.Basic
+import QtQuick.Layouts
+import "Icons.js" as Icons
+
+Rectangle {
+    id: root
+    height: 44; color: Theme.bgElevated
+
+    property bool connected: false
+    property string connectionName: ""
+    property string dbType: ""
+    property bool executing: false
+    property bool hasChanges: false
+    property bool canUndo: false
+    property bool canRedo: false
+
+    signal executeQuery()
+    signal formatQuery()
+    signal saveChanges()
+    signal discardChanges()
+    signal undoAction()
+    signal redoAction()
+    signal toggleHistory()
+    signal toggleSettings()
+    signal addRow()
+    signal deleteRows()
+    signal refreshData()
+
+    RowLayout {
+        anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 6
+
+        // ── Connection status ──
+        Rectangle {
+            width: connRow.implicitWidth + 16; height: 28; radius: 14
+            color: connected ? Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.1)
+                             : Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.1)
+            RowLayout {
+                id: connRow; anchors.centerIn: parent; spacing: 6
+                Rectangle { width: 6; height: 6; radius: 3; color: connected ? Theme.success : Theme.error }
+                Text {
+                    text: connected ? connectionName : "Disconnected"
+                    font.pixelSize: 11; font.weight: Font.Medium; font.family: Theme.fontFamily
+                    color: connected ? Theme.fg : Theme.fgMuted
+                }
+                // DB type badge
+                Rectangle {
+                    visible: dbType !== "" && connected
+                    width: dbTypeLbl.implicitWidth + 8; height: 16; radius: 8
+                    color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
+                    Text { id: dbTypeLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: 8; font.weight: Font.Bold; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                }
+            }
+        }
+
+        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+
+        // ── Execute ──
+        ToolBtn { icon: Icons.play; tip: "Execute (Ctrl+Enter)"; accent: true; spinning: executing; onClicked: executeQuery() }
+        ToolBtn { icon: Icons.formatText; tip: "Format SQL"; onClicked: formatQuery() }
+
+        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+
+        // ── Row operations ──
+        ToolBtn { icon: Icons.add; tip: "Add Row"; onClicked: addRow() }
+        ToolBtn { icon: Icons.trash; tip: "Delete Selected"; onClicked: deleteRows() }
+        ToolBtn { icon: Icons.refresh; tip: "Refresh"; onClicked: refreshData() }
+
+        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+
+        // ── Undo / Redo ──
+        ToolBtn { icon: Icons.undo; tip: "Undo (Ctrl+Z)"; enabled: canUndo; onClicked: undoAction() }
+        ToolBtn { icon: Icons.redo; tip: "Redo (Ctrl+Y)"; enabled: canRedo; onClicked: redoAction() }
+
+        Item { Layout.fillWidth: true }
+
+        // ── Save changes indicator ──
+        Rectangle {
+            visible: hasChanges
+            width: saveRow.implicitWidth + 16; height: 28; radius: 14
+            color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
+
+            RowLayout {
+                id: saveRow; anchors.centerIn: parent; spacing: 6
+                FlatIcon { icon: Icons.warning; size: 12; color: Theme.warning }
+                Text { text: "Unsaved changes"; font.pixelSize: 11; font.weight: Font.Medium; color: Theme.warning; font.family: Theme.fontFamily }
+            }
+
+            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: saveChanges() }
+        }
+
+        // Discard
+        ToolBtn { visible: hasChanges; icon: Icons.close; tip: "Discard changes"; onClicked: discardChanges() }
+        // Save
+        ToolBtn { visible: hasChanges; icon: Icons.save; tip: "Save changes (Ctrl+S)"; accent: true; onClicked: saveChanges() }
+
+        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter; visible: !hasChanges }
+
+        // ── Right side ──
+        ToolBtn { icon: Icons.clock; tip: "History"; onClicked: toggleHistory() }
+        ToolBtn { icon: Icons.settings; tip: "Settings"; onClicked: toggleSettings() }
+    }
+
+    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+
+    // ── Execution indicator animation ──
+    Rectangle {
+        anchors.bottom: parent.bottom; height: 2; color: Theme.accent; visible: executing
+        width: parent.width * 0.3; radius: 1
+
+        SequentialAnimation on x {
+            running: executing; loops: Animation.Infinite
+            NumberAnimation { from: 0; to: root.width * 0.7; duration: 800; easing.type: Easing.InOutQuad }
+            NumberAnimation { from: root.width * 0.7; to: 0; duration: 800; easing.type: Easing.InOutQuad }
+        }
+    }
+
+    // ── Tool button component ──
+    component ToolBtn : Rectangle {
+        property string icon: ""
+        property string tip: ""
+        property bool accent: false
+        property bool spinning: false
+
+        signal clicked()
+
+        width: 28; height: 28; radius: Theme.r6
+        color: accent ? (tbMa.containsMouse ? Qt.darker(Theme.accent, 1.1) : Theme.accent)
+             : tbMa.containsMouse ? Theme.bgHover : "transparent"
+        opacity: enabled ? 1 : 0.3
+
+        FlatIcon {
+            anchors.centerIn: parent; icon: parent.icon; size: 14
+            color: parent.accent ? "#fff" : Theme.fgMuted
+
+            RotationAnimation on rotation {
+                running: spinning; loops: Animation.Infinite; from: 0; to: 360; duration: 1000
+            }
+        }
+
+        MouseArea { id: tbMa; anchors.fill: parent; hoverEnabled: true; cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor; onClicked: if (parent.enabled) parent.clicked() }
+        FlatTooltip { visible: tbMa.containsMouse && tip !== ""; text: tip; x: tbMa.mouseX; y: -30 }
+    }
+}

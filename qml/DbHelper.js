@@ -3,8 +3,11 @@
 
 function isSQL(dbType) {
     var t = (dbType || "").toLowerCase()
-    return ["postgres", "mysql", "sqlite", "mssql", "mariadb"].indexOf(t) >= 0
+    return ["postgres", "mysql", "sqlite", "mssql", "mariadb", "clickhouse", "duckdb", "oracle"].indexOf(t) >= 0
 }
+function isClickHouse(dbType) { return (dbType || "").toLowerCase() === "clickhouse" }
+function isDuckDB(dbType) { return (dbType || "").toLowerCase() === "duckdb" }
+function isOracle(dbType) { return (dbType || "").toLowerCase() === "oracle" }
 function isMongo(dbType) { return (dbType || "").toLowerCase() === "mongodb" }
 function isRedis(dbType) { return (dbType || "").toLowerCase() === "redis" }
 
@@ -36,14 +39,17 @@ function nodeBadge(dbType, nodeType) {
 function dbAccent(dbType) {
     var t = (dbType || "").toLowerCase()
     switch (t) {
-        case "postgres":  return "#336791"
-        case "mysql":     return "#00758f"
-        case "mariadb":   return "#003545"
-        case "sqlite":    return "#44A6C6"
-        case "mongodb":   return "#00ed64"
-        case "redis":     return "#d82c20"
-        case "mssql":     return "#CC2927"
-        default:          return "#6366f1"
+        case "postgres":    return "#336791"
+        case "mysql":       return "#00758f"
+        case "mariadb":     return "#003545"
+        case "sqlite":      return "#44A6C6"
+        case "mongodb":     return "#00ed64"
+        case "redis":       return "#d82c20"
+        case "mssql":       return "#CC2927"
+        case "clickhouse":  return "#FFCC00"
+        case "duckdb":      return "#FFD900"
+        case "oracle":      return "#C3160B"
+        default:            return "#6366f1"
     }
 }
 
@@ -52,6 +58,8 @@ function buildSelectQuery(dbType, entityName) {
         return '{"find": "' + entityName + '", "limit": 20}'
     if (isRedis(dbType))
         return "KEYS " + entityName + "*"
+    if (isOracle(dbType))
+        return 'SELECT * FROM "' + entityName + '" FETCH FIRST 100 ROWS ONLY'
     return 'SELECT * FROM "' + entityName + '" LIMIT 100'
 }
 
@@ -72,13 +80,16 @@ function queryMode(dbType) {
 function displayName(dbType) {
     var t = (dbType || "").toLowerCase()
     switch (t) {
-        case "postgres":  return "PostgreSQL"
-        case "mysql":     return "MySQL"
-        case "mariadb":   return "MariaDB"
-        case "sqlite":    return "SQLite"
-        case "mongodb":   return "MongoDB"
-        case "redis":     return "Redis"
-        case "mssql":     return "SQL Server"
-        default:          return dbType || "Database"
+        case "postgres":    return "PostgreSQL"
+        case "mysql":       return "MySQL"
+        case "mariadb":     return "MariaDB"
+        case "sqlite":      return "SQLite"
+        case "mongodb":     return "MongoDB"
+        case "redis":       return "Redis"
+        case "mssql":       return "SQL Server"
+        case "clickhouse":  return "ClickHouse"
+        case "duckdb":      return "DuckDB"
+        case "oracle":      return "Oracle"
+        default:            return dbType || "Database"
     }
 }
