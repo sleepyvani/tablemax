@@ -125,7 +125,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 text: "CONNECTIONS"
                 font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
-                font.letterSpacing: 0.8; color: Theme.fgDim; opacity: 0.6
+                font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
             }
         }
 
@@ -135,9 +135,9 @@ Rectangle {
             Layout.preferredHeight: {
                 var count = model ? model.length : 0
                 if (count === 0) return 52
-                return Math.min(count * 30 + 4, 200)
+                return Math.min(count * 38 + 4, 240)
             }
-            Layout.minimumHeight: 30
+            Layout.minimumHeight: 38
             clip: true; spacing: 0
             boundsBehavior: Flickable.StopAtBounds
 
@@ -159,7 +159,7 @@ Rectangle {
 
             delegate: Rectangle {
                 id: _connRow
-                width: _connList.width; height: 30
+                width: _connList.width; height: 38
                 property bool active: connectionManager.activeIndex === index
                 property bool hovered: _connMa.containsMouse
 
@@ -168,9 +168,16 @@ Rectangle {
                     : hovered ? Theme.bgHover : "transparent"
                 Behavior on color { ColorAnimation { duration: Theme.fast } }
 
+                // Active accent bar (Rule 7.5)
+                Rectangle {
+                    width: 3; height: parent.height
+                    color: Theme.accent; visible: _connRow.active
+                    anchors.left: parent.left
+                }
+
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8
+                    anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s8
                     spacing: Theme.s6
 
                     // Status dot
@@ -321,7 +328,7 @@ Rectangle {
                 Text {
                     text: "SCHEMA"
                     font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
-                    font.letterSpacing: 0.8; color: Theme.fgDim; opacity: 0.6
+                    font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
                     Layout.fillWidth: true
                 }
 

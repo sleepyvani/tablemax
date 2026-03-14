@@ -8,7 +8,7 @@ import "Icons.js" as Icons
 
 Rectangle {
     id: root
-    height: 44; color: Theme.bgElevated
+    height: 38; color: Theme.bgElevated
 
     property bool connected: false
     property string connectionName: ""
