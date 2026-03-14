@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import "DbHelper.js" as DB
 import "FormatHelper.js" as Fmt
+import "Icons.js" as Icons
 
 Rectangle {
     Layout.fillWidth: true; Layout.preferredHeight: 24; color: Theme.bgElevated
@@ -86,10 +87,10 @@ Rectangle {
             color: themeMa.containsMouse ? Theme.bgHover : "transparent"
             Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-            Text {
+            FlatIcon {
                 anchors.centerIn: parent
-                text: Theme.darkMode ? "☾" : "☀"
-                font.pixelSize: Theme.t11; color: Theme.fgMuted
+                icon: Theme.darkMode ? Icons.moon : Icons.sun
+                size: 11; color: Theme.fgMuted
             }
 
             MouseArea {

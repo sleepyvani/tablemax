@@ -135,9 +135,7 @@ Rectangle {
             Layout.preferredHeight: {
                 var count = model ? model.length : 0
                 if (count === 0) return 52
-                var schemaEmpty = !schemaService || schemaService.tree.length === 0
-                var maxRatio = schemaEmpty ? 0.5 : 0.3
-                return Math.min(count * 30 + 4, sidebar.height * maxRatio)
+                return Math.min(count * 30 + 4, 200)
             }
             Layout.minimumHeight: 30
             clip: true; spacing: 0

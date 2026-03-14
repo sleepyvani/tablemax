@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import "DbHelper.js" as DB
+import "Icons.js" as Icons
 
 Rectangle {
     id: welcomeRoot
@@ -97,8 +98,8 @@ Rectangle {
 
                 Repeater {
                     model: [
-                        { icon: "+", label: "New Connection", desc: "Add a database", action: "conn" },
-                        { icon: "▷", label: "New Query", desc: "Write SQL", action: "tab" }
+                        { iconCode: Icons.add, label: "New Connection", desc: "Add a database", action: "conn" },
+                        { iconCode: Icons.edit, label: "New Query", desc: "Write SQL", action: "tab" }
                     ]
 
                     Rectangle {
@@ -129,9 +130,9 @@ Rectangle {
                                 color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
                                 border.width: 1; border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.15)
 
-                                Text {
-                                    anchors.centerIn: parent; text: modelData.icon
-                                    font.pixelSize: Theme.t14; color: Theme.accent
+                                FlatIcon {
+                                    anchors.centerIn: parent; icon: modelData.iconCode
+                                    size: 14; color: Theme.accent
                                 }
                             }
 
@@ -220,8 +221,8 @@ Rectangle {
                             }
 
                             // Connect arrow
-                            Text {
-                                text: "→"; font.pixelSize: Theme.t14
+                            FlatIcon {
+                                icon: Icons.right; size: 12
                                 color: _rcMa.containsMouse ? Theme.accent : Theme.fgDim
                                 Behavior on color { ColorAnimation { duration: Theme.fast } }
                             }

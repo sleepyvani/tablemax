@@ -60,6 +60,8 @@ var lightning     = "\uE2DE"   // lightning
 var chart         = "\uE150"   // chart-bar
 var star          = "\uE46A"   // star
 var heart         = "\uE2A8"   // heart
+var moon          = "\uE318"   // moon
+var sun           = "\uE474"   // sun
 
 // ── Communication ──
 var chat          = "\uE17A"   // chat-text

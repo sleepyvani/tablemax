@@ -268,8 +268,5 @@ Rectangle {
 
     Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { executeCurrentQuery(); e.accepted = true } }
 
-    Component.onCompleted: {
-        if (syntaxHighlighter && editor.textDocument)
-            syntaxHighlighter.document = editor.textDocument
-    }
+
 }
