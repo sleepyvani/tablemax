@@ -29,24 +29,24 @@ FlatDialog {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 36
             color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.06)
-            radius: 6
+            radius: Theme.r6
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 10
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                 FlatIcon { icon: Icons.code; size: 14; color: Theme.accent }
                 Text {
                     text: statements.length + " statement" + (statements.length !== 1 ? "s" : "") + " to execute"
-                    font.pixelSize: 12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
                 }
                 Item { Layout.fillWidth: true }
 
                 // Copy all
                 Rectangle {
-                    width: 70; height: 24; radius: 12
+                    width: 70; height: 24; radius: Theme.rFull
                     color: copyAllMa.containsMouse ? Theme.bgHover : Theme.bgSurface
                     border.width: 1; border.color: Theme.border
-                    Text { anchors.centerIn: parent; text: "Copy All"; font.pixelSize: 10; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
+                    Text { anchors.centerIn: parent; text: "Copy All"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
                     MouseArea {
                         id: copyAllMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: {
@@ -68,7 +68,7 @@ FlatDialog {
             ColumnLayout {
                 id: stmtCol
                 anchors.left: parent.left; anchors.right: parent.right
-                spacing: 6
+                spacing: Theme.s6
 
                 Repeater {
                     model: statements.length
@@ -80,19 +80,19 @@ FlatDialog {
 
                         Layout.fillWidth: true
                         Layout.preferredHeight: Math.max(stmtText.implicitHeight + 24, 48)
-                        radius: 6
+                        radius: Theme.r6
                         color: Theme.bgSurface
                         border.width: 1; border.color: Theme.border
 
                         RowLayout {
                             anchors.fill: parent
-                            anchors.leftMargin: 12; anchors.rightMargin: 8
-                            anchors.topMargin: 6; anchors.bottomMargin: 6
-                            spacing: 8
+                            anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s8
+                            anchors.topMargin: Theme.s6; anchors.bottomMargin: Theme.s6
+                            spacing: Theme.s8
 
                             // Statement type icon
                             Rectangle {
-                                width: 24; height: 24; radius: 12
+                                width: 24; height: 24; radius: Theme.rFull
                                 color: {
                                     var s = stmtIdx < statements.length ? statements[stmtIdx] : ""
                                     if (s.indexOf("INSERT") === 0) return Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.12)
@@ -123,13 +123,13 @@ FlatDialog {
                             Text {
                                 id: stmtText
                                 text: stmtItem.stmtIdx < root.statements.length ? root.statements[stmtItem.stmtIdx] : ""
-                                font.pixelSize: 11; font.family: Theme.mono; color: Theme.fg
+                                font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.fg
                                 wrapMode: Text.WrapAnywhere; Layout.fillWidth: true
                             }
 
                             // Copy individual
                             Rectangle {
-                                width: 24; height: 24; radius: 4
+                                width: 24; height: 24; radius: Theme.r4
                                 color: copySingleMa.containsMouse ? Theme.bgHover : "transparent"
                                 FlatIcon { anchors.centerIn: parent; icon: Icons.copy; size: 11; color: Theme.fgMuted }
                                 MouseArea {
@@ -160,9 +160,9 @@ FlatDialog {
             visible: statements.length > 0
 
             RowLayout {
-                anchors.centerIn: parent; spacing: 6
+                anchors.centerIn: parent; spacing: Theme.s6
                 FlatIcon { icon: Icons.warning; size: 12; color: Theme.warning }
-                Text { text: "This will modify data in your database. Proceed with caution."; font.pixelSize: 11; color: Theme.warning; font.family: Theme.fontFamily }
+                Text { text: "This will modify data in your database. Proceed with caution."; font.pixelSize: Theme.t11; color: Theme.warning; font.family: Theme.fontFamily }
             }
         }
 
@@ -170,7 +170,7 @@ FlatDialog {
 
         // ── Action buttons ──
         RowLayout {
-            Layout.fillWidth: true; spacing: 8
+            Layout.fillWidth: true; spacing: Theme.s8
 
             Item { Layout.fillWidth: true }
             FlatButton { text: "Cancel"; variant: "ghost"; onClicked: { cancelled(); root.close() } }

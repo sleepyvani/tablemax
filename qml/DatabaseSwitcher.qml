@@ -22,15 +22,15 @@ FlatPopover {
             Layout.fillWidth: true; Layout.preferredHeight: 40
             color: "transparent"
             RowLayout {
-                anchors.fill: parent; anchors.margins: 12; spacing: 8
+                anchors.fill: parent; anchors.margins: Theme.s12; spacing: Theme.s8
                 FlatIcon { icon: Icons.database; size: 14; color: Theme.accent }
                 Text {
-                    text: "Databases"; font.family: Theme.sans; font.pixelSize: 13
+                    text: "Databases"; font.family: Theme.sans; font.pixelSize: Theme.t13
                     font.weight: Font.DemiBold; color: Theme.fg
                 }
                 Item { Layout.fillWidth: true }
                 Text {
-                    text: databases.length + " total"; font.pixelSize: 11; color: Theme.fgMuted
+                    text: databases.length + " total"; font.pixelSize: Theme.t11; color: Theme.fgMuted
                 }
             }
         }
@@ -61,15 +61,15 @@ FlatPopover {
                 radius: Theme.r4
 
                 RowLayout {
-                    anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 8
+                    anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                     Rectangle {
-                        width: 6; height: 6; radius: 3
+                        width: 6; height: 6; radius: Theme.rFull
                         color: name === currentDb ? Theme.accent : "transparent"
                     }
 
                     Text {
-                        text: name; font.family: Theme.mono; font.pixelSize: 12
+                        text: name; font.family: Theme.mono; font.pixelSize: Theme.t12
                         color: name === currentDb ? Theme.accent : Theme.fg
                         font.weight: name === currentDb ? Font.DemiBold : Font.Normal
                         Layout.fillWidth: true; elide: Text.ElideRight
@@ -77,7 +77,7 @@ FlatPopover {
 
                     Text {
                         text: name === currentDb ? "current" : ""
-                        font.pixelSize: 10; color: Theme.fgMuted
+                        font.pixelSize: Theme.t11; color: Theme.fgMuted
                     }
                 }
 
@@ -95,7 +95,7 @@ FlatPopover {
         // Empty
         Text {
             visible: dbModel.count === 0
-            text: "No databases found"; font.pixelSize: 12; color: Theme.fgMuted
+            text: "No databases found"; font.pixelSize: Theme.t12; color: Theme.fgMuted
             Layout.alignment: Qt.AlignHCenter; Layout.margins: 16
         }
     }

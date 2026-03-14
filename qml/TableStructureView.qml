@@ -25,24 +25,24 @@ Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 40; color: Theme.bgElevated
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 12; spacing: 8
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                 FlatIcon { icon: Icons.grid; size: 14; color: Theme.accent }
                 Text {
                     text: tableName || "Table Structure"
-                    font.pixelSize: 13; font.weight: Font.DemiBold; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t13; font.weight: Font.DemiBold; font.family: Theme.fontFamily
                     color: Theme.fg; Layout.fillWidth: true; elide: Text.ElideRight
                 }
 
                 // Column count badge
                 Rectangle {
-                    height: 18; width: colCountLbl.implicitWidth + 12; radius: 9
+                    height: 18; width: colCountLbl.implicitWidth + Theme.s12; radius: Theme.rFull
                     color: Theme.bgSurface
-                    Text { id: colCountLbl; anchors.centerIn: parent; text: columns.length + " columns"; font.pixelSize: 9; font.family: Theme.mono; color: Theme.fgDim }
+                    Text { id: colCountLbl; anchors.centerIn: parent; text: columns.length + " columns"; font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.fgDim }
                 }
 
                 Rectangle {
-                    width: 24; height: 24; radius: 4
+                    width: 24; height: 24; radius: Theme.r4
                     color: structCloseMa.containsMouse ? Theme.bgHover : "transparent"
                     FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 12; color: Theme.fgMuted }
                     MouseArea { id: structCloseMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.closed() }
@@ -57,12 +57,12 @@ Rectangle {
 
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14; spacing: 0
-                Text { text: "#"; font.pixelSize: 10; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 32 }
-                Text { text: "COLUMN"; font.pixelSize: 10; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.fillWidth: true; Layout.preferredWidth: 180 }
-                Text { text: "TYPE"; font.pixelSize: 10; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 120 }
-                Text { text: "NULL"; font.pixelSize: 10; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 48 }
-                Text { text: "DEFAULT"; font.pixelSize: 10; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
-                Text { text: "EXTRA"; font.pixelSize: 10; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
+                Text { text: "#"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 32 }
+                Text { text: "COLUMN"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.fillWidth: true; Layout.preferredWidth: 180 }
+                Text { text: "TYPE"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 120 }
+                Text { text: "NULL"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 48 }
+                Text { text: "DEFAULT"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
+                Text { text: "EXTRA"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
             }
             Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
         }
@@ -91,19 +91,19 @@ Rectangle {
 
                     // Column name + PK indicator
                     RowLayout {
-                        Layout.fillWidth: true; Layout.preferredWidth: 180; spacing: 4
+                        Layout.fillWidth: true; Layout.preferredWidth: 180; spacing: Theme.s4
 
                         // PK badge
                         Rectangle {
                             visible: colRow.modelData.pk === true
-                            width: 18; height: 14; radius: 3
+                            width: 18; height: 14; radius: Theme.r4
                             color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.15)
                             Text { anchors.centerIn: parent; text: "PK"; font.pixelSize: 7; font.weight: Font.Bold; color: Theme.warning; font.family: Theme.mono }
                         }
 
                         Text {
                             text: colRow.modelData.name || ""
-                            font.pixelSize: 12; font.weight: colRow.modelData.pk ? Font.DemiBold : Font.Normal
+                            font.pixelSize: Theme.t12; font.weight: colRow.modelData.pk ? Font.DemiBold : Font.Normal
                             font.family: Theme.fontFamily; color: Theme.fg
                             elide: Text.ElideRight; Layout.fillWidth: true
                         }
@@ -111,14 +111,14 @@ Rectangle {
 
                     // Type
                     Rectangle {
-                        Layout.preferredWidth: 120; height: 20; radius: 4
+                        Layout.preferredWidth: 120; height: 20; radius: Theme.r4
                         color: Qt.rgba(Theme.info.r, Theme.info.g, Theme.info.b, 0.08)
                         Layout.alignment: Qt.AlignVCenter
 
                         Text {
                             anchors.centerIn: parent
                             text: colRow.modelData.type || "unknown"
-                            font.pixelSize: 10; font.family: Theme.mono; color: Theme.info
+                            font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.info
                             elide: Text.ElideRight
                         }
                     }

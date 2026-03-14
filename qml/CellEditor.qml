@@ -69,11 +69,11 @@ Rectangle {
     ColumnLayout {
         id: textEditor; visible: false; anchors.fill: parent; anchors.margins: 2; spacing: 0
         RowLayout {
-            Layout.fillWidth: true; spacing: 4
+            Layout.fillWidth: true; spacing: Theme.s4
             TextInput {
                 id: textInput
                 Layout.fillWidth: true; Layout.fillHeight: true
-                font.pixelSize: 12; font.family: "Cascadia Code, Consolas, monospace"
+                font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
                 color: Theme.fg; selectByMouse: true; clip: true
                 verticalAlignment: TextInput.AlignVCenter
                 leftPadding: 6
@@ -86,10 +86,10 @@ Rectangle {
 
             // NULL button
             Rectangle {
-                width: 36; height: 22; radius: 4
+                width: 36; height: 22; radius: Theme.r4
                 color: nullMa.containsMouse ? Theme.bgHover : "transparent"
                 border.color: Theme.border; border.width: 1
-                Text { anchors.centerIn: parent; text: "NULL"; font.pixelSize: 9; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                Text { anchors.centerIn: parent; text: "NULL"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.fontFamily }
                 MouseArea {
                     id: nullMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: { textInput.text = ""; root.committed(editRow, editCol, null) ; root.visible = false }
@@ -98,7 +98,7 @@ Rectangle {
 
             // Confirm button
             Rectangle {
-                width: 22; height: 22; radius: 4; color: commitMa.containsMouse ? Theme.accent : Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
+                width: 22; height: 22; radius: Theme.r4; color: commitMa.containsMouse ? Theme.accent : Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
                 FlatIcon { anchors.centerIn: parent; icon: Icons.check; size: 11; color: commitMa.containsMouse ? "#fff" : Theme.accent }
                 MouseArea { id: commitMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.commit() }
             }
@@ -107,7 +107,7 @@ Rectangle {
 
     // ── Boolean editor ──
     RowLayout {
-        id: boolEditor; visible: false; anchors.fill: parent; anchors.margins: 6; spacing: 8
+        id: boolEditor; visible: false; anchors.fill: parent; anchors.margins: Theme.s6; spacing: Theme.s8
 
         property bool checked: false
 
@@ -115,7 +115,7 @@ Rectangle {
             checked: boolEditor.checked
             onCheckedChanged: { boolEditor.checked = checked; root.commit() }
         }
-        Text { text: boolEditor.checked ? "TRUE" : "FALSE"; font.pixelSize: 12; font.weight: Font.Medium; color: boolEditor.checked ? Theme.success : Theme.fgMuted; font.family: Theme.fontFamily }
+        Text { text: boolEditor.checked ? "TRUE" : "FALSE"; font.pixelSize: Theme.t12; font.weight: Font.Medium; color: boolEditor.checked ? Theme.success : Theme.fgMuted; font.family: Theme.fontFamily }
         Item { Layout.fillWidth: true }
     }
 
@@ -127,9 +127,9 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 28; color: Theme.bgElevated
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 8; anchors.rightMargin: 8; spacing: 6
+                anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8; spacing: Theme.s6
                 FlatIcon { icon: Icons.code; size: 12; color: Theme.accent }
-                Text { text: "JSON Editor"; font.pixelSize: 11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
+                Text { text: "JSON Editor"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
                 Item { Layout.fillWidth: true }
                 FlatButton { text: "Format"; variant: "ghost"; size: "sm"; onClicked: jsonTextArea.text = tryPrettyJson(jsonTextArea.text) }
                 FlatButton { text: "Save"; size: "sm"; onClicked: root.commit() }
@@ -141,7 +141,7 @@ Rectangle {
             Layout.fillWidth: true; Layout.fillHeight: true
             TextArea {
                 id: jsonTextArea
-                font.pixelSize: 12; font.family: "Cascadia Code, Consolas, monospace"
+                font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
                 color: Theme.fg; wrapMode: Text.WrapAnywhere; selectByMouse: true
                 background: Rectangle { color: "transparent" }
                 padding: 8

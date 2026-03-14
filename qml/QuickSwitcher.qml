@@ -30,14 +30,14 @@ FlatDialog {
             color: "transparent"
 
             RowLayout {
-                anchors.fill: parent; spacing: 8
+                anchors.fill: parent; spacing: Theme.s8
 
                 FlatIcon { icon: Icons.search; size: 16; color: Theme.fgMuted; Layout.leftMargin: 4 }
 
                 TextInput {
                     id: searchField
                     Layout.fillWidth: true
-                    font.family: Theme.sans; font.pixelSize: 15; color: Theme.fg
+                    font.family: Theme.sans; font.pixelSize: Theme.t14; color: Theme.fg
                     selectByMouse: true; clip: true
 
                     Text {
@@ -72,7 +72,7 @@ FlatDialog {
                 radius: Theme.r4
 
                 RowLayout {
-                    anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 10
+                    anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                     // Icon Badge
                     Rectangle {
@@ -102,11 +102,11 @@ FlatDialog {
                     ColumnLayout {
                         spacing: 0; Layout.fillWidth: true
                         Text {
-                            text: name; font.family: Theme.sans; font.pixelSize: 13
+                            text: name; font.family: Theme.sans; font.pixelSize: Theme.t13
                             color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true
                         }
                         Text {
-                            text: itemType; font.pixelSize: 10; color: Theme.fgMuted
+                            text: itemType; font.pixelSize: Theme.t11; color: Theme.fgMuted
                         }
                     }
 
@@ -128,11 +128,11 @@ FlatDialog {
         // Empty
         ColumnLayout {
             visible: resultsModel.count === 0
-            Layout.alignment: Qt.AlignHCenter; Layout.margins: 24; spacing: 4
+            Layout.alignment: Qt.AlignHCenter; Layout.margins: Theme.s24; spacing: Theme.s4
             FlatIcon { icon: Icons.search; size: 24; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter }
             Text {
                 text: searchField.text ? "No results found" : "Start typing to search"
-                font.pixelSize: 13; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter
+                font.pixelSize: Theme.t13; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter
             }
         }
 
@@ -142,7 +142,7 @@ FlatDialog {
             color: Theme.bgSurface; radius: Theme.r4
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 12; spacing: 16
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; spacing: Theme.s16
                 Repeater {
                     model: [
                         { keys: "\u2191\u2193", desc: "Navigate" },
@@ -150,14 +150,14 @@ FlatDialog {
                         { keys: "Esc", desc: "Close" }
                     ]
                     Row {
-                        spacing: 4
+                        spacing: Theme.s4
                         Rectangle {
-                            width: kt.implicitWidth + 8; height: 18; radius: 3
+                            width: kt.implicitWidth + Theme.s8; height: 18; radius: Theme.r4
                             color: Theme.bgHover; border.width: 1; border.color: Theme.border
                             Text { id: kt; anchors.centerIn: parent; text: modelData.keys
-                                   font.pixelSize: 10; font.family: Theme.mono; color: Theme.fgMuted }
+                                   font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.fgMuted }
                         }
-                        Text { text: modelData.desc; font.pixelSize: 10; color: Theme.fgDim
+                        Text { text: modelData.desc; font.pixelSize: Theme.t11; color: Theme.fgDim
                                anchors.verticalCenter: parent.verticalCenter }
                     }
                 }
