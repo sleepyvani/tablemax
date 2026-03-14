@@ -30,7 +30,7 @@ Rectangle {
 
     // Fade-in on load
     Component.onCompleted: fadeIn.start()
-    NumberAnimation { id: fadeIn; target: welcomeRoot; property: "opacity"; from: 0; to: 1; duration: 400; easing.type: Easing.OutCubic }
+    NumberAnimation { id: fadeIn; target: welcomeRoot; property: "opacity"; from: 0; to: 1; duration: Theme.slow; easing.type: Easing.OutCubic }
 
     Flickable {
         anchors.fill: parent; contentHeight: mainCol.height + 80
@@ -41,14 +41,14 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top; anchors.topMargin: Math.max(40, parent.height * 0.08)
             width: Math.min(parent.width - 60, 500)
-            spacing: 32
+            spacing: Theme.s32
 
             // Logo
             Item {
                 Layout.alignment: Qt.AlignHCenter; width: 64; height: 64
 
                 Rectangle {
-                    anchors.fill: parent; radius: 16
+                    anchors.fill: parent; radius: Theme.r16
                     gradient: Gradient {
                         GradientStop { position: 0; color: "#6366f1" }
                         GradientStop { position: 1; color: "#8b5cf6" }
@@ -56,7 +56,7 @@ Rectangle {
 
                     Text {
                         anchors.centerIn: parent; text: "T"
-                        font.pixelSize: 28; font.weight: Font.Bold; color: "#fff"
+                        font.pixelSize: Theme.t24; font.weight: Font.Bold; color: "#fff"
                         font.family: Theme.sans
                     }
                 }
@@ -76,24 +76,24 @@ Rectangle {
 
             // Title
             ColumnLayout {
-                spacing: 6; Layout.alignment: Qt.AlignHCenter
+                spacing: Theme.s6; Layout.alignment: Qt.AlignHCenter
 
                 Text {
                     text: "TableMax"
-                    font.family: Theme.sans; font.pixelSize: 28; font.weight: Font.Bold
+                    font.family: Theme.sans; font.pixelSize: Theme.t24; font.weight: Font.Bold
                     color: Theme.fg; Layout.alignment: Qt.AlignHCenter
                     font.letterSpacing: -0.5
                 }
                 Text {
                     text: "Modern database management tool"
-                    font.family: Theme.sans; font.pixelSize: 14; color: Theme.fgMuted
+                    font.family: Theme.sans; font.pixelSize: Theme.t14; color: Theme.fgMuted
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
 
             // ── Quick Actions ──
             RowLayout {
-                Layout.alignment: Qt.AlignHCenter; spacing: 12
+                Layout.alignment: Qt.AlignHCenter; spacing: Theme.s12
 
                 Repeater {
                     model: [
@@ -110,7 +110,7 @@ Rectangle {
 
                         Behavior on color { ColorAnimation { duration: Theme.normal } }
                         Behavior on border.color { ColorAnimation { duration: Theme.normal } }
-                        Behavior on scale { NumberAnimation { duration: 80 } }
+                        Behavior on scale { NumberAnimation { duration: Theme.fast } }
 
                         // Hover glow
                         Rectangle {
@@ -121,7 +121,7 @@ Rectangle {
                         }
 
                         ColumnLayout {
-                            anchors.centerIn: parent; spacing: 8
+                            anchors.centerIn: parent; spacing: Theme.s8
 
                             Rectangle {
                                 Layout.alignment: Qt.AlignHCenter
@@ -131,21 +131,21 @@ Rectangle {
 
                                 Text {
                                     anchors.centerIn: parent; text: modelData.icon
-                                    font.pixelSize: 14; color: Theme.accent
+                                    font.pixelSize: Theme.t14; color: Theme.accent
                                 }
                             }
 
                             ColumnLayout {
-                                spacing: 2; Layout.alignment: Qt.AlignHCenter
+                                spacing: Theme.s2; Layout.alignment: Qt.AlignHCenter
 
                                 Text {
                                     text: modelData.label; font.family: Theme.sans
-                                    font.pixelSize: 13; font.weight: Font.DemiBold
+                                    font.pixelSize: Theme.t13; font.weight: Font.DemiBold
                                     color: Theme.fg; Layout.alignment: Qt.AlignHCenter
                                 }
                                 Text {
                                     text: modelData.desc; font.family: Theme.sans
-                                    font.pixelSize: 11; color: Theme.fgDim
+                                    font.pixelSize: Theme.t11; color: Theme.fgDim
                                     Layout.alignment: Qt.AlignHCenter
                                 }
                             }
@@ -162,12 +162,12 @@ Rectangle {
 
             // ── Recent Connections ──
             ColumnLayout {
-                Layout.fillWidth: true; spacing: 8
+                Layout.fillWidth: true; spacing: Theme.s8
                 visible: connectionManager && connectionManager.connections.length > 0
 
                 Text {
                     text: "RECENT CONNECTIONS"
-                    font.family: Theme.sans; font.pixelSize: 9; font.weight: Font.DemiBold
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold
                     font.letterSpacing: 1.5; color: Theme.fgDim; opacity: 0.6
                     Layout.alignment: Qt.AlignHCenter
                 }
@@ -185,11 +185,11 @@ Rectangle {
                         border.width: 1
                         border.color: _rcMa.containsMouse ? Theme.borderLight : Theme.border
 
-                        Behavior on color { ColorAnimation { duration: 80 } }
-                        Behavior on border.color { ColorAnimation { duration: 80 } }
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
+                        Behavior on border.color { ColorAnimation { duration: Theme.fast } }
 
                         RowLayout {
-                            anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 10
+                            anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                             // Color dot
                             Rectangle {
@@ -210,20 +210,20 @@ Rectangle {
                                 Layout.fillWidth: true; spacing: 0
                                 Text {
                                     text: modelData.name || "Untitled"
-                                    font.family: Theme.sans; font.pixelSize: 12; font.weight: Font.DemiBold
+                                    font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold
                                     color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true
                                 }
                                 Text {
                                     text: DB.displayName(modelData.dbType || "")
-                                    font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim
+                                    font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
                                 }
                             }
 
                             // Connect arrow
                             Text {
-                                text: "→"; font.pixelSize: 14
+                                text: "→"; font.pixelSize: Theme.t14
                                 color: _rcMa.containsMouse ? Theme.accent : Theme.fgDim
-                                Behavior on color { ColorAnimation { duration: 80 } }
+                                Behavior on color { ColorAnimation { duration: Theme.fast } }
                             }
                         }
 
@@ -242,11 +242,11 @@ Rectangle {
 
             // ── Keyboard Shortcuts ──
             ColumnLayout {
-                Layout.alignment: Qt.AlignHCenter; spacing: 8
+                Layout.alignment: Qt.AlignHCenter; spacing: Theme.s8
 
                 Text {
                     text: "KEYBOARD SHORTCUTS"
-                    font.family: Theme.sans; font.pixelSize: 9; font.weight: Font.DemiBold
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold
                     font.letterSpacing: 1.5; color: Theme.fgDim; opacity: 0.6
                     Layout.alignment: Qt.AlignHCenter
                 }
@@ -261,20 +261,20 @@ Rectangle {
                     ]
 
                     RowLayout {
-                        Layout.alignment: Qt.AlignHCenter; spacing: 10
+                        Layout.alignment: Qt.AlignHCenter; spacing: Theme.s8
 
                         Rectangle {
-                            height: 20; width: skText.implicitWidth + 12; radius: Theme.r4
+                            height: 20; width: skText.implicitWidth + Theme.s12; radius: Theme.r4
                             color: Theme.bgSurface; border.width: 1; border.color: Theme.border
 
                             Text {
                                 id: skText; anchors.centerIn: parent; text: modelData.k
-                                font.family: Theme.mono; font.pixelSize: 10; color: Theme.fgDim
+                                font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
                             }
                         }
                         Text {
                             text: modelData.d; font.family: Theme.sans
-                            font.pixelSize: 12; color: Theme.fgDim
+                            font.pixelSize: Theme.t12; color: Theme.fgDim
                         }
                     }
                 }
