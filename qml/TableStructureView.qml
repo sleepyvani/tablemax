@@ -56,7 +56,7 @@ Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 28; color: Theme.bgElevated
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14; spacing: 0
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: 0
                 Text { text: "#"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 32 }
                 Text { text: "COLUMN"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.fillWidth: true; Layout.preferredWidth: 180 }
                 Text { text: "TYPE"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 120 }

@@ -228,7 +228,7 @@ Rectangle {
                 return Math.min(contentHeight + 4, sidebar.height * maxRatio)
             }
             Layout.minimumHeight: 52
-            clip: true; spacing: 2
+            clip: true; spacing: Theme.s2
             boundsBehavior: Flickable.StopAtBounds
 
             model: {

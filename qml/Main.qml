@@ -352,7 +352,7 @@ ApplicationWindow {
         dialogDescription: "All available shortcuts"
 
         contentItem: Column {
-            spacing: 2; width: 420
+            spacing: Theme.s2; width: 420
 
             Repeater {
                 model: [
@@ -375,22 +375,22 @@ ApplicationWindow {
                 ]
 
                 Rectangle {
-                    width: parent.width; height: 32; radius: 4
+                    width: parent.width; height: 32; radius: Theme.r4
                     color: index % 2 === 0 ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02) : "transparent"
 
                     RowLayout {
-                        anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 8
+                        anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                         Row {
-                            spacing: 4; Layout.preferredWidth: 180
+                            spacing: Theme.s4; Layout.preferredWidth: 180
                             Repeater {
                                 model: modelData.keys.split("+")
                                 Rectangle {
-                                    width: kbdT.implicitWidth + 12; height: 20; radius: 4
+                                    width: kbdT.implicitWidth + Theme.s12; height: 20; radius: Theme.r4
                                     color: Theme.bgSurface; border.width: 1; border.color: Theme.border
                                     Text {
                                         id: kbdT; anchors.centerIn: parent
-                                        text: modelData; font.family: Theme.mono; font.pixelSize: 10; font.weight: Font.Medium
+                                        text: modelData; font.family: Theme.mono; font.pixelSize: Theme.t11; font.weight: Font.Medium
                                         color: Theme.fg
                                     }
                                 }
@@ -398,7 +398,7 @@ ApplicationWindow {
                         }
 
                         Text {
-                            text: modelData.desc; font.family: Theme.sans; font.pixelSize: 12
+                            text: modelData.desc; font.family: Theme.sans; font.pixelSize: Theme.t12
                             color: Theme.fgMuted; Layout.fillWidth: true
                         }
                     }
