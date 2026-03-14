@@ -26,7 +26,7 @@ Rectangle {
             color: "transparent"
 
             RowLayout {
-                anchors.fill: parent; anchors.margins: 12; spacing: 8
+                anchors.fill: parent; anchors.margins: Theme.s12; spacing: Theme.s8
 
                 Rectangle {
                     width: 28; height: 28; radius: Theme.r6
@@ -40,12 +40,12 @@ Rectangle {
                     spacing: 0; Layout.fillWidth: true
                     Text {
                         text: tableName || "No table selected"
-                        font.family: Theme.mono; font.pixelSize: 13; font.weight: Font.DemiBold
+                        font.family: Theme.mono; font.pixelSize: Theme.t13; font.weight: Font.DemiBold
                         color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true
                     }
                     Text {
                         text: schema.length + " columns"
-                        font.pixelSize: 10; color: Theme.fgMuted
+                        font.pixelSize: Theme.t11; color: Theme.fgMuted
                     }
                 }
             }
@@ -55,7 +55,7 @@ Rectangle {
 
         // ── Stats Cards ──
         RowLayout {
-            Layout.fillWidth: true; Layout.margins: 12; spacing: 8
+            Layout.fillWidth: true; Layout.margins: Theme.s12; spacing: Theme.s8
 
             Repeater {
                 model: [
@@ -69,17 +69,17 @@ Rectangle {
                     color: Theme.bgSurface; border.width: 1; border.color: Theme.border
 
                     ColumnLayout {
-                        anchors.centerIn: parent; spacing: 2
+                        anchors.centerIn: parent; spacing: Theme.s2
                         Text {
-                            text: modelData.value; font.family: Theme.mono; font.pixelSize: 14
+                            text: modelData.value; font.family: Theme.mono; font.pixelSize: Theme.t14
                             font.weight: Font.DemiBold; color: Theme.fg
                             Layout.alignment: Qt.AlignHCenter
                         }
                         RowLayout {
-                            Layout.alignment: Qt.AlignHCenter; spacing: 4
+                            Layout.alignment: Qt.AlignHCenter; spacing: Theme.s4
                             FlatIcon { icon: modelData.iconCode; size: 10; color: Theme.fgMuted }
                             Text {
-                                text: modelData.label; font.pixelSize: 10; color: Theme.fgMuted
+                                text: modelData.label; font.pixelSize: Theme.t11; color: Theme.fgMuted
                             }
                         }
                     }
@@ -92,10 +92,10 @@ Rectangle {
             Layout.fillWidth: true; Layout.margins: 12; Layout.topMargin: 0
             Layout.preferredHeight: 28; color: "transparent"
             RowLayout {
-                anchors.verticalCenter: parent.verticalCenter; x: 4; spacing: 6
+                anchors.verticalCenter: parent.verticalCenter; x: 4; spacing: Theme.s6
                 FlatIcon { icon: Icons.column; size: 11; color: Theme.fgMuted }
                 Text {
-                    text: "COLUMNS"; font.family: Theme.sans; font.pixelSize: 11
+                    text: "COLUMNS"; font.family: Theme.sans; font.pixelSize: Theme.t11
                     font.weight: Font.DemiBold; color: Theme.fgMuted; font.letterSpacing: 1
                 }
             }
@@ -104,7 +104,7 @@ Rectangle {
         ListView {
             Layout.fillWidth: true; Layout.fillHeight: true
             Layout.leftMargin: 12; Layout.rightMargin: 12
-            clip: true; spacing: 2
+            clip: true; spacing: Theme.s2
             model: schema
 
             delegate: Rectangle {
@@ -114,11 +114,11 @@ Rectangle {
                 MouseArea { id: mouseArea; anchors.fill: parent; hoverEnabled: true }
 
                 RowLayout {
-                    anchors.fill: parent; anchors.leftMargin: 8; anchors.rightMargin: 8; spacing: 6
+                    anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8; spacing: Theme.s6
 
                     // PK indicator
                     Rectangle {
-                        width: 18; height: 18; radius: 9
+                        width: 18; height: 18; radius: Theme.rFull
                         color: modelData.primaryKey ? Theme.accent : "transparent"
                         border.width: modelData.primaryKey ? 0 : 1
                         border.color: Theme.border
@@ -134,18 +134,18 @@ Rectangle {
                     ColumnLayout {
                         spacing: 0; Layout.fillWidth: true
                         Text {
-                            text: modelData.name; font.family: Theme.mono; font.pixelSize: 12
+                            text: modelData.name; font.family: Theme.mono; font.pixelSize: Theme.t12
                             color: Theme.fg; elide: Text.ElideRight; Layout.fillWidth: true
                         }
                         RowLayout {
-                            spacing: 4
+                            spacing: Theme.s4
                             Text {
-                                text: modelData.type; font.pixelSize: 10; color: Theme.accent
+                                text: modelData.type; font.pixelSize: Theme.t11; color: Theme.accent
                                 font.family: Theme.mono
                             }
                             Text {
                                 visible: modelData.nullable
-                                text: "nullable"; font.pixelSize: 10; color: Theme.fgDim
+                                text: "nullable"; font.pixelSize: Theme.t11; color: Theme.fgDim
                             }
                         }
                     }
@@ -153,12 +153,12 @@ Rectangle {
                     // Default value badge
                     Rectangle {
                         visible: modelData.defaultValue && modelData.defaultValue !== ""
-                        width: defText.implicitWidth + 8; height: 16; radius: 3
+                        width: defText.implicitWidth + Theme.s8; height: 16; radius: Theme.r4
                         color: Theme.bgSurface; border.width: 1; border.color: Theme.border
                         Text {
                             id: defText; anchors.centerIn: parent
                             text: "= " + (modelData.defaultValue || "")
-                            font.pixelSize: 9; font.family: Theme.mono; color: Theme.fgMuted
+                            font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.fgMuted
                         }
                     }
                 }
@@ -169,12 +169,12 @@ Rectangle {
         ColumnLayout {
             visible: schema.length === 0
             Layout.fillWidth: true; Layout.fillHeight: true
-            Layout.alignment: Qt.AlignCenter; spacing: 8
+            Layout.alignment: Qt.AlignCenter; spacing: Theme.s8
 
             FlatIcon { icon: Icons.table; size: 32; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter }
             Text {
                 text: "Select a table to view its structure"
-                font.pixelSize: 13; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter
+                font.pixelSize: Theme.t13; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter
             }
         }
     }

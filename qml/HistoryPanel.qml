@@ -27,16 +27,16 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 40; color: Theme.bgElevated
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 8
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
                 FlatIcon { icon: Icons.clock; size: 14; color: Theme.accent }
-                Text { text: "Query History"; font.pixelSize: 13; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.fontFamily; Layout.fillWidth: true }
+                Text { text: "Query History"; font.pixelSize: Theme.t13; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.fontFamily; Layout.fillWidth: true }
                 Text {
                     text: filteredEntries.length
-                    font.pixelSize: 11; color: Theme.fgMuted; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
                     visible: filteredEntries.length > 0
                 }
                 Rectangle {
-                    width: 20; height: 20; radius: 4; color: closeMa.containsMouse ? Theme.bgHover : "transparent"
+                    width: 20; height: 20; radius: Theme.r4; color: closeMa.containsMouse ? Theme.bgHover : "transparent"
                     FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 10; color: Theme.fgMuted }
                     MouseArea { id: closeMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.close() }
                 }
@@ -48,12 +48,12 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 36; color: Theme.bgElevated
             RowLayout {
-                anchors.fill: parent; anchors.margins: 8; spacing: 6
+                anchors.fill: parent; anchors.margins: Theme.s8; spacing: Theme.s6
                 FlatIcon { icon: Icons.search; size: 12; color: Theme.fgMuted }
                 TextInput {
                     id: searchInput
                     Layout.fillWidth: true; Layout.fillHeight: true
-                    font.pixelSize: 12; font.family: Theme.fontFamily; color: Theme.fg
+                    font.pixelSize: Theme.t12; font.family: Theme.fontFamily; color: Theme.fg
                     selectByMouse: true; clip: true
                     onTextChanged: searchQuery = text
                     Text {
@@ -62,7 +62,7 @@ Rectangle {
                     }
                 }
                 Rectangle {
-                    width: 16; height: 16; radius: 8; color: clearMa.containsMouse ? Theme.bgHover : "transparent"
+                    width: 16; height: 16; radius: Theme.rFull; color: clearMa.containsMouse ? Theme.bgHover : "transparent"
                     visible: searchInput.text.length > 0
                     FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 8; color: Theme.fgMuted }
                     MouseArea { id: clearMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { searchInput.text = ""; searchQuery = "" } }
@@ -84,25 +84,25 @@ Rectangle {
                 ColumnLayout {
                     id: histCol
                     anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter; margins: 12 }
-                    spacing: 4
+                    spacing: Theme.s4
 
                     // Query text
                     Text {
                         Layout.fillWidth: true
                         text: modelData.query || ""
-                        font.pixelSize: 12; font.family: "Cascadia Code, Consolas, monospace"
+                        font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
                         color: Theme.fg; wrapMode: Text.NoWrap; elide: Text.ElideRight
                         maximumLineCount: 2
                     }
 
                     // Metadata row
                     RowLayout {
-                        spacing: 8
+                        spacing: Theme.s8
                         // Database badge
                         Rectangle {
-                            width: dbLabel.implicitWidth + 8; height: 16; radius: 3
+                            width: dbLabel.implicitWidth + Theme.s8; height: 16; radius: Theme.r4
                             color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
-                            Text { id: dbLabel; anchors.centerIn: parent; text: modelData.database || "" ;font.pixelSize: 9; color: Theme.accent; font.family: Theme.fontFamily }
+                            Text { id: dbLabel; anchors.centerIn: parent; text: modelData.database || "" ;font.pixelSize: Theme.t11; color: Theme.accent; font.family: Theme.fontFamily }
                         }
                         // Status
                         FlatIcon {
@@ -112,12 +112,12 @@ Rectangle {
                         // Execution time
                         Text {
                             text: (modelData.executionTime || 0).toFixed(0) + "ms"
-                            font.pixelSize: 10; color: Theme.fgMuted; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
                         }
                         // Rows affected
                         Text {
                             text: (modelData.rowsAffected || 0) + " rows"
-                            font.pixelSize: 10; color: Theme.fgMuted; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
                             visible: (modelData.rowsAffected || 0) > 0
                         }
                         Item { Layout.fillWidth: true }
@@ -156,7 +156,7 @@ Rectangle {
                 anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12
                 Item { Layout.fillWidth: true }
                 FlatButton {
-                    text: "Clear History"; flat: true; size: "small"
+                    text: "Clear History"; variant: "ghost"; size: "sm"
                     onClicked: if (historyService) historyService.clearHistory()
                 }
             }
