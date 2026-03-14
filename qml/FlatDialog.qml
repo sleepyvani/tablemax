@@ -8,6 +8,7 @@ T.Dialog {
     property string dialogTitle: ""
     property string dialogDescription: ""
 
+    parent: Overlay.overlay
     anchors.centerIn: parent
     modal: true
     dim: true
@@ -31,6 +32,7 @@ T.Dialog {
 
     header: ColumnLayout {
         spacing: Theme.s4
+        Layout.margins: Theme.s24
         visible: root.dialogTitle.length > 0
 
         Text {
