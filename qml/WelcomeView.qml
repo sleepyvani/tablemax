@@ -41,14 +41,14 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top; anchors.topMargin: Math.max(40, parent.height * 0.08)
             width: Math.min(parent.width - 60, 500)
-            spacing: Theme.s32
+            spacing: 32
 
             // Logo
             Item {
                 Layout.alignment: Qt.AlignHCenter; width: 64; height: 64
 
                 Rectangle {
-                    anchors.fill: parent; radius: Theme.r16
+                    anchors.fill: parent; radius: Theme.r12
                     gradient: Gradient {
                         GradientStop { position: 0; color: "#6366f1" }
                         GradientStop { position: 1; color: "#8b5cf6" }

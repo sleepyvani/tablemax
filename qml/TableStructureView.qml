@@ -84,10 +84,10 @@ Rectangle {
                 color: colRowMa.containsMouse ? Theme.bgHover : colIdx % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
 
                 RowLayout {
-                    anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14; spacing: 0
+                    anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: 0
 
                     // Row number
-                    Text { text: (colRow.colIdx + 1).toString(); font.pixelSize: 10; font.family: Theme.mono; color: Theme.fgDim; Layout.preferredWidth: 32 }
+                    Text { text: (colRow.colIdx + 1).toString(); font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.fgDim; Layout.preferredWidth: 32 }
 
                     // Column name + PK indicator
                     RowLayout {
@@ -126,7 +126,7 @@ Rectangle {
                     // Nullable
                     Text {
                         text: colRow.modelData.nullable ? "YES" : "NO"
-                        font.pixelSize: 10; font.family: Theme.mono; Layout.preferredWidth: 48
+                        font.pixelSize: Theme.t11; font.family: Theme.mono; Layout.preferredWidth: 48
                         color: colRow.modelData.nullable ? Theme.fgDim : Theme.warning
                         font.weight: colRow.modelData.nullable ? Font.Normal : Font.Bold
                     }
@@ -134,7 +134,7 @@ Rectangle {
                     // Default
                     Text {
                         text: colRow.modelData.defaultVal !== undefined && colRow.modelData.defaultVal !== null ? String(colRow.modelData.defaultVal) : "—"
-                        font.pixelSize: 10; font.family: Theme.mono; Layout.preferredWidth: 100
+                        font.pixelSize: Theme.t11; font.family: Theme.mono; Layout.preferredWidth: 100
                         color: colRow.modelData.defaultVal !== undefined && colRow.modelData.defaultVal !== null ? Theme.fg : Theme.fgDim
                         elide: Text.ElideRight
                     }
@@ -142,7 +142,7 @@ Rectangle {
                     // Extra (AUTO_INCREMENT, etc.)
                     Text {
                         text: colRow.modelData.extra || "—"
-                        font.pixelSize: 10; font.family: Theme.mono; Layout.preferredWidth: 100
+                        font.pixelSize: Theme.t11; font.family: Theme.mono; Layout.preferredWidth: 100
                         color: (colRow.modelData.extra || "") !== "" ? Theme.accent : Theme.fgDim
                         elide: Text.ElideRight
                     }

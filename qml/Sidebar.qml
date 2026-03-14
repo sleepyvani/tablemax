@@ -52,8 +52,8 @@ Rectangle {
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 14
-                anchors.rightMargin: 10
+                anchors.leftMargin: Theme.s12
+                anchors.rightMargin: Theme.s8
                 spacing: Theme.s8
 
                 // Logo
@@ -650,7 +650,7 @@ Rectangle {
             }
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
                 spacing: Theme.s6
 
                 // Connection status dot

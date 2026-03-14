@@ -158,7 +158,7 @@ Rectangle {
                         ColumnLayout {
                             id: fieldContent
                             anchors.left: parent.left; anchors.right: parent.right
-                            anchors.leftMargin: 14; anchors.rightMargin: 14
+                            anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
                             anchors.verticalCenter: parent.verticalCenter
                             spacing: Theme.s4
 
