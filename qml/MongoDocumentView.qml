@@ -25,17 +25,17 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 36; color: Theme.bgElevated
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 8
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
                 FlatIcon { icon: Icons.list; size: 14; color: Theme.accent }
                 Text {
                     text: totalRows + " document" + (totalRows !== 1 ? "s" : "")
-                    font.pixelSize: 12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
                 }
                 Item { Layout.fillWidth: true }
 
                 // View mode toggle
                 Row {
-                    spacing: 2
+                    spacing: Theme.s2
                     property string viewMode: "list"
 
                     Rectangle {
@@ -62,7 +62,7 @@ Rectangle {
             id: docListView
             Layout.fillWidth: true; Layout.fillHeight: true
             visible: parent.viewMode === "list"
-            model: totalRows; clip: true; spacing: 8
+            model: totalRows; clip: true; spacing: Theme.s8
             boundsBehavior: Flickable.StopAtBounds
             topMargin: 8; bottomMargin: 8; leftMargin: 12; rightMargin: 12
 
@@ -79,14 +79,14 @@ Rectangle {
                 ColumnLayout {
                     id: docContent
                     anchors { left: parent.left; right: parent.right; top: parent.top; margins: 12 }
-                    spacing: 4
+                    spacing: Theme.s4
 
                     // Document header
                     RowLayout {
-                        Layout.fillWidth: true; spacing: 8
+                        Layout.fillWidth: true; spacing: Theme.s8
 
                         Rectangle {
-                            width: 20; height: 20; radius: 4; color: "transparent"
+                            width: 20; height: 20; radius: Theme.r4; color: "transparent"
                             FlatIcon {
                                 anchors.centerIn: parent
                                 icon: docDelegate.expanded ? Icons.down : Icons.right
@@ -99,13 +99,13 @@ Rectangle {
 
                         Text {
                             text: "Document " + (docDelegate.docIndex + 1)
-                            font.pixelSize: 11; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.fontFamily
                         }
 
                         // _id badge
                         Rectangle {
                             visible: totalColumns > 0 && resultModel !== null
-                            width: idLabel.implicitWidth + 12; height: 18; radius: 9
+                            width: idLabel.implicitWidth + Theme.s12; height: 18; radius: Theme.rFull
                             color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
                             Text {
                                 id: idLabel; anchors.centerIn: parent
@@ -118,7 +118,7 @@ Rectangle {
                         Item { Layout.fillWidth: true }
 
                         Rectangle {
-                            width: 22; height: 22; radius: 4; color: copyDocMa.containsMouse ? Theme.bgHover : "transparent"
+                            width: 22; height: 22; radius: Theme.r4; color: copyDocMa.containsMouse ? Theme.bgHover : "transparent"
                             FlatIcon { anchors.centerIn: parent; icon: Icons.copy; size: 11; color: Theme.fgMuted }
                             MouseArea {
                                 id: copyDocMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
@@ -133,14 +133,14 @@ Rectangle {
                         Text {
                             Layout.fillWidth: true
                             text: getDocPreview(docDelegate.docIndex)
-                            font.pixelSize: 11; font.family: "Cascadia Code, Consolas, monospace"
+                            font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
                             color: Theme.fgMuted; elide: Text.ElideRight; maximumLineCount: 1
                         }
                     }
 
                     // Expanded — show all fields
                     ColumnLayout {
-                        visible: docDelegate.expanded; spacing: 2; Layout.leftMargin: 28; Layout.fillWidth: true
+                        visible: docDelegate.expanded; spacing: Theme.s2; Layout.leftMargin: 28; Layout.fillWidth: true
 
                         Repeater {
                             model: totalColumns
@@ -148,7 +148,7 @@ Rectangle {
                             RowLayout {
                                 required property int index
                                 property int colIdx: index
-                                Layout.fillWidth: true; spacing: 8
+                                Layout.fillWidth: true; spacing: Theme.s8
 
                                 Text {
                                     text: resultModel ? String(resultModel.headerData(colIdx, Qt.Horizontal, 0) || ("col_" + colIdx)) : ""
@@ -194,7 +194,7 @@ Rectangle {
 
             TextArea {
                 text: generateAllDocsJson()
-                font.pixelSize: 12; font.family: "Cascadia Code, Consolas, monospace"
+                font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
                 color: Theme.fg; readOnly: true; wrapMode: Text.WrapAnywhere
                 background: Rectangle { color: "transparent" }
                 padding: 16

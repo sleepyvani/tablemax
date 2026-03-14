@@ -25,11 +25,11 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 36; color: Theme.bgElevated
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 8
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
                 FlatIcon { icon: Icons.key; size: 14; color: "#ef4444" }
                 Text {
                     text: totalRows + " key" + (totalRows !== 1 ? "s" : "")
-                    font.pixelSize: 12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
                 }
                 Item { Layout.fillWidth: true }
             }
@@ -55,11 +55,11 @@ Rectangle {
                     anchors.fill: parent
                     anchors.leftMargin: 12
                     anchors.rightMargin: 12
-                    spacing: 10
+                    spacing: Theme.s8
 
                     // Key icon based on type
                     Rectangle {
-                        width: 24; height: 24; radius: 6
+                        width: 24; height: 24; radius: Theme.r6
                         color: getTypeColor(getRedisType(keyDelegate.keyIdx), 0.12)
                         FlatIcon {
                             anchors.centerIn: parent
@@ -73,12 +73,12 @@ Rectangle {
                         Layout.fillWidth: true; spacing: 1
                         Text {
                             text: getKeyName(keyDelegate.keyIdx)
-                            font.pixelSize: 12; font.family: "Cascadia Code, Consolas, monospace"
+                            font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
                             color: Theme.fg; elide: Text.ElideMiddle; Layout.fillWidth: true
                         }
                         Text {
                             text: getKeyPreview(keyDelegate.keyIdx)
-                            font.pixelSize: 10; font.family: "Cascadia Code, Consolas, monospace"
+                            font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
                             color: Theme.fgMuted; elide: Text.ElideRight; Layout.fillWidth: true
                             visible: text !== ""
                         }
@@ -86,7 +86,7 @@ Rectangle {
 
                     // Type badge
                     Rectangle {
-                        width: typeLbl.implicitWidth + 10; height: 18; radius: 9
+                        width: typeLbl.implicitWidth + Theme.s8; height: 18; radius: Theme.rFull
                         color: getTypeColor(getRedisType(keyDelegate.keyIdx), 0.1)
                         Text {
                             id: typeLbl; anchors.centerIn: parent
@@ -99,7 +99,7 @@ Rectangle {
                     // TTL badge
                     Rectangle {
                         visible: getTTL(keyDelegate.keyIdx) !== ""
-                        width: ttlLbl.implicitWidth + 10; height: 18; radius: 9
+                        width: ttlLbl.implicitWidth + Theme.s8; height: 18; radius: Theme.rFull
                         color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
                         RowLayout {
                             anchors.centerIn: parent; spacing: 3
@@ -110,7 +110,7 @@ Rectangle {
 
                     // Copy button
                     Rectangle {
-                        width: 24; height: 24; radius: 4; color: copyKeyMa.containsMouse ? Theme.bgHover : "transparent"
+                        width: 24; height: 24; radius: Theme.r4; color: copyKeyMa.containsMouse ? Theme.bgHover : "transparent"
                         FlatIcon { anchors.centerIn: parent; icon: Icons.copy; size: 11; color: Theme.fgMuted }
                         MouseArea {
                             id: copyKeyMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor

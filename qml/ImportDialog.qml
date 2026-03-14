@@ -17,7 +17,7 @@ FlatDialog {
     property string importResult: ""
 
     contentItem: ColumnLayout {
-        spacing: 16; width: parent.width
+        spacing: Theme.s16; width: parent.width
 
         // ── File info ──
         Rectangle {
@@ -25,7 +25,7 @@ FlatDialog {
             color: Theme.bgSurface; border.width: 1; border.color: Theme.border
 
             ColumnLayout {
-                anchors.centerIn: parent; spacing: 8
+                anchors.centerIn: parent; spacing: Theme.s8
 
                 FlatIcon {
                     icon: Icons.fileCode; size: 28; color: Theme.fgMuted
@@ -34,7 +34,7 @@ FlatDialog {
 
                 Text {
                     text: selectedFilePath || "No file selected"
-                    font.family: Theme.mono; font.pixelSize: 12; color: Theme.fgMuted
+                    font.family: Theme.mono; font.pixelSize: Theme.t12; color: Theme.fgMuted
                     Layout.alignment: Qt.AlignHCenter; elide: Text.ElideMiddle
                     Layout.maximumWidth: 360
                 }
@@ -50,7 +50,7 @@ FlatDialog {
 
         // ── Options ──
         ColumnLayout {
-            spacing: 8; Layout.fillWidth: true
+            spacing: Theme.s8; Layout.fillWidth: true
             FlatCheckbox { id: wrapTransaction; text: "Wrap in transaction"; checked: true }
             FlatCheckbox { id: stopOnError; text: "Stop on first error"; checked: true }
         }
@@ -67,7 +67,7 @@ FlatDialog {
                           importResult.startsWith("\u274C") ? Theme.error : Theme.border
 
             RowLayout {
-                anchors.fill: parent; anchors.margins: 12; spacing: 8
+                anchors.fill: parent; anchors.margins: Theme.s12; spacing: Theme.s8
 
                 FlatSpinner { visible: importing; implicitWidth: 20; implicitHeight: 20 }
                 FlatIcon {
@@ -84,7 +84,7 @@ FlatDialog {
                         if (importResult.startsWith("\u274C")) return importResult.substring(2)
                         return importResult
                     }
-                    font.family: Theme.sans; font.pixelSize: 12
+                    font.family: Theme.sans; font.pixelSize: Theme.t12
                     color: Theme.fg; Layout.fillWidth: true; wrapMode: Text.Wrap
                 }
             }
@@ -92,7 +92,7 @@ FlatDialog {
 
         // ── Actions ──
         RowLayout {
-            spacing: 8; Layout.fillWidth: true; Layout.alignment: Qt.AlignRight
+            spacing: Theme.s8; Layout.fillWidth: true; Layout.alignment: Qt.AlignRight
 
             FlatButton {
                 text: "Browse..."; onClicked: fileDialog.open()
