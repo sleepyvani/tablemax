@@ -73,7 +73,7 @@ Rectangle {
             TextInput {
                 id: textInput
                 Layout.fillWidth: true; Layout.fillHeight: true
-                font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
+                font.pixelSize: Theme.t12; font.family: Theme.mono
                 color: Theme.fg; selectByMouse: true; clip: true
                 verticalAlignment: TextInput.AlignVCenter
                 leftPadding: 6
@@ -141,7 +141,7 @@ Rectangle {
             Layout.fillWidth: true; Layout.fillHeight: true
             TextArea {
                 id: jsonTextArea
-                font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
+                font.pixelSize: Theme.t12; font.family: Theme.mono
                 color: Theme.fg; wrapMode: Text.WrapAnywhere; selectByMouse: true
                 background: Rectangle { color: "transparent" }
                 padding: 8

@@ -29,10 +29,10 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
                 FlatIcon { icon: Icons.clock; size: 14; color: Theme.accent }
-                Text { text: "Query History"; font.pixelSize: Theme.t13; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.fontFamily; Layout.fillWidth: true }
+                Text { text: "Query History"; font.pixelSize: Theme.t13; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.sans; Layout.fillWidth: true }
                 Text {
                     text: filteredEntries.length
-                    font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans
                     visible: filteredEntries.length > 0
                 }
                 Rectangle {
@@ -53,7 +53,7 @@ Rectangle {
                 TextInput {
                     id: searchInput
                     Layout.fillWidth: true; Layout.fillHeight: true
-                    font.pixelSize: Theme.t12; font.family: Theme.fontFamily; color: Theme.fg
+                    font.pixelSize: Theme.t12; font.family: Theme.sans; color: Theme.fg
                     selectByMouse: true; clip: true
                     onTextChanged: searchQuery = text
                     Text {
@@ -90,7 +90,7 @@ Rectangle {
                     Text {
                         Layout.fillWidth: true
                         text: modelData.query || ""
-                        font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
+                        font.pixelSize: Theme.t12; font.family: Theme.mono
                         color: Theme.fg; wrapMode: Text.NoWrap; elide: Text.ElideRight
                         maximumLineCount: 2
                     }
@@ -102,7 +102,7 @@ Rectangle {
                         Rectangle {
                             width: dbLabel.implicitWidth + Theme.s8; height: 16; radius: Theme.r4
                             color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.1)
-                            Text { id: dbLabel; anchors.centerIn: parent; text: modelData.database || "" ;font.pixelSize: Theme.t11; color: Theme.accent; font.family: Theme.fontFamily }
+                            Text { id: dbLabel; anchors.centerIn: parent; text: modelData.database || "" ;font.pixelSize: Theme.t11; color: Theme.accent; font.family: Theme.sans }
                         }
                         // Status
                         FlatIcon {
@@ -112,19 +112,19 @@ Rectangle {
                         // Execution time
                         Text {
                             text: (modelData.executionTime || 0).toFixed(0) + "ms"
-                            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans
                         }
                         // Rows affected
                         Text {
                             text: (modelData.rowsAffected || 0) + " rows"
-                            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans
                             visible: (modelData.rowsAffected || 0) > 0
                         }
                         Item { Layout.fillWidth: true }
                         // Timestamp
                         Text {
                             text: formatTimestamp(modelData.timestamp || "")
-                            font.pixelSize: 10; color: Theme.fgDim; font.family: Theme.fontFamily
+                            font.pixelSize: 10; color: Theme.fgDim; font.family: Theme.sans
                         }
                     }
                 }

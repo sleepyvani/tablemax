@@ -8,7 +8,8 @@ import "Icons.js" as Icons
 
 FlatDialog {
     id: root
-    title: "Settings"
+    dialogTitle: "Settings"
+    dialogDescription: "Configure your workspace"
     width: 640; height: 520
 
     property var appSettings: null
@@ -67,7 +68,7 @@ FlatDialog {
                     // ─────── General ───────
                     ColumnLayout {
                         visible: activeTab === "general"; spacing: Theme.s16; Layout.fillWidth: true
-                        Text { text: "General"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
+                        Text { text: "General"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.sans }
 
                         SettingRow { label: "Auto-connect on startup"; description: "Reconnect to last database automatically"
                             FlatSwitch { checked: appSettings ? appSettings.autoConnect : true; onCheckedChanged: if (appSettings) appSettings.autoConnect = checked }
@@ -83,7 +84,7 @@ FlatDialog {
                     // ─────── Editor ───────
                     ColumnLayout {
                         visible: activeTab === "editor"; spacing: Theme.s16; Layout.fillWidth: true
-                        Text { text: "Editor"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
+                        Text { text: "Editor"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.sans }
 
                         SettingRow { label: "Font family"; description: "Monospace font for SQL editor"
                             FlatInput { text: appSettings ? appSettings.editorFont : "Cascadia Code"; width: 160; onTextChanged: if (appSettings) appSettings.editorFont = text }
@@ -108,7 +109,7 @@ FlatDialog {
                     // ─────── Data Grid ───────
                     ColumnLayout {
                         visible: activeTab === "datagrid"; spacing: Theme.s16; Layout.fillWidth: true
-                        Text { text: "Data Grid"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
+                        Text { text: "Data Grid"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.sans }
 
                         SettingRow { label: "Row height"; description: "Height of each row in pixels"
                             FlatInput { text: appSettings ? String(appSettings.rowHeight) : "28"; width: 60; onTextChanged: if (appSettings) appSettings.rowHeight = parseInt(text) || 28 }
@@ -135,14 +136,14 @@ FlatDialog {
                     // ─────── Appearance ───────
                     ColumnLayout {
                         visible: activeTab === "appearance"; spacing: Theme.s16; Layout.fillWidth: true
-                        Text { text: "Appearance"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
-                        Text { text: "Theme settings are managed from the system theme.\nTableMax follows your Windows dark/light mode automatically."; font.pixelSize: Theme.t12; color: Theme.fgMuted; font.family: Theme.fontFamily; lineHeight: 1.5 }
+                        Text { text: "Appearance"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.sans }
+                        Text { text: "Theme settings are managed from the system theme.\nTableMax follows your Windows dark/light mode automatically."; font.pixelSize: Theme.t12; color: Theme.fgMuted; font.family: Theme.sans; lineHeight: 1.5 }
                     }
 
                     // ─────── AI ───────
                     ColumnLayout {
                         visible: activeTab === "ai"; spacing: Theme.s16; Layout.fillWidth: true
-                        Text { text: "AI Assistant"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
+                        Text { text: "AI Assistant"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.sans }
 
                         SettingRow { label: "Provider"
                             FlatSelect {
@@ -180,9 +181,9 @@ FlatDialog {
 
         ColumnLayout {
             Layout.fillWidth: true; spacing: Theme.s2
-            Text { text: label; font.pixelSize: Theme.t13; color: Theme.fg; font.family: Theme.fontFamily }
+            Text { text: label; font.pixelSize: Theme.t13; color: Theme.fg; font.family: Theme.sans }
             Text {
-                text: description; font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
+                text: description; font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans
                 visible: description !== ""; Layout.fillWidth: true; wrapMode: Text.WordWrap
             }
         }
@@ -202,7 +203,7 @@ FlatDialog {
             anchors.leftMargin: Theme.s8
             spacing: Theme.s8
             FlatIcon { icon: parent.parent.icon; size: 14; color: root.activeTab === parent.parent.tabId ? Theme.accent : Theme.fgMuted }
-            Text { text: parent.parent.label; font.pixelSize: Theme.t12; font.family: Theme.fontFamily; color: root.activeTab === parent.parent.tabId ? Theme.fg : Theme.fgMuted; Layout.fillWidth: true }
+            Text { text: parent.parent.label; font.pixelSize: Theme.t12; font.family: Theme.sans; color: root.activeTab === parent.parent.tabId ? Theme.fg : Theme.fgMuted; Layout.fillWidth: true }
         }
         MouseArea { id: stbMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.activeTab = tabId }
     }

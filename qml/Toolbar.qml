@@ -43,7 +43,7 @@ Rectangle {
                 Rectangle { width: Theme.s6; height: Theme.s6; radius: Theme.rFull; color: connected ? Theme.success : Theme.error }
                 Text {
                     text: connected ? connectionName : "Disconnected"
-                    font.pixelSize: Theme.t11; font.weight: Font.Medium; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t11; font.weight: Font.Medium; font.family: Theme.sans
                     color: connected ? Theme.fg : Theme.fgMuted
                 }
                 // DB type badge
@@ -51,7 +51,7 @@ Rectangle {
                     visible: dbType !== "" && connected
                     width: dbTypeLbl.implicitWidth + Theme.s8; height: 16; radius: Theme.rFull
                     color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
-                    Text { id: dbTypeLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                    Text { id: dbTypeLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgMuted; font.family: Theme.sans }
                 }
             }
         }
@@ -86,7 +86,7 @@ Rectangle {
             RowLayout {
                 id: saveRow; anchors.centerIn: parent; spacing: Theme.s6
                 FlatIcon { icon: Icons.warning; size: 12; color: Theme.warning }
-                Text { text: "Unsaved changes"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.warning; font.family: Theme.fontFamily }
+                Text { text: "Unsaved changes"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.warning; font.family: Theme.sans }
             }
 
             MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: saveChanges() }

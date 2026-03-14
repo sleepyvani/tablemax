@@ -37,7 +37,7 @@ FlatDialog {
                 FlatIcon { icon: Icons.code; size: 14; color: Theme.accent }
                 Text {
                     text: statements.length + " statement" + (statements.length !== 1 ? "s" : "") + " to execute"
-                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.sans
                 }
                 Item { Layout.fillWidth: true }
 
@@ -46,7 +46,7 @@ FlatDialog {
                     width: 70; height: 24; radius: Theme.rFull
                     color: copyAllMa.containsMouse ? Theme.bgHover : Theme.bgSurface
                     border.width: 1; border.color: Theme.border
-                    Text { anchors.centerIn: parent; text: "Copy All"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
+                    Text { anchors.centerIn: parent; text: "Copy All"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.sans }
                     MouseArea {
                         id: copyAllMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: {
@@ -162,7 +162,7 @@ FlatDialog {
             RowLayout {
                 anchors.centerIn: parent; spacing: Theme.s6
                 FlatIcon { icon: Icons.warning; size: 12; color: Theme.warning }
-                Text { text: "This will modify data in your database. Proceed with caution."; font.pixelSize: Theme.t11; color: Theme.warning; font.family: Theme.fontFamily }
+                Text { text: "This will modify data in your database. Proceed with caution."; font.pixelSize: Theme.t11; color: Theme.warning; font.family: Theme.sans }
             }
         }
 

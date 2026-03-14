@@ -30,7 +30,7 @@ Rectangle {
                 FlatIcon { icon: Icons.grid; size: 14; color: Theme.accent }
                 Text {
                     text: tableName || "Table Structure"
-                    font.pixelSize: Theme.t13; font.weight: Font.DemiBold; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t13; font.weight: Font.DemiBold; font.family: Theme.sans
                     color: Theme.fg; Layout.fillWidth: true; elide: Text.ElideRight
                 }
 
@@ -104,7 +104,7 @@ Rectangle {
                         Text {
                             text: colRow.modelData.name || ""
                             font.pixelSize: Theme.t12; font.weight: colRow.modelData.pk ? Font.DemiBold : Font.Normal
-                            font.family: Theme.fontFamily; color: Theme.fg
+                            font.family: Theme.sans; color: Theme.fg
                             elide: Text.ElideRight; Layout.fillWidth: true
                         }
                     }

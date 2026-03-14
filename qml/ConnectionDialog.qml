@@ -34,7 +34,7 @@ T.Dialog {
     }
 
     background: Rectangle {
-        color: Theme.background
+        color: Theme.bg
         border.width: 1
         border.color: Theme.border
         radius: Theme.r12
@@ -66,16 +66,16 @@ T.Dialog {
 
             Text {
                 text: dlg.editIdx >= 0 ? "Edit Connection" : "New Connection"
-                font.family: Theme.fontFamily
+                font.family: Theme.sans
                 font.pixelSize: Theme.t16
                 font.weight: Font.DemiBold
-                color: Theme.foreground
+                color: Theme.fg
             }
             Text {
                 text: "Choose a database type and enter credentials"
-                font.family: Theme.fontFamily
+                font.family: Theme.sans
                 font.pixelSize: Theme.t13
-                color: Theme.mutedForeground
+                color: Theme.fgMuted
             }
         }
 
@@ -137,10 +137,10 @@ T.Dialog {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: modelData.label
-                                font.family: Theme.fontFamily
+                                font.family: Theme.sans
                                 font.pixelSize: Theme.t12
                                 font.weight: sel ? Font.DemiBold : Font.Normal
-                                color: sel ? Theme.foreground : Theme.mutedForeground
+                                color: sel ? Theme.fg : Theme.fgMuted
                             }
                         }
 
@@ -169,10 +169,10 @@ T.Dialog {
 
             Text {
                 text: "Name"
-                font.family: Theme.fontFamily
+                font.family: Theme.sans
                 font.pixelSize: Theme.t13
                 font.weight: Font.Medium
-                color: Theme.mutedForeground
+                color: Theme.fgMuted
             }
             FlatInput {
                 id: nameIn
@@ -224,7 +224,7 @@ T.Dialog {
                     Layout.fillWidth: true; spacing: Theme.s4
                     visible: dlg.dbTypes[dlg.dbTypeIdx] === "sqlite"
 
-                    Text { text: "Database File"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                    Text { text: "Database File"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                     FlatInput { id: sqliteFileIn; placeholderText: "C:\\path\\to\\database.db"; Layout.fillWidth: true }
                     Text { text: "Enter the full path to your SQLite database file"; font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim }
                 }
@@ -236,13 +236,13 @@ T.Dialog {
 
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: Theme.s4
-                        Text { text: "Host"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                        Text { text: "Host"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                         FlatInput { id: hostIn; placeholderText: "localhost"; Layout.fillWidth: true }
                     }
 
                     ColumnLayout {
                         Layout.preferredWidth: 90; Layout.maximumWidth: 90; spacing: Theme.s4
-                        Text { text: "Port"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                        Text { text: "Port"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                         FlatInput {
                             id: portIn
                             placeholderText: Conn.defaultPort(dlg.dbTypes[dlg.dbTypeIdx])
@@ -258,7 +258,7 @@ T.Dialog {
 
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: Theme.s4
-                        Text { text: "Username"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                        Text { text: "Username"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                         FlatInput {
                             id: userIn
                             placeholderText: Conn.defaultUser(dlg.dbTypes[dlg.dbTypeIdx])
@@ -268,7 +268,7 @@ T.Dialog {
 
                     ColumnLayout {
                         Layout.fillWidth: true; spacing: Theme.s4
-                        Text { text: "Password"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                        Text { text: "Password"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                         FlatInput { id: passIn; placeholderText: "••••••••"; echoMode: TextInput.Password; Layout.fillWidth: true }
                     }
                 }
@@ -278,7 +278,7 @@ T.Dialog {
                     Layout.fillWidth: true; spacing: Theme.s4
                     visible: dlg.dbTypes[dlg.dbTypeIdx] === "redis"
 
-                    Text { text: "Password (optional)"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                    Text { text: "Password (optional)"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                     FlatInput { id: redisPassIn; placeholderText: "Leave empty if no auth"; echoMode: TextInput.Password; Layout.fillWidth: true }
                 }
 
@@ -287,7 +287,7 @@ T.Dialog {
                     Layout.fillWidth: true; spacing: Theme.s4
                     visible: dlg.dbTypes[dlg.dbTypeIdx] !== "sqlite" && dlg.dbTypes[dlg.dbTypeIdx] !== "redis"
 
-                    Text { text: "Database"; font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.mutedForeground }
+                    Text { text: "Database"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted }
                     FlatInput {
                         id: dbNameIn
                         placeholderText: Conn.defaultDatabase(dlg.dbTypes[dlg.dbTypeIdx])
@@ -321,8 +321,8 @@ T.Dialog {
 
                 Text {
                     text: "Connection String"
-                    font.family: Theme.fontFamily; font.pixelSize: Theme.t12
-                    color: Theme.mutedForeground
+                    font.family: Theme.sans; font.pixelSize: Theme.t12
+                    color: Theme.fgMuted
                 }
                 FlatInput {
                     id: connStrIn
@@ -331,8 +331,8 @@ T.Dialog {
                 }
                 Text {
                     text: Conn.connStrPlaceholder(dlg.dbTypes[dlg.dbTypeIdx])
-                    font.family: Theme.fontFamily; font.pixelSize: Theme.t11
-                    color: Theme.mutedForeground; opacity: 0.5
+                    font.family: Theme.sans; font.pixelSize: Theme.t11
+                    color: Theme.fgMuted; opacity: 0.5
                     wrapMode: Text.Wrap
                     Layout.fillWidth: true
                 }
@@ -352,8 +352,8 @@ T.Dialog {
 
             Text {
                 text: "Color"
-                font.family: Theme.fontFamily; font.pixelSize: Theme.t12
-                color: Theme.mutedForeground
+                font.family: Theme.sans; font.pixelSize: Theme.t12
+                color: Theme.fgMuted
             }
 
             Item { Layout.preferredWidth: 8 }
@@ -417,7 +417,7 @@ T.Dialog {
                 }
                 Text {
                     text: dlg.testMsg
-                    font.family: Theme.fontFamily; font.pixelSize: Theme.t12
+                    font.family: Theme.sans; font.pixelSize: Theme.t12
                     color: dlg.testStatus === "ok" ? Theme.success : dlg.testStatus === "fail" ? Theme.error : Theme.fgMuted
                     Layout.fillWidth: true; elide: Text.ElideRight
                 }

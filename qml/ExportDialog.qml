@@ -99,7 +99,7 @@ FlatDialog {
                 // CSV options
                 RowLayout {
                     visible: selectedFormat === "csv"; spacing: Theme.s12
-                    Text { text: "Delimiter"; font.pixelSize: Theme.t12; font.family: Theme.fontFamily; color: Theme.fgMuted }
+                    Text { text: "Delimiter"; font.pixelSize: Theme.t12; font.family: Theme.sans; color: Theme.fgMuted }
                     FlatSelect { id: delimiterSelect; model: [",", ";", "\\t", "|"]; currentIndex: 0; implicitWidth: 80 }
                     FlatCheckbox { id: headersCheck; text: "Include headers"; checked: true }
                 }

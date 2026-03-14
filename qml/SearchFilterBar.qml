@@ -44,7 +44,7 @@ Rectangle {
                 TextInput {
                     id: searchInput
                     Layout.fillWidth: true
-                    font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.fg
+                    font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg
                     selectByMouse: true; clip: true
 
                     Text {
@@ -103,7 +103,7 @@ Rectangle {
             RowLayout {
                 id: colFilterRow; anchors.centerIn: parent; spacing: Theme.s4
                 FlatIcon { icon: Icons.filter; size: 10; color: Theme.fgMuted }
-                Text { text: "All Columns"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                Text { text: "All Columns"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.sans }
             }
 
             MouseArea {
@@ -135,7 +135,7 @@ Rectangle {
 
             property bool caseActive: false
 
-            Text { anchors.centerIn: parent; text: "Aa"; font.pixelSize: Theme.t11; font.weight: Font.Bold; font.family: Theme.fontFamily; color: parent.caseActive ? Theme.accent : Theme.fgMuted }
+            Text { anchors.centerIn: parent; text: "Aa"; font.pixelSize: Theme.t11; font.weight: Font.Bold; font.family: Theme.sans; color: parent.caseActive ? Theme.accent : Theme.fgMuted }
             MouseArea { id: caseMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: parent.caseActive = !parent.caseActive }
             FlatTooltip { visible: caseMa.containsMouse; text: "Match case"; y: -28 }
         }

@@ -84,7 +84,7 @@ Rectangle {
             Text {
                 text: label; font.pixelSize: Theme.t11
                 font.weight: isCurrent ? Font.DemiBold : Font.Normal
-                font.family: Theme.fontFamily
+                font.family: Theme.sans
                 color: isCurrent ? Theme.fg : Theme.fgMuted
             }
         }

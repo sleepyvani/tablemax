@@ -26,10 +26,10 @@ Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 36; color: Theme.bgElevated
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
-                FlatIcon { icon: Icons.key; size: 14; color: "#ef4444" }
+                FlatIcon { icon: Icons.key; size: 14; color: Theme.error }
                 Text {
                     text: totalRows + " key" + (totalRows !== 1 ? "s" : "")
-                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.sans
                 }
                 Item { Layout.fillWidth: true }
             }
@@ -73,12 +73,12 @@ Rectangle {
                         Layout.fillWidth: true; spacing: 1
                         Text {
                             text: getKeyName(keyDelegate.keyIdx)
-                            font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
+                            font.pixelSize: Theme.t12; font.family: Theme.mono
                             color: Theme.fg; elide: Text.ElideMiddle; Layout.fillWidth: true
                         }
                         Text {
                             text: getKeyPreview(keyDelegate.keyIdx)
-                            font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
+                            font.pixelSize: Theme.t11; font.family: Theme.mono
                             color: Theme.fgMuted; elide: Text.ElideRight; Layout.fillWidth: true
                             visible: text !== ""
                         }
@@ -92,7 +92,7 @@ Rectangle {
                             id: typeLbl; anchors.centerIn: parent
                             text: getRedisType(keyDelegate.keyIdx).toUpperCase()
                             font.pixelSize: 9; font.weight: Font.Medium
-                            font.family: Theme.fontFamily; color: getTypeColor(getRedisType(keyDelegate.keyIdx), 1)
+                            font.family: Theme.sans; color: getTypeColor(getRedisType(keyDelegate.keyIdx), 1)
                         }
                     }
 
@@ -104,7 +104,7 @@ Rectangle {
                         RowLayout {
                             anchors.centerIn: parent; spacing: 3
                             FlatIcon { icon: Icons.clock; size: 8; color: Theme.fgMuted }
-                            Text { id: ttlLbl; text: getTTL(keyDelegate.keyIdx); font.pixelSize: 9; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                            Text { id: ttlLbl; text: getTTL(keyDelegate.keyIdx); font.pixelSize: 9; color: Theme.fgMuted; font.family: Theme.sans }
                         }
                     }
 

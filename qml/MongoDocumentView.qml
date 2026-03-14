@@ -29,7 +29,7 @@ Rectangle {
                 FlatIcon { icon: Icons.list; size: 14; color: Theme.accent }
                 Text {
                     text: totalRows + " document" + (totalRows !== 1 ? "s" : "")
-                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.sans
                 }
                 Item { Layout.fillWidth: true }
 
@@ -99,7 +99,7 @@ Rectangle {
 
                         Text {
                             text: "Document " + (docDelegate.docIndex + 1)
-                            font.pixelSize: Theme.t11; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.sans
                         }
 
                         // _id badge
@@ -110,7 +110,7 @@ Rectangle {
                             Text {
                                 id: idLabel; anchors.centerIn: parent
                                 text: resultModel ? String(resultModel.data(resultModel.index(docDelegate.docIndex, 0), 0) || "") : ""
-                                font.pixelSize: 9; font.family: "Cascadia Code, Consolas, monospace"; color: Theme.accent
+                                font.pixelSize: 9; font.family: Theme.mono; color: Theme.accent
                                 elide: Text.ElideMiddle; maximumLineCount: 1
                             }
                         }
@@ -133,7 +133,7 @@ Rectangle {
                         Text {
                             Layout.fillWidth: true
                             text: getDocPreview(docDelegate.docIndex)
-                            font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
+                            font.pixelSize: Theme.t11; font.family: Theme.mono
                             color: Theme.fgMuted; elide: Text.ElideRight; maximumLineCount: 1
                         }
                     }
@@ -152,7 +152,7 @@ Rectangle {
 
                                 Text {
                                     text: resultModel ? String(resultModel.headerData(colIdx, Qt.Horizontal, 0) || ("col_" + colIdx)) : ""
-                                    font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
+                                    font.pixelSize: Theme.t11; font.family: Theme.mono
                                     font.weight: Font.Medium; color: Theme.accent
                                     Layout.preferredWidth: 140; Layout.alignment: Qt.AlignTop
                                 }
@@ -165,12 +165,12 @@ Rectangle {
                                         var val = resultModel.data(resultModel.index(docDelegate.docIndex, colIdx), 0)
                                         return val !== undefined && val !== null ? String(val) : "null"
                                     }
-                                    font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
+                                    font.pixelSize: Theme.t11; font.family: Theme.mono
                                     color: {
                                         var v = text
                                         if (v === "null") return Theme.fgDim
-                                        if (v === "true" || v === "false") return "#d97706"
-                                        if (!isNaN(v) && v !== "") return "#2563eb"
+                                        if (v === "true" || v === "false") return Theme.warning
+                                        if (!isNaN(v) && v !== "") return Theme.info
                                         return Theme.fg
                                     }
                                     Layout.fillWidth: true; wrapMode: Text.WrapAnywhere
@@ -194,7 +194,7 @@ Rectangle {
 
             TextArea {
                 text: generateAllDocsJson()
-                font.pixelSize: Theme.t12; font.family: "Cascadia Code, Consolas, monospace"
+                font.pixelSize: Theme.t12; font.family: Theme.mono
                 color: Theme.fg; readOnly: true; wrapMode: Text.WrapAnywhere
                 background: Rectangle { color: "transparent" }
                 padding: 16
