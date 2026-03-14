@@ -15,9 +15,9 @@ Rectangle {
     }
 
     // ── Sync syntax highlighter with editor document ──
-    Connections {
-        target: editor
-        function onTextDocumentChanged() {
+    Timer {
+        interval: 0; running: true; repeat: false
+        onTriggered: {
             if (syntaxHighlighter && editor.textDocument)
                 syntaxHighlighter.document = editor.textDocument
         }

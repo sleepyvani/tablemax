@@ -203,7 +203,7 @@ Rectangle {
 
         // Empty state
         FlatEmpty {
-            anchors.centerIn: parent; visible: totalRows === 0
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter; visible: totalRows === 0
             icon: Icons.database; title: "No documents"; description: "Run a query to see results"
         }
     }

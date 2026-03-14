@@ -24,7 +24,7 @@ Rectangle {
 
         // Server
         BreadcrumbItem {
-            icon: Icons.server
+            icon: Icons.globe
             label: serverName || "Server"
             active: serverName !== ""
             onClicked: root.serverClicked()

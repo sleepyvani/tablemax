@@ -126,7 +126,7 @@ Rectangle {
 
         // Empty state
         FlatEmpty {
-            anchors.centerIn: parent; visible: totalRows === 0
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter; visible: totalRows === 0
             icon: Icons.key; title: "No keys"; description: "Run a Redis command to see results"
         }
     }

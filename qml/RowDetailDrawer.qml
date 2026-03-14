@@ -111,7 +111,7 @@ Rectangle {
                 Rectangle {
                     width: 24; height: 24; radius: Theme.r4
                     color: prevMa.containsMouse ? Theme.bgHover : "transparent"; opacity: selectedRow > 0 ? 1 : 0.3
-                    FlatIcon { anchors.centerIn: parent; icon: Icons.chevronLeft; size: 12; color: Theme.fgMuted }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.left; size: 12; color: Theme.fgMuted }
                     MouseArea { id: prevMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: if (selectedRow > 0) selectedRow-- }
                 }
 
@@ -124,7 +124,7 @@ Rectangle {
                 Rectangle {
                     width: 24; height: 24; radius: Theme.r4
                     color: nextMa.containsMouse ? Theme.bgHover : "transparent"; opacity: resultModel && selectedRow < resultModel.totalRows - 1 ? 1 : 0.3
-                    FlatIcon { anchors.centerIn: parent; icon: Icons.chevronRight; size: 12; color: Theme.fgMuted }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.right; size: 12; color: Theme.fgMuted }
                     MouseArea { id: nextMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: if (resultModel && selectedRow < resultModel.totalRows - 1) selectedRow++ }
                 }
             }

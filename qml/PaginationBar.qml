@@ -37,7 +37,7 @@ Rectangle {
         Item { Layout.fillWidth: true }
 
         // Rows per page
-        Text { text: "Rows per page:"; font.pixelSize: 11; color: Theme.fgMuted; font.family: Theme.fontFamily }
+        Text { text: "Rows per page:"; font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily }
         FlatSelect {
             id: pageSizeSelect
             Layout.preferredWidth: 70; Layout.preferredHeight: 24

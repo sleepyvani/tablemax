@@ -22,7 +22,7 @@ FlatDialog {
 
             // ── Left sidebar ──
             Rectangle {
-                Layout.preferredWidth: 160; Layout.fillHeight: true; color: Theme.bgSunken
+                Layout.preferredWidth: 160; Layout.fillHeight: true; color: Theme.bgSidebar
 
                 ColumnLayout {
                     anchors.fill: parent

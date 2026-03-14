@@ -77,7 +77,7 @@ Rectangle {
             width: 24; height: 24; radius: Theme.r4
             color: prevMatchMa.containsMouse ? Theme.bgHover : "transparent"
             opacity: matchCount > 0 ? 1 : 0.3
-            FlatIcon { anchors.centerIn: parent; icon: Icons.chevronUp; size: 12; color: Theme.fgMuted }
+            FlatIcon { anchors.centerIn: parent; icon: Icons.up; size: 12; color: Theme.fgMuted }
             MouseArea { id: prevMatchMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.previousMatch() }
             FlatTooltip { visible: prevMatchMa.containsMouse; text: "Previous match"; y: -28 }
         }
@@ -86,7 +86,7 @@ Rectangle {
             width: 24; height: 24; radius: Theme.r4
             color: nextMatchMa.containsMouse ? Theme.bgHover : "transparent"
             opacity: matchCount > 0 ? 1 : 0.3
-            FlatIcon { anchors.centerIn: parent; icon: Icons.chevronDown; size: 12; color: Theme.fgMuted }
+            FlatIcon { anchors.centerIn: parent; icon: Icons.down; size: 12; color: Theme.fgMuted }
             MouseArea { id: nextMatchMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.nextMatch() }
             FlatTooltip { visible: nextMatchMa.containsMouse; text: "Next match"; y: -28 }
         }

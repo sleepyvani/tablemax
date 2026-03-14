@@ -541,6 +541,8 @@ Rectangle {
         // ── Separator ──
         Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border }
 
+        property bool _schemaCollapsed: false
+
         // ══════════════════════════════════════════
         //  SCHEMA EXPLORER SECTION
         // ══════════════════════════════════════════
@@ -603,7 +605,6 @@ Rectangle {
             }
         }
 
-        property bool _schemaCollapsed: false
 
         // ── Schema Tree ──
         SchemaTree {

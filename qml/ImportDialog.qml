@@ -15,6 +15,7 @@ FlatDialog {
 
     property bool importing: false
     property string importResult: ""
+    property string selectedFilePath: ""
 
     contentItem: ColumnLayout {
         spacing: Theme.s16; width: parent.width
@@ -45,8 +46,6 @@ FlatDialog {
                 onClicked: fileDialog.open()
             }
         }
-
-        property string selectedFilePath: ""
 
         // ── Options ──
         ColumnLayout {
