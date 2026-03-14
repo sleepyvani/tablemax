@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
+import "Icons.js" as Icons
 
 Rectangle {
     id: sidebar
@@ -26,8 +27,7 @@ Rectangle {
         }
     }
 
-    // BUG FIX: Search shortcut scoped to sidebar focus only
-    // (global Shortcut would intercept '/' while typing in QueryEditor)
+    // Search shortcut scoped to sidebar focus
     Keys.onPressed: function(event) {
         if (event.key === Qt.Key_Slash && !_search.activeFocus) {
             _search.forceActiveFocus()
@@ -41,76 +41,68 @@ Rectangle {
     // ════════════════════════════════════════════
     ColumnLayout {
         anchors.fill: parent
-        anchors.topMargin: 0
-        anchors.bottomMargin: 0
         spacing: 0
 
-        // ── Brand Bar ──
+        // ── Search + Actions Bar ──
         Item {
             Layout.fillWidth: true
-            Layout.preferredHeight: 48
+            Layout.preferredHeight: 38
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: Theme.s12
-                anchors.rightMargin: Theme.s8
-                spacing: Theme.s8
+                anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8
+                spacing: Theme.s4
 
-                // Logo
+                // Search input
                 Rectangle {
-                    width: 26; height: 26; radius: Theme.r8
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: "#6366f1" }
-                        GradientStop { position: 1.0; color: "#8b5cf6" }
-                    }
-                    Text {
-                        anchors.centerIn: parent
-                        text: "T"; font.pixelSize: Theme.t13; font.weight: Font.Bold
-                        font.family: Theme.sans; color: "#ffffff"
+                    Layout.fillWidth: true; height: 26
+                    radius: Theme.r6; color: Theme.bgSurface
+                    border.width: 1
+                    border.color: _search.activeFocus
+                        ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.5)
+                        : Theme.border
+                    Behavior on border.color { ColorAnimation { duration: Theme.fast } }
+
+                    Row {
+                        anchors.fill: parent; anchors.leftMargin: Theme.s6; anchors.rightMargin: Theme.s6
+                        spacing: Theme.s4
+
+                        FlatIcon {
+                            anchors.verticalCenter: parent.verticalCenter
+                            icon: Icons.search; size: 11; color: Theme.fgDim
+                        }
+
+                        TextInput {
+                            id: _search
+                            width: parent.width - 40
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fg
+                            selectByMouse: true; clip: true; focus: false
+
+                            Text {
+                                visible: !_search.text && !_search.activeFocus
+                                text: "Filter…"
+                                font: parent.font; color: Theme.fgDim; opacity: 0.5
+                            }
+
+                            Keys.onEscapePressed: { _search.text = ""; sidebar.forceActiveFocus() }
+                        }
+
+                        // Shortcut badge
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: !_search.activeFocus && !_search.text
+                            text: "/"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4
+                        }
                     }
                 }
 
-                // App name
-                Text {
-                    Layout.fillWidth: true
-                    text: "TableMax"
-                    font.family: Theme.sans; font.pixelSize: Theme.t14; font.weight: Font.DemiBold
-                    color: Theme.fg; font.letterSpacing: -0.3
-                }
-
-                // Theme
+                // Add connection
                 Rectangle {
-                    width: 28; height: 28; radius: Theme.r6
-                    color: _themeMa.containsMouse ? Theme.bgHover : "transparent"
+                    width: 26; height: 26; radius: Theme.r6
+                    color: _addMa.containsMouse ? Theme.bgHover : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: Theme.darkMode ? "◑" : "○"
-                        font.pixelSize: Theme.t14; color: Theme.fgMuted
-                    }
-                    MouseArea {
-                        id: _themeMa; anchors.fill: parent
-                        hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                        onClicked: Theme.toggleTheme()
-                    }
-                }
-
-                // New connection
-                Rectangle {
-                    width: 28; height: 28; radius: Theme.r6
-                    color: _addMa.containsMouse
-                        ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12) : "transparent"
-                    border.width: _addMa.containsMouse ? 1 : 0
-                    border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2)
-                    Behavior on color { ColorAnimation { duration: Theme.fast } }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "+"; font.pixelSize: Theme.t16; font.weight: Font.Medium
-                        color: _addMa.containsMouse ? Theme.accent : Theme.fgMuted
-                        Behavior on color { ColorAnimation { duration: Theme.fast } }
-                    }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.add; size: 12; color: Theme.fgMuted }
                     MouseArea {
                         id: _addMa; anchors.fill: parent
                         hoverEnabled: true; cursorShape: Qt.PointingHandCursor
@@ -120,115 +112,35 @@ Rectangle {
             }
         }
 
-        // ── Thin separator ──
-        Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border }
+        Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border; opacity: 0.5 }
 
-        // ── Search ──
+        // ══════════════════════════════════════════
+        //  CONNECTIONS
+        // ══════════════════════════════════════════
         Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 44
-            Layout.leftMargin: Theme.s8; Layout.rightMargin: Theme.s8
+            Layout.fillWidth: true; Layout.preferredHeight: 22
+            Layout.leftMargin: Theme.s8; Layout.topMargin: Theme.s4
 
-            Rectangle {
+            Text {
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width; height: 32
-                radius: Theme.r8; color: Theme.bgSurface
-                border.width: 1
-                border.color: _search.activeFocus
-                    ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.5)
-                    : Theme.border
-                Behavior on border.color { ColorAnimation { duration: Theme.fast } }
-
-                Row {
-                    anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8
-                    spacing: Theme.s8
-
-                    // Search icon
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: "⌕"; font.pixelSize: Theme.t13; color: Theme.fgDim
-                    }
-
-                    TextInput {
-                        id: _search
-                        width: parent.width - 46
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg
-                        selectByMouse: true; clip: true
-                        focus: false
-
-                        Text {
-                            visible: !_search.text && !_search.activeFocus
-                            text: "Search…"
-                            font: parent.font; color: Theme.fgDim
-                        }
-
-                        Keys.onEscapePressed: { _search.text = ""; sidebar.forceActiveFocus() }
-                    }
-
-                    // Shortcut badge
-                    Rectangle {
-                        anchors.verticalCenter: parent.verticalCenter
-                        visible: !_search.activeFocus && !_search.text
-                        width: 20; height: 18; radius: Theme.r4
-                        color: "transparent"
-                        border.width: 1; border.color: Theme.border
-
-                        Text {
-                            anchors.centerIn: parent; text: "/"
-                            font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
-                        }
-                    }
-                }
+                text: "CONNECTIONS"
+                font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                font.letterSpacing: 0.8; color: Theme.fgDim; opacity: 0.6
             }
         }
 
-        // ══════════════════════════════════════════
-        //  CONNECTIONS SECTION
-        // ══════════════════════════════════════════
-        Item {
-            Layout.fillWidth: true; Layout.preferredHeight: 28
-            Layout.leftMargin: Theme.s12; Layout.rightMargin: Theme.s8
-
-            Row {
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width; spacing: Theme.s6
-
-                Text {
-                    text: "CONNECTIONS"
-                    font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold
-                    font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
-                }
-
-                // Count badge
-                Rectangle {
-                    visible: connectionManager && connectionManager.connections.length > 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: _countTxt.implicitWidth + Theme.s8; height: 16; radius: Theme.rFull
-                    color: Theme.bgSurface
-
-                    Text {
-                        id: _countTxt
-                        anchors.centerIn: parent
-                        text: connectionManager ? connectionManager.connections.length : "0"
-                        font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
-                    }
-                }
-            }
-        }
-
-        // ── Connection List ──
         ListView {
             id: _connList
             Layout.fillWidth: true
-            // FIX #6: Dynamic height — give more space when schema is empty
             Layout.preferredHeight: {
+                var count = model ? model.length : 0
+                if (count === 0) return 52
                 var schemaEmpty = !schemaService || schemaService.tree.length === 0
-                var maxRatio = schemaEmpty ? 0.55 : 0.35
-                return Math.min(contentHeight + 4, sidebar.height * maxRatio)
+                var maxRatio = schemaEmpty ? 0.5 : 0.3
+                return Math.min(count * 30 + 4, sidebar.height * maxRatio)
             }
-            Layout.minimumHeight: 52
-            clip: true; spacing: Theme.s2
+            Layout.minimumHeight: 30
+            clip: true; spacing: 0
             boundsBehavior: Flickable.StopAtBounds
 
             model: {
@@ -242,240 +154,133 @@ Rectangle {
                 })
             }
 
-            // Smooth scroll
             ScrollBar.vertical: ScrollBar {
                 policy: _connList.contentHeight > _connList.height ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
-                contentItem: Rectangle { implicitWidth: 3; radius: 2; color: Theme.borderLight; opacity: 0.5 }
+                contentItem: Rectangle { implicitWidth: 3; radius: 2; color: Theme.fgDim; opacity: 0.2 }
             }
 
-            delegate: Item {
-                width: _connList.width
-                // FIX #5: Active row is taller to fit inline disconnect
-                height: _row.active && databaseService.connected ? 56 : 38
+            delegate: Rectangle {
+                id: _connRow
+                width: _connList.width; height: 30
+                property bool active: connectionManager.activeIndex === index
+                property bool hovered: _connMa.containsMouse
 
-                Behavior on height { NumberAnimation { duration: Theme.normal; easing.type: Easing.OutCubic } }
+                color: active
+                    ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
+                    : hovered ? Theme.bgHover : "transparent"
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                Rectangle {
-                    id: _row
+                RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: Theme.s6; anchors.rightMargin: Theme.s6
-                    radius: Theme.r6
+                    anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8
+                    spacing: Theme.s6
 
-                    property bool active: connectionManager.activeIndex === index
-                    property bool hovered: _rowMa.containsMouse
-
-                    color: active
-                        ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
-                        : hovered ? Theme.bgHover : "transparent"
-
-                    border.width: active ? 1 : 0
-                    border.color: active
-                        ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.15) : "transparent"
-
-                    Behavior on color { ColorAnimation { duration: Theme.fast } }
-
-                    // Left accent bar
+                    // Status dot
                     Rectangle {
-                        visible: _row.active
-                        width: 3; height: 16; radius: 2
-                        anchors.left: parent.left; anchors.leftMargin: 2
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: Theme.accent
+                        width: 6; height: 6; radius: 3
+                        color: _connRow.active && databaseService.connected ? Theme.success
+                             : _connRow.active ? Theme.warning : Theme.fgDim
+                        opacity: _connRow.active ? 1.0 : 0.3
                     }
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: _row.active ? Theme.s12 : Theme.s8
-                        anchors.rightMargin: Theme.s8
-                        anchors.topMargin: Theme.s4; anchors.bottomMargin: Theme.s4
-                        spacing: Theme.s2
+                    // DB type icon
+                    Image {
+                        Layout.preferredWidth: 14; Layout.preferredHeight: 14
+                        source: "qrc:/TableMax/icons/" + (modelData.dbType || "postgres").toLowerCase() + ".svg"
+                        sourceSize: Qt.size(14, 14); fillMode: Image.PreserveAspectFit
+                        opacity: _connRow.active ? 1.0 : 0.5
+                    }
 
-                        // Top row: icon + name + indicators
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: Theme.s8
+                    // Connection name
+                    Text {
+                        text: modelData.name || "Untitled"
+                        font.family: Theme.sans; font.pixelSize: Theme.t12
+                        font.weight: _connRow.active ? Font.DemiBold : Font.Normal
+                        color: _connRow.active ? Theme.fg : Theme.fgMuted
+                        elide: Text.ElideRight; Layout.fillWidth: true
+                    }
 
-                            // Color dot
-                            Rectangle {
-                                width: 8; height: 8; radius: 4
-                                color: modelData.color || "#6366f1"
-                                opacity: _row.active ? 1.0 : _row.hovered ? 0.7 : 0.4
-                                Behavior on opacity { NumberAnimation { duration: Theme.fast } }
-                            }
+                    // DB type badge (subtle)
+                    Text {
+                        text: DB.displayName(modelData.dbType || "").toLowerCase()
+                        font.family: Theme.mono; font.pixelSize: 9
+                        color: Theme.fgDim; opacity: 0.5
+                        visible: !_connRow.hovered || _connRow.active
+                    }
 
-                            // DB icon
-                            Image {
-                                Layout.preferredWidth: 16; Layout.preferredHeight: 16
-                                source: "qrc:/TableMax/icons/" + (modelData.dbType || "postgres").toLowerCase() + ".svg"
-                                sourceSize: Qt.size(16, 16)
-                                fillMode: Image.PreserveAspectFit
-                                opacity: _row.active ? 1.0 : _row.hovered ? 0.8 : 0.5
-                                Behavior on opacity { NumberAnimation { duration: Theme.fast } }
-                            }
-
-                            // Name + type
-                            ColumnLayout {
-                                Layout.fillWidth: true; spacing: 0
-
-                                Text {
-                                    text: modelData.name || "Untitled"
-                                    font.family: Theme.sans; font.pixelSize: Theme.t12
-                                    font.weight: _row.active ? Font.DemiBold : Font.Normal
-                                    color: Theme.fg; elide: Text.ElideRight
-                                    Layout.fillWidth: true
-                                }
-                                Text {
-                                    text: DB.displayName(modelData.dbType || "")
-                                    font.family: Theme.mono; font.pixelSize: Theme.t11
-                                    color: Theme.fgDim
-                                }
-                            }
-
-                            // Connected indicator (pulsing dot)
-                            Rectangle {
-                                id: _connDot
-                                visible: _row.active && databaseService.connected
-                                width: 7; height: 7; radius: 4
-                                color: Theme.success
-
-                                // BUG FIX: Explicit animation control (not "on opacity")
-                                SequentialAnimation {
-                                    id: _pulseAnim
-                                    loops: Animation.Infinite
-                                    running: _row.active && databaseService.connected
-                                    NumberAnimation { target: _connDot; property: "opacity"; to: 0.4; duration: 1500 }
-                                    NumberAnimation { target: _connDot; property: "opacity"; to: 1; duration: 1500 }
-                                    onStopped: _connDot.opacity = 1
-                                }
-                            }
-
-                            // FIX #2: Delete on hover — z:2 so it catches click before _rowMa
-                            Item {
-                                visible: _row.hovered && !_row.active
-                                Layout.preferredWidth: 20; Layout.preferredHeight: 20
-
-                                Rectangle {
-                                    anchors.fill: parent; radius: Theme.r4
-                                    color: _delMa.containsMouse
-                                        ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12) : "transparent"
-                                }
-                                Text {
-                                    anchors.centerIn: parent; text: "×"
-                                    font.pixelSize: Theme.t13; color: _delMa.containsMouse ? Theme.error : Theme.fgDim
-                                }
-                                MouseArea {
-                                    id: _delMa; anchors.fill: parent; z: 2
-                                    hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                                    onClicked: function(mouse) {
-                                        mouse.accepted = true
-                                        _delDlg.deleteIdx = index; _delDlg.open()
-                                    }
-                                }
-                            }
+                    // Delete on hover (non-active only)
+                    Rectangle {
+                        visible: _connRow.hovered && !_connRow.active
+                        width: 18; height: 18; radius: Theme.r4
+                        color: _delBtnMa.containsMouse
+                            ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12) : "transparent"
+                        FlatIcon {
+                            anchors.centerIn: parent; icon: Icons.close; size: 9
+                            color: _delBtnMa.containsMouse ? Theme.error : Theme.fgDim
                         }
-
-                        // FIX #5: Inline disconnect button (only for active + connected)
-                        Rectangle {
-                            Layout.fillWidth: true; Layout.preferredHeight: 22; radius: Theme.r4
-                            visible: _row.active && databaseService.connected
-
-                            color: _inlineDiscoMa.containsMouse
-                                ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.08)
-                                : "transparent"
-                            border.width: 1
-                            border.color: _inlineDiscoMa.containsMouse
-                                ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.2)
-                                : Qt.rgba(Theme.border.r, Theme.border.g, Theme.border.b, 0.5)
-
-                            Behavior on color { ColorAnimation { duration: Theme.fast } }
-                            Behavior on border.color { ColorAnimation { duration: Theme.fast } }
-
-                            // Row {
-                            //     anchors.centerIn: parent; spacing: 4
-                            //     Text {
-                            //         text: "⏻"; font.pixelSize: 9
-                            //         color: _inlineDiscoMa.containsMouse ? Theme.error : Theme.fgDim
-                            //         Behavior on color { ColorAnimation { duration: 100 } }
-                            //     }
-                            //     Text {
-                            //         text: "Disconnect"
-                            //         font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.Medium
-                            //         color: _inlineDiscoMa.containsMouse ? Theme.error : Theme.fgDim
-                            //         Behavior on color { ColorAnimation { duration: 100 } }
-                            //     }
-                            // }
-                            MouseArea {
-                                id: _inlineDiscoMa; anchors.fill: parent; z: 2
-                                hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                                onClicked: function(mouse) {
-                                    mouse.accepted = true
-                                    databaseService.disconnect()
-                                    connectionManager.activeIndex = -1
-                                    // FIX #4: Disconnect toast
-                                    root.toast("Disconnected", "info")
-                                }
+                        MouseArea {
+                            id: _delBtnMa; anchors.fill: parent; z: 2
+                            hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                            onClicked: function(mouse) {
+                                mouse.accepted = true
+                                _delDlg.deleteIdx = index; _delDlg.open()
                             }
                         }
                     }
+                }
 
-                    // Click handler
-                    MouseArea {
-                        id: _rowMa; anchors.fill: parent
-                        hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                        z: -1
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-                        onClicked: function(mouse) {
-                            sidebar.forceActiveFocus()
-                            if (mouse.button === Qt.RightButton) {
-                                _ctx.connIdx = index
-                                _ctx.x = mouse.x; _ctx.y = mouse.y
-                                _ctx.open()
-                            } else {
-                                // BUG FIX: Skip reconnect if already active + connected
-                                if (connectionManager.activeIndex === index && databaseService.connected) return
-                                connectionManager.activeIndex = index
-                                // connect() is synchronous — success/error toast comes from Connections handler
-                                databaseService.connect(modelData.dbType, modelData.connectionString)
-                            }
+                // Click handler
+                MouseArea {
+                    id: _connMa; anchors.fill: parent
+                    hoverEnabled: true; cursorShape: Qt.PointingHandCursor; z: -1
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: function(mouse) {
+                        sidebar.forceActiveFocus()
+                        if (mouse.button === Qt.RightButton) {
+                            _ctx.connIdx = index
+                            _ctx.x = mouse.x; _ctx.y = mouse.y
+                            _ctx.open()
+                        } else {
+                            if (connectionManager.activeIndex === index && databaseService.connected) return
+                            connectionManager.activeIndex = index
+                            databaseService.connect(modelData.dbType, modelData.connectionString)
                         }
                     }
+                }
 
-                    // FIX #8: Dynamic context menu (Connect/Disconnect based on state)
-                    FlatContextMenu {
-                        id: _ctx
-                        property int connIdx: -1
-                        menuModel: {
-                            var isActive = connectionManager.activeIndex === index && databaseService.connected
-                            var connectLabel = isActive ? "Disconnect" : "Connect"
-                            return [connectLabel, "Edit", "-", "Copy Connection String", "Duplicate", "-", "Delete"]
-                        }
-                        onMenuItemClicked: function(idx, label) {
-                            var ci = _ctx.connIdx
-                            if (label === "Connect") {
-                                // BUG FIX: Guard against reconnecting same connection
-                                if (connectionManager.activeIndex === ci && databaseService.connected) return
-                                connectionManager.activeIndex = ci
-                                var c = connectionManager.get(ci)
-                                databaseService.connect(c.dbType, c.connectionString)
-                            } else if (label === "Disconnect") {
-                                databaseService.disconnect()
-                                connectionManager.activeIndex = -1
-                                root.toast("Disconnected", "info")
-                            } else if (label === "Edit") {
-                                connDialog.editIdx = ci; connDialog.open()
-                            } else if (label === "Copy Connection String") {
-                                var cc = connectionManager.get(ci)
-                                if (cc) { _clip.text = cc.connectionString || ""; _clip.selectAll(); _clip.copy() }
-                                root.toast("Connection string copied", "success")
-                            } else if (label === "Duplicate") {
-                                var dc = connectionManager.get(ci)
-                                if (dc) connectionManager.add({
-                                    name: (dc.name || "Untitled") + " (copy)",
-                                    dbType: dc.dbType, connectionString: dc.connectionString, color: dc.color
-                                })
-                            } else if (label === "Delete") {
-                                _delDlg.deleteIdx = ci; _delDlg.open()
-                            }
+                // Context menu
+                FlatContextMenu {
+                    id: _ctx
+                    property int connIdx: -1
+                    menuModel: {
+                        var isActive = connectionManager.activeIndex === index && databaseService.connected
+                        return [isActive ? "Disconnect" : "Connect", "Edit", "-", "Copy Connection String", "Duplicate", "-", "Delete"]
+                    }
+                    onMenuItemClicked: function(idx, label) {
+                        var ci = _ctx.connIdx
+                        if (label === "Connect") {
+                            if (connectionManager.activeIndex === ci && databaseService.connected) return
+                            connectionManager.activeIndex = ci
+                            var c = connectionManager.get(ci)
+                            databaseService.connect(c.dbType, c.connectionString)
+                        } else if (label === "Disconnect") {
+                            databaseService.disconnect()
+                            connectionManager.activeIndex = -1
+                            root.toast("Disconnected", "info")
+                        } else if (label === "Edit") {
+                            connDialog.editIdx = ci; connDialog.open()
+                        } else if (label === "Copy Connection String") {
+                            var cc = connectionManager.get(ci)
+                            if (cc) { _clip.text = cc.connectionString || ""; _clip.selectAll(); _clip.copy() }
+                            root.toast("Connection string copied", "success")
+                        } else if (label === "Duplicate") {
+                            var dc = connectionManager.get(ci)
+                            if (dc) connectionManager.add({
+                                name: (dc.name || "Untitled") + " (copy)",
+                                dbType: dc.dbType, connectionString: dc.connectionString, color: dc.color
+                            })
+                        } else if (label === "Delete") {
+                            _delDlg.deleteIdx = ci; _delDlg.open()
                         }
                     }
                 }
@@ -483,54 +288,17 @@ Rectangle {
 
             // Empty state
             footer: Item {
-                width: _connList.width; height: 80
+                width: _connList.width; height: 48
                 visible: !connectionManager || connectionManager.connections.length === 0
 
-                Column {
-                    anchors.centerIn: parent; spacing: Theme.s8
-
-                    // Empty icon
-                    Rectangle {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: 32; height: 32; radius: Theme.r8
-                        color: Theme.bgSurface
-                        Text {
-                            anchors.centerIn: parent; text: "⊘"
-                            font.pixelSize: Theme.t14; color: Theme.fgDim
-                        }
-                    }
-
+                RowLayout {
+                    anchors.centerIn: parent; spacing: Theme.s6
+                    FlatIcon { icon: Icons.add; size: 12; color: Theme.fgDim }
                     Text {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "No connections yet"
-                        font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim
-                    }
-
-                    Rectangle {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: _emptyTxt.implicitWidth + Theme.s24; height: 26; radius: Theme.r6
-                        color: _emptyBtnMa.containsMouse
-                            ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
-                            : "transparent"
-                        border.width: 1
-                        border.color: _emptyBtnMa.containsMouse
-                            ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2)
-                            : Theme.border
-
-                        Behavior on color { ColorAnimation { duration: Theme.fast } }
-
-                        Row {
-                            anchors.centerIn: parent; spacing: Theme.s4
-                            Text { text: "+"; font.pixelSize: Theme.t12; color: Theme.accent }
-                            Text {
-                                id: _emptyTxt; text: "Add Connection"
-                                font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fg
-                            }
-                        }
+                        text: "Add connection"
+                        font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim
                         MouseArea {
-                            id: _emptyBtnMa
                             anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                            hoverEnabled: true
                             onClicked: connDialog.open()
                         }
                     }
@@ -539,60 +307,34 @@ Rectangle {
         }
 
         // ── Separator ──
-        Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border }
-
-        property bool _schemaCollapsed: false
+        Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border; opacity: 0.5 }
 
         // ══════════════════════════════════════════
-        //  SCHEMA EXPLORER SECTION
+        //  SCHEMA EXPLORER
         // ══════════════════════════════════════════
         Item {
-            Layout.fillWidth: true; Layout.preferredHeight: 28
-            Layout.leftMargin: Theme.s12; Layout.rightMargin: Theme.s8
+            Layout.fillWidth: true; Layout.preferredHeight: 22
+            Layout.leftMargin: Theme.s8; Layout.topMargin: Theme.s2
+            visible: databaseService && databaseService.connected
 
             RowLayout {
-                anchors.fill: parent; spacing: Theme.s6
+                anchors.fill: parent; spacing: Theme.s4
 
                 Text {
-                    text: {
-                        if (!connectionManager) return "EXPLORER"
-                        var c = connectionManager.get(connectionManager.activeIndex)
-                        return databaseService && databaseService.connected
-                            ? DB.tableLabel(c ? c.dbType : "")
-                            : "EXPLORER"
-                    }
-                    font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold
-                    font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
+                    text: "SCHEMA"
+                    font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                    font.letterSpacing: 0.8; color: Theme.fgDim; opacity: 0.6
                     Layout.fillWidth: true
                 }
 
-                // Collapse toggle
+                // Refresh button
                 Rectangle {
-                    visible: databaseService && databaseService.connected
-                    width: 22; height: 22; radius: Theme.r4
-                    color: _collapseMa.containsMouse ? Theme.bgHover : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent; text: _schemaCollapsed ? "▸" : "▾"
-                        font.pixelSize: Theme.t11; color: Theme.fgDim
-                    }
-                    MouseArea {
-                        id: _collapseMa; anchors.fill: parent
-                        hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                        onClicked: _schemaCollapsed = !_schemaCollapsed
-                    }
-                }
-
-                // Refresh
-                Rectangle {
-                    visible: databaseService && databaseService.connected
-                    width: 22; height: 22; radius: Theme.r4
+                    width: 20; height: 20; radius: Theme.r4
                     color: _refreshMa.containsMouse ? Theme.bgHover : "transparent"
+                    Layout.rightMargin: Theme.s4
 
-                    Text {
-                        id: _refreshIcon
-                        anchors.centerIn: parent; text: "↻"
-                        font.pixelSize: Theme.t12; color: Theme.fgDim
+                    FlatIcon {
+                        anchors.centerIn: parent; icon: Icons.refresh; size: 11; color: Theme.fgDim
                         rotation: _refreshMa.containsMouse ? 45 : 0
                         Behavior on rotation { NumberAnimation { duration: Theme.normal } }
                     }
@@ -605,80 +347,28 @@ Rectangle {
             }
         }
 
-
         // ── Schema Tree ──
         SchemaTree {
             Layout.fillWidth: true; Layout.fillHeight: true
-            visible: !sidebar._schemaCollapsed
+            visible: databaseService && databaseService.connected
         }
 
-        // FIX #7: Collapsed schema — clickable to expand
+        // ── Not connected state ──
         Item {
             Layout.fillWidth: true; Layout.fillHeight: true
-            visible: sidebar._schemaCollapsed
+            visible: !databaseService || !databaseService.connected
 
             Column {
-                anchors.centerIn: parent; spacing: Theme.s8
+                anchors.centerIn: parent; spacing: Theme.s6
 
+                FlatIcon {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    icon: Icons.database; size: 24; color: Theme.fgDim; opacity: 0.3
+                }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "▸  Schema explorer collapsed"
-                    font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.5
-                }
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Click to expand"
-                    font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.accent; opacity: 0.6
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                onClicked: sidebar._schemaCollapsed = false
-            }
-        }
-
-        // ══════════════════════════════════════════
-        //  BOTTOM STATUS BAR
-        // ══════════════════════════════════════════
-        Rectangle {
-            Layout.fillWidth: true; Layout.preferredHeight: 32
-            color: "transparent"
-
-            Rectangle {
-                anchors.top: parent.top; width: parent.width; height: 1
-                color: Theme.border
-            }
-
-            RowLayout {
-                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
-                spacing: Theme.s6
-
-                // Connection status dot
-                Rectangle {
-                    Layout.preferredWidth: 6; Layout.preferredHeight: 6
-                    radius: Theme.rFull
-                    color: databaseService && databaseService.connected ? Theme.success : Theme.fgDim
-                    opacity: databaseService && databaseService.connected ? 1.0 : 0.3
-                }
-
-                Text {
-                    text: {
-                        if (databaseService && databaseService.connected) {
-                            var c = connectionManager.get(connectionManager.activeIndex)
-                            if (c) return DB.displayName(c.dbType || "") + " · " + (c.name || "")
-                            return "Connected"
-                        }
-                        return "Disconnected"
-                    }
-                    font.family: Theme.mono; font.pixelSize: Theme.t11
-                    color: Theme.fgDim; elide: Text.ElideRight
-                    Layout.fillWidth: true
-                }
-
-                Text {
-                    text: "v0.2.0"
-                    font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4
+                    text: "Select a connection"
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4
                 }
             }
         }
@@ -704,15 +394,11 @@ Rectangle {
             Item { Layout.fillWidth: true }
 
             FlatButton {
-                text: "Cancel"
-                variant: "ghost"
-                size: "sm"
+                text: "Cancel"; variant: "ghost"; size: "sm"
                 onClicked: _delDlg.close()
             }
             FlatButton {
-                text: "Delete"
-                variant: "destructive"
-                size: "sm"
+                text: "Delete"; variant: "destructive"; size: "sm"
                 onClicked: {
                     connectionManager.remove(_delDlg.deleteIdx)
                     _delDlg.close()
