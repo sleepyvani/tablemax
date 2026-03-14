@@ -24,32 +24,32 @@ Rectangle {
     ListModel { id: filterModel }
 
     ColumnLayout {
-        anchors.fill: parent; anchors.margins: 12; spacing: 8
+        anchors.fill: parent; anchors.margins: Theme.s12; spacing: Theme.s8
 
         // ── Header ──
         RowLayout {
-            id: headerRow; Layout.fillWidth: true; spacing: 8
+            id: headerRow; Layout.fillWidth: true; spacing: Theme.s8
 
             FlatIcon { icon: Icons.filter; size: 14; color: Theme.accent }
             Text {
-                text: "Filters"; font.family: Theme.sans; font.pixelSize: 13
+                text: "Filters"; font.family: Theme.sans; font.pixelSize: Theme.t13
                 font.weight: Font.DemiBold; color: Theme.fg
             }
 
             Rectangle {
                 visible: filterModel.count > 0
-                width: countText.implicitWidth + 12; height: 20; radius: 10
+                width: countText.implicitWidth + Theme.s12; height: 20; radius: Theme.rFull
                 color: Theme.accent
                 Text {
                     id: countText; anchors.centerIn: parent
-                    text: filterModel.count; font.pixelSize: 10; font.weight: Font.Bold; color: "#fff"
+                    text: filterModel.count; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: "#fff"
                 }
             }
 
             Item { Layout.fillWidth: true }
 
             FlatButton {
-                text: "Add"; flat: true; font.pixelSize: 11
+                text: "Add"; variant: "ghost"; size: "sm"
                 onClicked: filterModel.append({
                     column: columns.length > 0 ? columns[0].name : "",
                     operator: "=",
@@ -73,10 +73,10 @@ Rectangle {
             id: filterList
             Layout.fillWidth: true
             Layout.preferredHeight: Math.min(contentHeight, 200)
-            model: filterModel; spacing: 6; clip: true
+            model: filterModel; spacing: Theme.s6; clip: true
 
             delegate: RowLayout {
-                width: filterList.width; spacing: 6; height: 36
+                width: filterList.width; spacing: Theme.s6; height: 36
 
                 FlatSelect {
                     visible: index > 0; implicitWidth: 64
@@ -122,23 +122,23 @@ Rectangle {
         Text {
             visible: filterModel.count === 0
             text: "No filters added. Click 'Add' to create one."
-            font.family: Theme.sans; font.pixelSize: 12; color: Theme.fgMuted
-            Layout.alignment: Qt.AlignHCenter; Layout.topMargin: 8
+            font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgMuted
+            Layout.alignment: Qt.AlignHCenter; Layout.topMargin: Theme.s8
         }
 
         // ── Footer ──
         RowLayout {
-            id: footerRow; Layout.fillWidth: true; spacing: 8
+            id: footerRow; Layout.fillWidth: true; spacing: Theme.s8
 
             FlatButton {
-                text: "Clear All"; flat: true; visible: filterModel.count > 0
+                text: "Clear All"; variant: "ghost"; visible: filterModel.count > 0
                 onClicked: { filterModel.clear(); filtersApplied("") }
             }
 
             Item { Layout.fillWidth: true }
 
             FlatButton {
-                text: "Apply Filters"; highlighted: true
+                text: "Apply Filters"
                 enabled: filterModel.count > 0
                 onClicked: filtersApplied(buildWhereClause())
             }

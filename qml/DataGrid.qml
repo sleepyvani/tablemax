@@ -40,8 +40,8 @@ Rectangle {
                 Text { text: "Results"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: Theme.fgMuted }
 
                 Rectangle {
-                    height: 16; width: rcText.implicitWidth + 10; radius: Theme.rFull; color: Theme.bgSurface; visible: resultModel && resultModel.totalRows > 0
-                    Text { id: rcText; anchors.centerIn: parent; text: Fmt.formatRowCount(resultModel ? resultModel.totalRows : 0); font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
+                    height: 16; width: rcText.implicitWidth + Theme.s8; radius: Theme.rFull; color: Theme.bgSurface; visible: resultModel && resultModel.totalRows > 0
+                    Text { id: rcText; anchors.centerIn: parent; text: Fmt.formatRowCount(resultModel ? resultModel.totalRows : 0); font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim }
                 }
 
                 Item { Layout.fillWidth: true }
@@ -99,7 +99,7 @@ Rectangle {
                     width: 48; height: 28; color: "transparent"
                     Text {
                         anchors.centerIn: parent
-                        text: "#"; font.family: Theme.mono; font.pixelSize: 9; font.weight: Font.Bold
+                        text: "#"; font.family: Theme.mono; font.pixelSize: Theme.t11; font.weight: Font.Bold
                         color: Theme.fgDim; opacity: 0.6
                     }
                     Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
@@ -114,7 +114,7 @@ Rectangle {
                         color: "transparent"
 
                         RowLayout {
-                            anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: 2; spacing: 4
+                            anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s2; spacing: Theme.s4
 
                             Text {
                                 text: resultModel ? resultModel.columnName(index) : ""
@@ -168,7 +168,7 @@ Rectangle {
                         Text {
                             anchors.centerIn: parent
                             text: (index + 1).toString()
-                            font.family: Theme.mono; font.pixelSize: 9
+                            font.family: Theme.mono; font.pixelSize: Theme.t11
                             color: Theme.fgDim; opacity: 0.5
                         }
 

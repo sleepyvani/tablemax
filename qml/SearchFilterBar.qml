@@ -26,8 +26,8 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 12; anchors.rightMargin: 12
-        spacing: 8
+        anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
+        spacing: Theme.s8
 
         // Search icon
         FlatIcon { icon: Icons.search; size: 14; color: Theme.fgMuted }
@@ -35,16 +35,16 @@ Rectangle {
         // Search input
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 28
-            radius: 6; color: Theme.bgSurface
+            radius: Theme.r6; color: Theme.bgSurface
             border.width: 1; border.color: searchInput.activeFocus ? Theme.accent : Theme.border
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 8; anchors.rightMargin: 8; spacing: 6
+                anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8; spacing: Theme.s6
 
                 TextInput {
                     id: searchInput
                     Layout.fillWidth: true
-                    font.family: Theme.fontFamily; font.pixelSize: 12; color: Theme.fg
+                    font.family: Theme.fontFamily; font.pixelSize: Theme.t12; color: Theme.fg
                     selectByMouse: true; clip: true
 
                     Text {
@@ -67,14 +67,14 @@ Rectangle {
                 Text {
                     visible: searchInput.text.length > 0
                     text: matchCount > 0 ? (currentMatch + 1) + "/" + matchCount : "0 results"
-                    font.pixelSize: 10; font.family: Theme.mono; color: matchCount > 0 ? Theme.fgDim : Theme.error
+                    font.pixelSize: Theme.t11; font.family: Theme.mono; color: matchCount > 0 ? Theme.fgDim : Theme.error
                 }
             }
         }
 
         // Prev/Next match
         Rectangle {
-            width: 24; height: 24; radius: 4
+            width: 24; height: 24; radius: Theme.r4
             color: prevMatchMa.containsMouse ? Theme.bgHover : "transparent"
             opacity: matchCount > 0 ? 1 : 0.3
             FlatIcon { anchors.centerIn: parent; icon: Icons.chevronUp; size: 12; color: Theme.fgMuted }
@@ -83,7 +83,7 @@ Rectangle {
         }
 
         Rectangle {
-            width: 24; height: 24; radius: 4
+            width: 24; height: 24; radius: Theme.r4
             color: nextMatchMa.containsMouse ? Theme.bgHover : "transparent"
             opacity: matchCount > 0 ? 1 : 0.3
             FlatIcon { anchors.centerIn: parent; icon: Icons.chevronDown; size: 12; color: Theme.fgMuted }
@@ -96,14 +96,14 @@ Rectangle {
 
         // Column filter dropdown
         Rectangle {
-            width: colFilterRow.implicitWidth + 16; height: 24; radius: 12
+            width: colFilterRow.implicitWidth + Theme.s16; height: 24; radius: Theme.rFull
             color: colFilterMa.containsMouse ? Theme.bgHover : Theme.bgSurface
             border.width: 1; border.color: Theme.border
 
             RowLayout {
-                id: colFilterRow; anchors.centerIn: parent; spacing: 4
+                id: colFilterRow; anchors.centerIn: parent; spacing: Theme.s4
                 FlatIcon { icon: Icons.filter; size: 10; color: Theme.fgMuted }
-                Text { text: "All Columns"; font.pixelSize: 10; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                Text { text: "All Columns"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.fontFamily }
             }
 
             MouseArea {
@@ -114,35 +114,35 @@ Rectangle {
 
         // Regex toggle
         Rectangle {
-            width: 24; height: 24; radius: 4
+            width: 24; height: 24; radius: Theme.r4
             color: regexActive ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12) : regexMa.containsMouse ? Theme.bgHover : "transparent"
             border.width: regexActive ? 1 : 0
             border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
 
             property bool regexActive: false
 
-            Text { anchors.centerIn: parent; text: ".*"; font.pixelSize: 10; font.weight: Font.Bold; font.family: Theme.mono; color: parent.regexActive ? Theme.accent : Theme.fgMuted }
+            Text { anchors.centerIn: parent; text: ".*"; font.pixelSize: Theme.t11; font.weight: Font.Bold; font.family: Theme.mono; color: parent.regexActive ? Theme.accent : Theme.fgMuted }
             MouseArea { id: regexMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: parent.regexActive = !parent.regexActive }
             FlatTooltip { visible: regexMa.containsMouse; text: "Toggle regex"; y: -28 }
         }
 
         // Case toggle
         Rectangle {
-            width: 24; height: 24; radius: 4
+            width: 24; height: 24; radius: Theme.r4
             color: caseActive ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12) : caseMa.containsMouse ? Theme.bgHover : "transparent"
             border.width: caseActive ? 1 : 0
             border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
 
             property bool caseActive: false
 
-            Text { anchors.centerIn: parent; text: "Aa"; font.pixelSize: 10; font.weight: Font.Bold; font.family: Theme.fontFamily; color: parent.caseActive ? Theme.accent : Theme.fgMuted }
+            Text { anchors.centerIn: parent; text: "Aa"; font.pixelSize: Theme.t11; font.weight: Font.Bold; font.family: Theme.fontFamily; color: parent.caseActive ? Theme.accent : Theme.fgMuted }
             MouseArea { id: caseMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: parent.caseActive = !parent.caseActive }
             FlatTooltip { visible: caseMa.containsMouse; text: "Match case"; y: -28 }
         }
 
         // Close
         Rectangle {
-            width: 24; height: 24; radius: 4
+            width: 24; height: 24; radius: Theme.r4
             color: closeSearchMa.containsMouse ? Theme.bgHover : "transparent"
             FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 12; color: Theme.fgMuted }
             MouseArea { id: closeSearchMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { searchInput.text = ""; root.isOpen = false; root.closed() } }

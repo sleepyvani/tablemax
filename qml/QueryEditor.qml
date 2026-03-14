@@ -106,7 +106,7 @@ Rectangle {
 
                     RowLayout {
                         id: runContent; anchors.centerIn: parent; spacing: Theme.s4
-                        Text { text: "▶"; font.pixelSize: 9; color: "#fff" }
+                        Text { text: "▶"; font.pixelSize: Theme.t11; color: "#fff" }
                         Text { text: "Run"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: "#fff" }
                     }
                     MouseArea {
@@ -118,7 +118,7 @@ Rectangle {
                 // Shortcut hint
                 Rectangle {
                     height: 18; width: kbdText.implicitWidth + 10; radius: Theme.r4; color: Theme.bgSurface; border.width: 1; border.color: Theme.border
-                    Text { id: kbdText; anchors.centerIn: parent; text: "Ctrl+Enter"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim }
+                    Text { id: kbdText; anchors.centerIn: parent; text: "Ctrl+Enter"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim }
                 }
 
                 // Query mode badge
@@ -130,7 +130,7 @@ Rectangle {
                     Text {
                         id: _modeText; anchors.centerIn: parent
                         text: DB.queryMode(_dbType)
-                        font.family: Theme.mono; font.pixelSize: 9; font.weight: Font.Bold; color: Theme.accent
+                        font.family: Theme.mono; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.accent
                     }
                 }
 
@@ -155,7 +155,7 @@ Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: clrMa.containsMouse ? Theme.bgHover : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                    Text { anchors.centerIn: parent; text: "⌫"; font.pixelSize: 13; color: Theme.fgMuted }
+                    Text { anchors.centerIn: parent; text: "⌫"; font.pixelSize: Theme.t13; color: Theme.fgMuted }
                     MouseArea {
                         id: clrMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: editor.text = ""
