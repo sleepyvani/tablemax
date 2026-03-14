@@ -54,18 +54,18 @@ Rectangle {
                 anchors.fill: parent
                 anchors.leftMargin: 14
                 anchors.rightMargin: 10
-                spacing: 10
+                spacing: Theme.s8
 
                 // Logo
                 Rectangle {
-                    width: 26; height: 26; radius: 8
+                    width: 26; height: 26; radius: Theme.r8
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: "#6366f1" }
                         GradientStop { position: 1.0; color: "#8b5cf6" }
                     }
                     Text {
                         anchors.centerIn: parent
-                        text: "T"; font.pixelSize: 13; font.weight: Font.Bold
+                        text: "T"; font.pixelSize: Theme.t13; font.weight: Font.Bold
                         font.family: Theme.sans; color: "#ffffff"
                     }
                 }
@@ -74,20 +74,20 @@ Rectangle {
                 Text {
                     Layout.fillWidth: true
                     text: "TableMax"
-                    font.family: Theme.sans; font.pixelSize: 14; font.weight: Font.DemiBold
+                    font.family: Theme.sans; font.pixelSize: Theme.t14; font.weight: Font.DemiBold
                     color: Theme.fg; font.letterSpacing: -0.3
                 }
 
                 // Theme
                 Rectangle {
-                    width: 28; height: 28; radius: 6
+                    width: 28; height: 28; radius: Theme.r6
                     color: _themeMa.containsMouse ? Theme.bgHover : "transparent"
-                    Behavior on color { ColorAnimation { duration: 100 } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                     Text {
                         anchors.centerIn: parent
                         text: Theme.darkMode ? "◑" : "○"
-                        font.pixelSize: 14; color: Theme.fgMuted
+                        font.pixelSize: Theme.t14; color: Theme.fgMuted
                     }
                     MouseArea {
                         id: _themeMa; anchors.fill: parent
@@ -98,18 +98,18 @@ Rectangle {
 
                 // New connection
                 Rectangle {
-                    width: 28; height: 28; radius: 6
+                    width: 28; height: 28; radius: Theme.r6
                     color: _addMa.containsMouse
                         ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12) : "transparent"
                     border.width: _addMa.containsMouse ? 1 : 0
                     border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2)
-                    Behavior on color { ColorAnimation { duration: 100 } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                     Text {
                         anchors.centerIn: parent
-                        text: "+"; font.pixelSize: 16; font.weight: Font.Medium
+                        text: "+"; font.pixelSize: Theme.t16; font.weight: Font.Medium
                         color: _addMa.containsMouse ? Theme.accent : Theme.fgMuted
-                        Behavior on color { ColorAnimation { duration: 100 } }
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
                     }
                     MouseArea {
                         id: _addMa; anchors.fill: parent
@@ -127,33 +127,33 @@ Rectangle {
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 44
-            Layout.leftMargin: 10; Layout.rightMargin: 10
+            Layout.leftMargin: Theme.s8; Layout.rightMargin: Theme.s8
 
             Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width; height: 32
-                radius: 8; color: Theme.bgSurface
+                radius: Theme.r8; color: Theme.bgSurface
                 border.width: 1
                 border.color: _search.activeFocus
                     ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.5)
                     : Theme.border
-                Behavior on border.color { ColorAnimation { duration: 120 } }
+                Behavior on border.color { ColorAnimation { duration: Theme.fast } }
 
                 Row {
-                    anchors.fill: parent; anchors.leftMargin: 10; anchors.rightMargin: 10
-                    spacing: 8
+                    anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8
+                    spacing: Theme.s8
 
                     // Search icon
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "⌕"; font.pixelSize: 13; color: Theme.fgDim
+                        text: "⌕"; font.pixelSize: Theme.t13; color: Theme.fgDim
                     }
 
                     TextInput {
                         id: _search
                         width: parent.width - 46
                         anchors.verticalCenter: parent.verticalCenter
-                        font.family: Theme.sans; font.pixelSize: 12; color: Theme.fg
+                        font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg
                         selectByMouse: true; clip: true
                         focus: false
 
@@ -170,13 +170,13 @@ Rectangle {
                     Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: !_search.activeFocus && !_search.text
-                        width: 20; height: 18; radius: 4
+                        width: 20; height: 18; radius: Theme.r4
                         color: "transparent"
                         border.width: 1; border.color: Theme.border
 
                         Text {
                             anchors.centerIn: parent; text: "/"
-                            font.family: Theme.mono; font.pixelSize: 10; color: Theme.fgDim
+                            font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
                         }
                     }
                 }
@@ -188,15 +188,15 @@ Rectangle {
         // ══════════════════════════════════════════
         Item {
             Layout.fillWidth: true; Layout.preferredHeight: 28
-            Layout.leftMargin: 14; Layout.rightMargin: 10
+            Layout.leftMargin: Theme.s12; Layout.rightMargin: Theme.s8
 
             Row {
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width; spacing: 6
+                width: parent.width; spacing: Theme.s6
 
                 Text {
                     text: "CONNECTIONS"
-                    font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold
                     font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
                 }
 
@@ -204,14 +204,14 @@ Rectangle {
                 Rectangle {
                     visible: connectionManager && connectionManager.connections.length > 0
                     anchors.verticalCenter: parent.verticalCenter
-                    width: _countTxt.implicitWidth + 10; height: 16; radius: 8
+                    width: _countTxt.implicitWidth + Theme.s8; height: 16; radius: Theme.rFull
                     color: Theme.bgSurface
 
                     Text {
                         id: _countTxt
                         anchors.centerIn: parent
                         text: connectionManager ? connectionManager.connections.length : "0"
-                        font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim
+                        font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
                     }
                 }
             }
@@ -253,13 +253,13 @@ Rectangle {
                 // FIX #5: Active row is taller to fit inline disconnect
                 height: _row.active && databaseService.connected ? 56 : 38
 
-                Behavior on height { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
+                Behavior on height { NumberAnimation { duration: Theme.normal; easing.type: Easing.OutCubic } }
 
                 Rectangle {
                     id: _row
                     anchors.fill: parent
-                    anchors.leftMargin: 6; anchors.rightMargin: 6
-                    radius: 6
+                    anchors.leftMargin: Theme.s6; anchors.rightMargin: Theme.s6
+                    radius: Theme.r6
 
                     property bool active: connectionManager.activeIndex === index
                     property bool hovered: _rowMa.containsMouse
@@ -272,7 +272,7 @@ Rectangle {
                     border.color: active
                         ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.15) : "transparent"
 
-                    Behavior on color { ColorAnimation { duration: 80 } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                     // Left accent bar
                     Rectangle {
@@ -285,22 +285,22 @@ Rectangle {
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.leftMargin: _row.active ? 12 : 10
-                        anchors.rightMargin: 8
-                        anchors.topMargin: 4; anchors.bottomMargin: 4
-                        spacing: 2
+                        anchors.leftMargin: _row.active ? Theme.s12 : Theme.s8
+                        anchors.rightMargin: Theme.s8
+                        anchors.topMargin: Theme.s4; anchors.bottomMargin: Theme.s4
+                        spacing: Theme.s2
 
                         // Top row: icon + name + indicators
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: 8
+                            spacing: Theme.s8
 
                             // Color dot
                             Rectangle {
                                 width: 8; height: 8; radius: 4
                                 color: modelData.color || "#6366f1"
                                 opacity: _row.active ? 1.0 : _row.hovered ? 0.7 : 0.4
-                                Behavior on opacity { NumberAnimation { duration: 100 } }
+                                Behavior on opacity { NumberAnimation { duration: Theme.fast } }
                             }
 
                             // DB icon
@@ -310,7 +310,7 @@ Rectangle {
                                 sourceSize: Qt.size(16, 16)
                                 fillMode: Image.PreserveAspectFit
                                 opacity: _row.active ? 1.0 : _row.hovered ? 0.8 : 0.5
-                                Behavior on opacity { NumberAnimation { duration: 100 } }
+                                Behavior on opacity { NumberAnimation { duration: Theme.fast } }
                             }
 
                             // Name + type
@@ -319,14 +319,14 @@ Rectangle {
 
                                 Text {
                                     text: modelData.name || "Untitled"
-                                    font.family: Theme.sans; font.pixelSize: 12
+                                    font.family: Theme.sans; font.pixelSize: Theme.t12
                                     font.weight: _row.active ? Font.DemiBold : Font.Normal
                                     color: Theme.fg; elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
                                 Text {
                                     text: DB.displayName(modelData.dbType || "")
-                                    font.family: Theme.mono; font.pixelSize: 9
+                                    font.family: Theme.mono; font.pixelSize: Theme.t11
                                     color: Theme.fgDim
                                 }
                             }
@@ -355,13 +355,13 @@ Rectangle {
                                 Layout.preferredWidth: 20; Layout.preferredHeight: 20
 
                                 Rectangle {
-                                    anchors.fill: parent; radius: 4
+                                    anchors.fill: parent; radius: Theme.r4
                                     color: _delMa.containsMouse
                                         ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12) : "transparent"
                                 }
                                 Text {
                                     anchors.centerIn: parent; text: "×"
-                                    font.pixelSize: 13; color: _delMa.containsMouse ? Theme.error : Theme.fgDim
+                                    font.pixelSize: Theme.t13; color: _delMa.containsMouse ? Theme.error : Theme.fgDim
                                 }
                                 MouseArea {
                                     id: _delMa; anchors.fill: parent; z: 2
@@ -376,7 +376,7 @@ Rectangle {
 
                         // FIX #5: Inline disconnect button (only for active + connected)
                         Rectangle {
-                            Layout.fillWidth: true; Layout.preferredHeight: 22; radius: 4
+                            Layout.fillWidth: true; Layout.preferredHeight: 22; radius: Theme.r4
                             visible: _row.active && databaseService.connected
 
                             color: _inlineDiscoMa.containsMouse
@@ -387,8 +387,8 @@ Rectangle {
                                 ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.2)
                                 : Qt.rgba(Theme.border.r, Theme.border.g, Theme.border.b, 0.5)
 
-                            Behavior on color { ColorAnimation { duration: 100 } }
-                            Behavior on border.color { ColorAnimation { duration: 100 } }
+                            Behavior on color { ColorAnimation { duration: Theme.fast } }
+                            Behavior on border.color { ColorAnimation { duration: Theme.fast } }
 
                             // Row {
                             //     anchors.centerIn: parent; spacing: 4
@@ -487,28 +487,28 @@ Rectangle {
                 visible: !connectionManager || connectionManager.connections.length === 0
 
                 Column {
-                    anchors.centerIn: parent; spacing: 8
+                    anchors.centerIn: parent; spacing: Theme.s8
 
                     // Empty icon
                     Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: 32; height: 32; radius: 8
+                        width: 32; height: 32; radius: Theme.r8
                         color: Theme.bgSurface
                         Text {
                             anchors.centerIn: parent; text: "⊘"
-                            font.pixelSize: 14; color: Theme.fgDim
+                            font.pixelSize: Theme.t14; color: Theme.fgDim
                         }
                     }
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: "No connections yet"
-                        font.family: Theme.sans; font.pixelSize: 12; color: Theme.fgDim
+                        font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim
                     }
 
                     Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: _emptyTxt.implicitWidth + 24; height: 26; radius: 6
+                        width: _emptyTxt.implicitWidth + Theme.s24; height: 26; radius: Theme.r6
                         color: _emptyBtnMa.containsMouse
                             ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
                             : "transparent"
@@ -517,14 +517,14 @@ Rectangle {
                             ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2)
                             : Theme.border
 
-                        Behavior on color { ColorAnimation { duration: 100 } }
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                         Row {
-                            anchors.centerIn: parent; spacing: 4
-                            Text { text: "+"; font.pixelSize: 12; color: Theme.accent }
+                            anchors.centerIn: parent; spacing: Theme.s4
+                            Text { text: "+"; font.pixelSize: Theme.t12; color: Theme.accent }
                             Text {
                                 id: _emptyTxt; text: "Add Connection"
-                                font.family: Theme.sans; font.pixelSize: 11; color: Theme.fg
+                                font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fg
                             }
                         }
                         MouseArea {
@@ -546,10 +546,10 @@ Rectangle {
         // ══════════════════════════════════════════
         Item {
             Layout.fillWidth: true; Layout.preferredHeight: 28
-            Layout.leftMargin: 14; Layout.rightMargin: 10
+            Layout.leftMargin: Theme.s12; Layout.rightMargin: Theme.s8
 
             RowLayout {
-                anchors.fill: parent; spacing: 6
+                anchors.fill: parent; spacing: Theme.s6
 
                 Text {
                     text: {
@@ -559,7 +559,7 @@ Rectangle {
                             ? DB.tableLabel(c ? c.dbType : "")
                             : "EXPLORER"
                     }
-                    font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold
                     font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7
                     Layout.fillWidth: true
                 }
@@ -567,12 +567,12 @@ Rectangle {
                 // Collapse toggle
                 Rectangle {
                     visible: databaseService && databaseService.connected
-                    width: 22; height: 22; radius: 4
+                    width: 22; height: 22; radius: Theme.r4
                     color: _collapseMa.containsMouse ? Theme.bgHover : "transparent"
 
                     Text {
                         anchors.centerIn: parent; text: _schemaCollapsed ? "▸" : "▾"
-                        font.pixelSize: 8; color: Theme.fgDim
+                        font.pixelSize: Theme.t11; color: Theme.fgDim
                     }
                     MouseArea {
                         id: _collapseMa; anchors.fill: parent
@@ -584,15 +584,15 @@ Rectangle {
                 // Refresh
                 Rectangle {
                     visible: databaseService && databaseService.connected
-                    width: 22; height: 22; radius: 4
+                    width: 22; height: 22; radius: Theme.r4
                     color: _refreshMa.containsMouse ? Theme.bgHover : "transparent"
 
                     Text {
                         id: _refreshIcon
                         anchors.centerIn: parent; text: "↻"
-                        font.pixelSize: 12; color: Theme.fgDim
+                        font.pixelSize: Theme.t12; color: Theme.fgDim
                         rotation: _refreshMa.containsMouse ? 45 : 0
-                        Behavior on rotation { NumberAnimation { duration: 200 } }
+                        Behavior on rotation { NumberAnimation { duration: Theme.normal } }
                     }
                     MouseArea {
                         id: _refreshMa; anchors.fill: parent
@@ -617,17 +617,17 @@ Rectangle {
             visible: sidebar._schemaCollapsed
 
             Column {
-                anchors.centerIn: parent; spacing: 8
+                anchors.centerIn: parent; spacing: Theme.s8
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "▸  Schema explorer collapsed"
-                    font.family: Theme.sans; font.pixelSize: 11; color: Theme.fgDim; opacity: 0.5
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.5
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "Click to expand"
-                    font.family: Theme.sans; font.pixelSize: 10; color: Theme.accent; opacity: 0.6
+                    font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.accent; opacity: 0.6
                 }
             }
 
@@ -651,12 +651,12 @@ Rectangle {
 
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14
-                spacing: 6
+                spacing: Theme.s6
 
                 // Connection status dot
                 Rectangle {
                     Layout.preferredWidth: 6; Layout.preferredHeight: 6
-                    radius: 3
+                    radius: Theme.rFull
                     color: databaseService && databaseService.connected ? Theme.success : Theme.fgDim
                     opacity: databaseService && databaseService.connected ? 1.0 : 0.3
                 }
@@ -670,14 +670,14 @@ Rectangle {
                         }
                         return "Disconnected"
                     }
-                    font.family: Theme.mono; font.pixelSize: 10
+                    font.family: Theme.mono; font.pixelSize: Theme.t11
                     color: Theme.fgDim; elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
 
                 Text {
                     text: "v0.2.0"
-                    font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4
+                    font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4
                 }
             }
         }
@@ -697,8 +697,8 @@ Rectangle {
         }
 
         contentItem: RowLayout {
-            spacing: 8
-            Layout.topMargin: 8
+            spacing: Theme.s8
+            Layout.topMargin: Theme.s8
 
             Item { Layout.fillWidth: true }
 
