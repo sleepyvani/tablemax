@@ -10,7 +10,7 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 2
+        anchors.leftMargin: Theme.s2
         anchors.rightMargin: Theme.s8
         spacing: 0
 
@@ -24,11 +24,11 @@ Rectangle {
                 anchors.centerIn: parent
                 width: 28; height: 28; radius: Theme.r6
                 color: sbToggle.containsMouse ? Theme.bgHover : "transparent"
-                Behavior on color { ColorAnimation { duration: 80 } }
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                 Text {
                     anchors.centerIn: parent
-                    text: "☰"; font.pixelSize: 14
+                    text: "☰"; font.pixelSize: Theme.t14
                     color: Theme.fgMuted
                 }
             }
@@ -47,17 +47,15 @@ Rectangle {
             model: tabManager ? tabManager.tabs : []
 
             Rectangle {
-                Layout.preferredWidth: Math.min(tabLabel.implicitWidth + 52, 180)
-                Layout.preferredHeight: 38
-                color: "transparent"
+                    Layout.preferredWidth: Math.min(tabLabel.implicitWidth + 52, 180)
 
                 property bool isActive: tabManager.currentIndex === index
 
                 Rectangle {
                     anchors.fill: parent
-                    anchors.topMargin: 4
-                    anchors.leftMargin: 2
-                    anchors.rightMargin: 2
+                    anchors.topMargin: Theme.s4
+                    anchors.leftMargin: Theme.s2
+                    anchors.rightMargin: Theme.s2
                     radius: Theme.r6
                     color: isActive ? Theme.bgSurface : tabMa.containsMouse ? Theme.bgHover : "transparent"
 
@@ -78,9 +76,9 @@ Rectangle {
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 6
-                        spacing: 4
+                        anchors.leftMargin: Theme.s8
+                        anchors.rightMargin: Theme.s6
+                        spacing: Theme.s4
 
                         // Modified indicator dot
                         Rectangle {
@@ -112,7 +110,7 @@ Rectangle {
 
                             Text {
                                 anchors.centerIn: parent
-                                text: "×"; font.pixelSize: 13
+                                text: "×"; font.pixelSize: Theme.t13
                                 color: tabClose.containsMouse ? Theme.fg : Theme.fgMuted
                             }
 
@@ -165,13 +163,13 @@ Rectangle {
                 anchors.centerIn: parent
                 width: 24; height: 24; radius: Theme.r6
                 color: newTabMa.containsMouse ? Theme.bgHover : "transparent"
-                Behavior on color { ColorAnimation { duration: 80 } }
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                 Text {
                     anchors.centerIn: parent
-                    text: "+"; font.pixelSize: 16
+                    text: "+"; font.pixelSize: Theme.t16
                     color: newTabMa.containsMouse ? Theme.accent : Theme.fgMuted
-                    Behavior on color { ColorAnimation { duration: 80 } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
                 }
             }
 
@@ -189,7 +187,7 @@ Rectangle {
         // Active DB pill
         Rectangle {
             Layout.preferredHeight: 22
-            Layout.preferredWidth: connPillRow.implicitWidth + 16
+            Layout.preferredWidth: connPillRow.implicitWidth + Theme.s16
             radius: Theme.rFull
             color: databaseService.connected ? Qt.rgba(0.2, 0.83, 0.6, 0.08) : Theme.bgSurface
             border.width: 1
@@ -198,7 +196,7 @@ Rectangle {
             Row {
                 id: connPillRow
                 anchors.centerIn: parent
-                spacing: 5
+                spacing: Theme.s4
 
                 Rectangle {
                     width: 5; height: 5; radius: 3; anchors.verticalCenter: parent.verticalCenter
@@ -208,7 +206,7 @@ Rectangle {
 
                 Text {
                     font.family: Theme.sans
-                    font.pixelSize: 10
+                    font.pixelSize: Theme.t11
                     text: {
                         if (databaseService.connected && connectionManager) {
                             var c = connectionManager.get(connectionManager.activeIndex)
@@ -265,7 +263,7 @@ Rectangle {
         dialogDescription: "This tab has unsaved query content. Close anyway?"
 
         contentItem: RowLayout {
-            spacing: 8
+            spacing: Theme.s8
             Item { Layout.fillWidth: true }
             FlatButton {
                 text: "Cancel"

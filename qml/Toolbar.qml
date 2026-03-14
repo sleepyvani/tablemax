@@ -31,27 +31,27 @@ Rectangle {
     signal refreshData()
 
     RowLayout {
-        anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 6
+        anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s6
 
         // ── Connection status ──
         Rectangle {
-            width: connRow.implicitWidth + 16; height: 28; radius: 14
+            width: connRow.implicitWidth + Theme.s16; height: 28; radius: Theme.rFull
             color: connected ? Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.1)
                              : Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.1)
             RowLayout {
-                id: connRow; anchors.centerIn: parent; spacing: 6
-                Rectangle { width: 6; height: 6; radius: 3; color: connected ? Theme.success : Theme.error }
+                id: connRow; anchors.centerIn: parent; spacing: Theme.s6
+                Rectangle { width: Theme.s6; height: Theme.s6; radius: Theme.rFull; color: connected ? Theme.success : Theme.error }
                 Text {
                     text: connected ? connectionName : "Disconnected"
-                    font.pixelSize: 11; font.weight: Font.Medium; font.family: Theme.fontFamily
+                    font.pixelSize: Theme.t11; font.weight: Font.Medium; font.family: Theme.fontFamily
                     color: connected ? Theme.fg : Theme.fgMuted
                 }
                 // DB type badge
                 Rectangle {
                     visible: dbType !== "" && connected
-                    width: dbTypeLbl.implicitWidth + 8; height: 16; radius: 8
+                    width: dbTypeLbl.implicitWidth + Theme.s8; height: 16; radius: Theme.rFull
                     color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
-                    Text { id: dbTypeLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: 8; font.weight: Font.Bold; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                    Text { id: dbTypeLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgMuted; font.family: Theme.fontFamily }
                 }
             }
         }
@@ -80,13 +80,13 @@ Rectangle {
         // ── Save changes indicator ──
         Rectangle {
             visible: hasChanges
-            width: saveRow.implicitWidth + 16; height: 28; radius: 14
+            width: saveRow.implicitWidth + Theme.s16; height: 28; radius: Theme.rFull
             color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
 
             RowLayout {
-                id: saveRow; anchors.centerIn: parent; spacing: 6
+                id: saveRow; anchors.centerIn: parent; spacing: Theme.s6
                 FlatIcon { icon: Icons.warning; size: 12; color: Theme.warning }
-                Text { text: "Unsaved changes"; font.pixelSize: 11; font.weight: Font.Medium; color: Theme.warning; font.family: Theme.fontFamily }
+                Text { text: "Unsaved changes"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.warning; font.family: Theme.fontFamily }
             }
 
             MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: saveChanges() }

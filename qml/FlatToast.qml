@@ -12,7 +12,7 @@ Item {
 
     anchors.right: parent ? parent.right : undefined
     anchors.bottom: parent ? parent.bottom : undefined
-    anchors.margins: 16
+    anchors.margins: Theme.s16
 
     width: toastRect.width
     height: toastRect.height
@@ -40,7 +40,7 @@ Item {
     ParallelAnimation {
         id: showAnim
         NumberAnimation { target: root; property: "opacity"; to: 1; duration: Theme.durationSlow; easing.type: Easing.OutCubic }
-        NumberAnimation { target: root; property: "y"; to: root.parent ? root.parent.height - root.height - 16 : 0; duration: Theme.durationSlow; easing.type: Easing.OutCubic }
+        NumberAnimation { target: root; property: "y"; to: root.parent ? root.parent.height - root.height - Theme.s16 : 0; duration: Theme.durationSlow; easing.type: Easing.OutCubic }
     }
 
     ParallelAnimation {
@@ -52,8 +52,8 @@ Item {
 
     Rectangle {
         id: toastRect
-        width: toastContent.implicitWidth + 32
-        height: toastContent.implicitHeight + 20
+        width: toastContent.implicitWidth + Theme.s24 * 2
+        height: toastContent.implicitHeight + Theme.s16
         radius: Theme.radiusMd
         color: Theme.popover
         border.width: 1
@@ -62,11 +62,11 @@ Item {
         RowLayout {
             id: toastContent
             anchors.centerIn: parent
-            spacing: 8
+            spacing: Theme.s8
 
             Rectangle {
-                width: 6
-                height: 6
+                width: Theme.s6
+                height: Theme.s6
                 radius: Theme.radiusFull
                 visible: root.variant !== "default"
                 color: {
@@ -89,7 +89,7 @@ Item {
 
             Text {
                 text: "✕"
-                font.pixelSize: 12
+                font.pixelSize: Theme.t12
                 color: Theme.mutedForeground
 
                 MouseArea {

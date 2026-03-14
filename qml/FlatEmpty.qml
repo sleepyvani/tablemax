@@ -14,11 +14,11 @@ Item {
     ColumnLayout {
         id: emptyLayout
         anchors.centerIn: parent
-        spacing: 12
+        spacing: Theme.s12
 
         Text {
             text: root.icon
-            font.pixelSize: 48
+            font.pixelSize: Theme.t24 * 2
             color: Theme.mutedForeground
             horizontalAlignment: Text.AlignHCenter
             Layout.alignment: Qt.AlignHCenter

@@ -13,7 +13,7 @@ T.Dialog {
     dim: true
 
     implicitWidth: 420
-    padding: 24
+    padding: Theme.s24
 
     enter: Transition {
         ParallelAnimation {
@@ -30,7 +30,7 @@ T.Dialog {
     }
 
     header: ColumnLayout {
-        spacing: 4
+        spacing: Theme.s4
         visible: root.dialogTitle.length > 0
 
         Text {
@@ -52,7 +52,7 @@ T.Dialog {
             Layout.fillWidth: true
         }
 
-        Item { height: 8 }
+        Item { height: Theme.s8 }
     }
 
     background: Rectangle {

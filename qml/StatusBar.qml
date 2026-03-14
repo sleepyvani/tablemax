@@ -13,7 +13,7 @@ Rectangle {
 
         // Connection info
         RowLayout {
-            spacing: 4
+            spacing: Theme.s4
             Rectangle {
                 width: 5; height: 5; radius: 3
                 color: databaseService && databaseService.connected ? Theme.success : Theme.fgDim
@@ -25,7 +25,7 @@ Rectangle {
                     var c = connectionManager.get(connectionManager.activeIndex)
                     return DB.displayName(c ? c.dbType : "") + " · " + (c && c.name ? c.name : "")
                 }
-                font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim
+                font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim
             }
         }
 
@@ -35,7 +35,7 @@ Rectangle {
         Text {
             text: resultModel && resultModel.totalRows > 0
                 ? resultModel.totalRows + " rows × " + resultModel.totalColumns + " cols" : "Ready"
-            font.family: Theme.mono; font.pixelSize: 10; color: Theme.fgDim
+            font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
         }
 
         Rectangle { width: 1; height: 10; color: Theme.border; opacity: 0.5; visible: _execTime.visible }
@@ -47,7 +47,7 @@ Rectangle {
             text: databaseService && databaseService.lastExecTime > 0
                 ? Fmt.formatExecTime(databaseService.lastExecTime)
                 : ""
-            font.family: Theme.mono; font.pixelSize: 10; color: Theme.fgDim
+            font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
         }
 
         // Query mode badge
@@ -56,7 +56,7 @@ Rectangle {
             visible: databaseService && databaseService.connected
         }
         Rectangle {
-            height: 14; width: _qmText.implicitWidth + 8; radius: Theme.r4
+            height: 14; width: _qmText.implicitWidth + Theme.s8; radius: Theme.r4
             color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.06)
             visible: databaseService && databaseService.connected
             Text {
@@ -66,7 +66,7 @@ Rectangle {
                     var c = connectionManager.get(connectionManager.activeIndex)
                     return DB.queryMode(c ? c.dbType : "")
                 }
-                font.family: Theme.mono; font.pixelSize: 8; font.weight: Font.Bold; color: Theme.accent
+                font.family: Theme.mono; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.accent
             }
         }
 
@@ -74,7 +74,7 @@ Rectangle {
 
         // Error indicator
         Text {
-            text: "●"; font.pixelSize: 7
+            text: "●"; font.pixelSize: Theme.t11
             color: databaseService && databaseService.error !== "" ? Theme.error : "transparent"
             visible: databaseService && databaseService.error !== ""
         }
@@ -84,12 +84,12 @@ Rectangle {
             Layout.preferredWidth: 18; Layout.preferredHeight: 16
             radius: Theme.r4
             color: themeMa.containsMouse ? Theme.bgHover : "transparent"
-            Behavior on color { ColorAnimation { duration: 80 } }
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
 
             Text {
                 anchors.centerIn: parent
                 text: Theme.darkMode ? "☾" : "☀"
-                font.pixelSize: 9; color: Theme.fgMuted
+                font.pixelSize: Theme.t11; color: Theme.fgMuted
             }
 
             MouseArea {
@@ -101,6 +101,6 @@ Rectangle {
 
         Rectangle { width: 1; height: 10; color: Theme.border; opacity: 0.5 }
 
-        Text { text: "v0.2.0"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4 }
+        Text { text: "v0.2.0"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4 }
     }
 }

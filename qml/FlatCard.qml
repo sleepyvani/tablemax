@@ -16,8 +16,8 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 24
-        spacing: 8
+        anchors.margins: Theme.s24
+        spacing: Theme.s8
 
         Text {
             id: titleText
