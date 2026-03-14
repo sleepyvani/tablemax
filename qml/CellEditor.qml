@@ -89,7 +89,7 @@ Rectangle {
                 width: 36; height: 22; radius: Theme.r4
                 color: nullMa.containsMouse ? Theme.bgHover : "transparent"
                 border.color: Theme.border; border.width: 1
-                Text { anchors.centerIn: parent; text: "NULL"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.fontFamily }
+                Text { anchors.centerIn: parent; text: "NULL"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.sans }
                 MouseArea {
                     id: nullMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: { textInput.text = ""; root.committed(editRow, editCol, null) ; root.visible = false }
@@ -115,7 +115,7 @@ Rectangle {
             checked: boolEditor.checked
             onCheckedChanged: { boolEditor.checked = checked; root.commit() }
         }
-        Text { text: boolEditor.checked ? "TRUE" : "FALSE"; font.pixelSize: Theme.t12; font.weight: Font.Medium; color: boolEditor.checked ? Theme.success : Theme.fgMuted; font.family: Theme.fontFamily }
+        Text { text: boolEditor.checked ? "TRUE" : "FALSE"; font.pixelSize: Theme.t12; font.weight: Font.Medium; color: boolEditor.checked ? Theme.success : Theme.fgMuted; font.family: Theme.sans }
         Item { Layout.fillWidth: true }
     }
 
@@ -129,7 +129,7 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8; spacing: Theme.s6
                 FlatIcon { icon: Icons.code; size: 12; color: Theme.accent }
-                Text { text: "JSON Editor"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.fontFamily }
+                Text { text: "JSON Editor"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.sans }
                 Item { Layout.fillWidth: true }
                 FlatButton { text: "Format"; variant: "ghost"; size: "sm"; onClicked: jsonTextArea.text = tryPrettyJson(jsonTextArea.text) }
                 FlatButton { text: "Save"; size: "sm"; onClicked: root.commit() }

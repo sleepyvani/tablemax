@@ -48,6 +48,7 @@ Rectangle {
 
             Rectangle {
                     Layout.preferredWidth: Math.min(tabLabel.implicitWidth + 52, 180)
+                    Layout.preferredHeight: 38
 
                 property bool isActive: tabManager.currentIndex === index
 

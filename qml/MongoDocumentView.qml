@@ -35,6 +35,7 @@ Rectangle {
 
                 // View mode toggle
                 Row {
+                    id: viewModeRow
                     spacing: Theme.s2
                     property string viewMode: "list"
 
@@ -55,13 +56,13 @@ Rectangle {
             Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
-        property string viewMode: "list"
+
 
         // ── Document List View (Compass-style) ──
         ListView {
             id: docListView
             Layout.fillWidth: true; Layout.fillHeight: true
-            visible: parent.viewMode === "list"
+            visible: viewModeRow.viewMode === "list"
             model: totalRows; clip: true; spacing: Theme.s8
             boundsBehavior: Flickable.StopAtBounds
             topMargin: Theme.s8; bottomMargin: Theme.s8; leftMargin: Theme.s12; rightMargin: Theme.s12
@@ -190,7 +191,7 @@ Rectangle {
         // ── JSON Raw View ──
         ScrollView {
             Layout.fillWidth: true; Layout.fillHeight: true
-            visible: parent.viewMode === "json"
+            visible: viewModeRow.viewMode === "json"
 
             TextArea {
                 text: generateAllDocsJson()

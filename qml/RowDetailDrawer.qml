@@ -50,7 +50,7 @@ Rectangle {
                 Text {
                     text: tableName ? "Row #" + (selectedRow + 1) + " — " + tableName : "Row #" + (selectedRow + 1)
                     font.pixelSize: Theme.t13; font.weight: Font.DemiBold
-                    font.family: Theme.fontFamily; color: Theme.fg
+                    font.family: Theme.sans; color: Theme.fg
                     Layout.fillWidth: true; elide: Text.ElideRight
                 }
 
@@ -168,7 +168,7 @@ Rectangle {
                                 Text {
                                     text: resultModel ? resultModel.columnName(fieldItem.colIdx) : ""
                                     font.pixelSize: Theme.t11; font.weight: Font.DemiBold
-                                    font.family: Theme.fontFamily; color: Theme.fgMuted
+                                    font.family: Theme.sans; color: Theme.fgMuted
                                 }
                                 // Type badge
                                 Rectangle {

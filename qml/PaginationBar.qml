@@ -31,13 +31,13 @@ Rectangle {
         Text {
             text: totalRows.toLocaleString() + " rows"
             font.pixelSize: Theme.t11; color: Theme.fgMuted
-            font.family: Theme.fontFamily
+            font.family: Theme.sans
         }
 
         Item { Layout.fillWidth: true }
 
         // Rows per page
-        Text { text: "Rows per page:"; font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily }
+        Text { text: "Rows per page:"; font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans }
         FlatSelect {
             id: pageSizeSelect
             Layout.preferredWidth: 70; Layout.preferredHeight: 24
@@ -54,7 +54,7 @@ Rectangle {
         // Page info
         Text {
             text: "Page " + currentPage + " of " + Math.max(1, totalPages)
-            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
+            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans
         }
 
         // Navigation buttons
@@ -98,7 +98,7 @@ Rectangle {
                         Text {
                             anchors.centerIn: parent
                             text: modelData === -1 ? "…" : modelData
-                            font.pixelSize: Theme.t11; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; font.family: Theme.sans
                             color: modelData === currentPage ? "#fff" : Theme.fgMuted
                         }
                         MouseArea {
