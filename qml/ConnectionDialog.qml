@@ -390,8 +390,8 @@ T.Dialog {
         // ── Test Status ──
         Rectangle {
             Layout.fillWidth: true
-            Layout.leftMargin: 24
-            Layout.rightMargin: 24
+            Layout.leftMargin: Theme.s24
+            Layout.rightMargin: Theme.s24
             Layout.preferredHeight: dlg.testStatus !== "" ? 34 : 0
             radius: Theme.r8
             visible: dlg.testStatus !== ""

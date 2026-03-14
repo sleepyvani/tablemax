@@ -155,7 +155,7 @@ FlatDialog {
 
         // ── Warning ──
         Rectangle {
-            Layout.fillWidth: true; Layout.preferredHeight: 32; radius: 6
+            Layout.fillWidth: true; Layout.preferredHeight: 32; radius: Theme.r6
             color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.08)
             visible: statements.length > 0
 

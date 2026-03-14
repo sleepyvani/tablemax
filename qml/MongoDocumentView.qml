@@ -64,7 +64,7 @@ Rectangle {
             visible: parent.viewMode === "list"
             model: totalRows; clip: true; spacing: Theme.s8
             boundsBehavior: Flickable.StopAtBounds
-            topMargin: 8; bottomMargin: 8; leftMargin: 12; rightMargin: 12
+            topMargin: Theme.s8; bottomMargin: Theme.s8; leftMargin: Theme.s12; rightMargin: Theme.s12
 
             delegate: Rectangle {
                 id: docDelegate
@@ -152,12 +152,12 @@ Rectangle {
 
                                 Text {
                                     text: resultModel ? String(resultModel.headerData(colIdx, Qt.Horizontal, 0) || ("col_" + colIdx)) : ""
-                                    font.pixelSize: 11; font.family: "Cascadia Code, Consolas, monospace"
+                                    font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
                                     font.weight: Font.Medium; color: Theme.accent
                                     Layout.preferredWidth: 140; Layout.alignment: Qt.AlignTop
                                 }
 
-                                Text { text: ":"; font.pixelSize: 11; color: Theme.fgDim; Layout.alignment: Qt.AlignTop }
+                                Text { text: ":"; font.pixelSize: Theme.t11; color: Theme.fgDim; Layout.alignment: Qt.AlignTop }
 
                                 Text {
                                     text: {
@@ -165,7 +165,7 @@ Rectangle {
                                         var val = resultModel.data(resultModel.index(docDelegate.docIndex, colIdx), 0)
                                         return val !== undefined && val !== null ? String(val) : "null"
                                     }
-                                    font.pixelSize: 11; font.family: "Cascadia Code, Consolas, monospace"
+                                    font.pixelSize: Theme.t11; font.family: "Cascadia Code, Consolas, monospace"
                                     color: {
                                         var v = text
                                         if (v === "null") return Theme.fgDim

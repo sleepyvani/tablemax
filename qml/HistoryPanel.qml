@@ -153,7 +153,7 @@ Rectangle {
             visible: filteredEntries.length > 0
             Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
                 Item { Layout.fillWidth: true }
                 FlatButton {
                     text: "Clear History"; variant: "ghost"; size: "sm"

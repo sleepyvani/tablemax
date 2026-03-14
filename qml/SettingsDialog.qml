@@ -41,7 +41,7 @@ FlatDialog {
 
                     // Reset
                     FlatButton {
-                        Layout.fillWidth: true; Layout.leftMargin: 8; Layout.rightMargin: 8
+                        Layout.fillWidth: true; Layout.leftMargin: Theme.s8; Layout.rightMargin: Theme.s8
                         text: "Reset All"; variant: "ghost"; size: "sm"
                         onClicked: if (appSettings) appSettings.resetAll()
                     }
@@ -82,7 +82,7 @@ FlatDialog {
 
                     // ─────── Editor ───────
                     ColumnLayout {
-                        visible: activeTab === "editor"; spacing: 16; Layout.fillWidth: true
+                        visible: activeTab === "editor"; spacing: Theme.s16; Layout.fillWidth: true
                         Text { text: "Editor"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
 
                         SettingRow { label: "Font family"; description: "Monospace font for SQL editor"
@@ -107,7 +107,7 @@ FlatDialog {
 
                     // ─────── Data Grid ───────
                     ColumnLayout {
-                        visible: activeTab === "datagrid"; spacing: 16; Layout.fillWidth: true
+                        visible: activeTab === "datagrid"; spacing: Theme.s16; Layout.fillWidth: true
                         Text { text: "Data Grid"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
 
                         SettingRow { label: "Row height"; description: "Height of each row in pixels"
@@ -134,14 +134,14 @@ FlatDialog {
 
                     // ─────── Appearance ───────
                     ColumnLayout {
-                        visible: activeTab === "appearance"; spacing: 16; Layout.fillWidth: true
+                        visible: activeTab === "appearance"; spacing: Theme.s16; Layout.fillWidth: true
                         Text { text: "Appearance"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
                         Text { text: "Theme settings are managed from the system theme.\nTableMax follows your Windows dark/light mode automatically."; font.pixelSize: Theme.t12; color: Theme.fgMuted; font.family: Theme.fontFamily; lineHeight: 1.5 }
                     }
 
                     // ─────── AI ───────
                     ColumnLayout {
-                        visible: activeTab === "ai"; spacing: 16; Layout.fillWidth: true
+                        visible: activeTab === "ai"; spacing: Theme.s16; Layout.fillWidth: true
                         Text { text: "AI Assistant"; font.pixelSize: Theme.t16; font.weight: Font.Bold; color: Theme.fg; font.family: Theme.fontFamily }
 
                         SettingRow { label: "Provider"

@@ -53,8 +53,8 @@ Rectangle {
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 12
-                    anchors.rightMargin: 12
+                    anchors.leftMargin: Theme.s12
+                    anchors.rightMargin: Theme.s12
                     spacing: Theme.s8
 
                     // Key icon based on type

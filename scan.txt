@@ -1,0 +1,66 @@
+﻿=== ConnectionDialog (2) ===
+  L393 MARG
+  L394 MARG
+=== WelcomeView (4) ===
+  L44 SPAC
+  L66 RAD
+  L71 RAD
+  L196 RAD
+=== InfoPanel (1) ===
+  L106 MARG
+=== HistoryPanel (1) ===
+  L156 MARG
+=== SchemaTree (3) ===
+  L207 FONT
+  L154 MARG
+  L30 DUR
+=== SQLPreviewDialog (1) ===
+  L158 RAD
+=== TableStructureView (1) ===
+  L59 MARG
+=== MongoDocumentView (4) ===
+  L155 FONT
+  L168 FONT
+  L67 MARG
+  L132 MARG
+=== RedisKeyBrowser (5) ===
+  L94 FONT
+  L56 MARG
+  L57 MARG
+  L73 SPAC
+  L105 SPAC
+=== SettingsDialog (5) ===
+  L44 MARG
+  L85 SPAC
+  L110 SPAC
+  L137 SPAC
+  L144 SPAC
+=== QueryEditor (3) ===
+  L233 DUR
+  L234 DUR
+  L261 DUR
+=== Sidebar (6) ===
+  L281 MARG
+  L231 SPAC
+  L300 RAD
+  L338 RAD
+  L346 DUR
+  L347 DUR
+=== Main (6) ===
+  L382 MARG
+  L355 SPAC
+  L382 SPAC
+  L385 SPAC
+  L378 RAD
+  L389 RAD
+=== Toolbar (3) ===
+  L116 DUR
+  L117 DUR
+  L140 DUR
+=== StatusBar (1) ===
+  L18 RAD
+=== TabBar_ (2) ===
+  L85 RAD
+  L202 RAD
+=== DataGrid (1) ===
+  L189 MARG

@@ -103,7 +103,7 @@ Rectangle {
 
         ListView {
             Layout.fillWidth: true; Layout.fillHeight: true
-            Layout.leftMargin: 12; Layout.rightMargin: 12
+            Layout.leftMargin: Theme.s12; Layout.rightMargin: Theme.s12
             clip: true; spacing: Theme.s2
             model: schema
 
