@@ -32,11 +32,11 @@ FlatDialog {
     onOpened: refreshPreview()
 
     contentItem: ColumnLayout {
-        spacing: 16; width: parent.width
+        spacing: Theme.s16; width: parent.width
 
         // ── Format Cards ──
         RowLayout {
-            spacing: 8; Layout.fillWidth: true
+            spacing: Theme.s8; Layout.fillWidth: true
 
             Repeater {
                 model: [
@@ -54,19 +54,19 @@ FlatDialog {
                     Behavior on border.color { ColorAnimation { duration: Theme.fast } }
 
                     ColumnLayout {
-                        anchors.centerIn: parent; spacing: 4
+                        anchors.centerIn: parent; spacing: Theme.s4
                         FlatIcon {
                             icon: modelData.icon; size: 20
                             color: selectedFormat === modelData.id ? Theme.accent : Theme.fgMuted
                             Layout.alignment: Qt.AlignHCenter
                         }
                         Text {
-                            text: modelData.label; font.family: Theme.sans; font.pixelSize: 13
+                            text: modelData.label; font.family: Theme.sans; font.pixelSize: Theme.t13
                             font.weight: Font.DemiBold; color: Theme.fg
                             Layout.alignment: Qt.AlignHCenter
                         }
                         Text {
-                            text: modelData.desc; font.family: Theme.sans; font.pixelSize: 10
+                            text: modelData.desc; font.family: Theme.sans; font.pixelSize: Theme.t11
                             color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter
                         }
                     }
@@ -85,35 +85,35 @@ FlatDialog {
             radius: Theme.r8; color: Theme.bgSurface; border.width: 1; border.color: Theme.border
 
             ColumnLayout {
-                id: optCol; anchors.fill: parent; anchors.margins: 12; spacing: 8
+                id: optCol; anchors.fill: parent; anchors.margins: Theme.s12; spacing: Theme.s8
 
                 RowLayout {
-                    spacing: 6
+                    spacing: Theme.s6
                     FlatIcon { icon: Icons.settings; size: 12; color: Theme.fgMuted }
                     Text {
-                        text: "Options"; font.family: Theme.sans; font.pixelSize: 12
+                        text: "Options"; font.family: Theme.sans; font.pixelSize: Theme.t12
                         font.weight: Font.DemiBold; color: Theme.fgMuted; font.letterSpacing: 0.5
                     }
                 }
 
                 // CSV options
                 RowLayout {
-                    visible: selectedFormat === "csv"; spacing: 12
-                    Text { text: "Delimiter"; font.pixelSize: 12; font.family: Theme.fontFamily; color: Theme.fgMuted }
+                    visible: selectedFormat === "csv"; spacing: Theme.s12
+                    Text { text: "Delimiter"; font.pixelSize: Theme.t12; font.family: Theme.fontFamily; color: Theme.fgMuted }
                     FlatSelect { id: delimiterSelect; model: [",", ";", "\\t", "|"]; currentIndex: 0; implicitWidth: 80 }
                     FlatCheckbox { id: headersCheck; text: "Include headers"; checked: true }
                 }
 
                 // SQL options
                 RowLayout {
-                    visible: selectedFormat === "sql"; spacing: 12
+                    visible: selectedFormat === "sql"; spacing: Theme.s12
                     FlatInput { id: tableNameField; placeholderText: "Table name"; text: "exported_table"
                         implicitWidth: 200; onTextChanged: refreshPreview() }
                 }
 
                 // JSON options
                 RowLayout {
-                    visible: selectedFormat === "json"; spacing: 12
+                    visible: selectedFormat === "json"; spacing: Theme.s12
                     FlatCheckbox { id: prettyCheck; text: "Pretty print"; checked: true }
                 }
             }
@@ -132,10 +132,10 @@ FlatDialog {
                     Layout.fillWidth: true; Layout.preferredHeight: 28
                     color: Theme.bgSurface
                     RowLayout {
-                        anchors.verticalCenter: parent.verticalCenter; x: 10; spacing: 6
+                        anchors.verticalCenter: parent.verticalCenter; x: 10; spacing: Theme.s6
                         FlatIcon { icon: Icons.code; size: 10; color: Theme.fgMuted }
                         Text {
-                            text: "Preview"; font.family: Theme.mono; font.pixelSize: 10
+                            text: "Preview"; font.family: Theme.mono; font.pixelSize: Theme.t11
                             color: Theme.fgMuted; font.letterSpacing: 0.5
                         }
                     }
@@ -147,7 +147,7 @@ FlatDialog {
                     Text {
                         width: parent.width - 16; x: 8; y: 4
                         text: previewText + (previewText.length >= 500 ? "\n..." : "")
-                        font.family: Theme.mono; font.pixelSize: 11
+                        font.family: Theme.mono; font.pixelSize: Theme.t11
                         color: Theme.fg; wrapMode: Text.WrapAnywhere
                     }
                 }
@@ -156,7 +156,7 @@ FlatDialog {
 
         // ── Action Buttons ──
         RowLayout {
-            spacing: 8; Layout.fillWidth: true; Layout.alignment: Qt.AlignRight
+            spacing: Theme.s8; Layout.fillWidth: true; Layout.alignment: Qt.AlignRight
 
             FlatButton {
                 text: "Copy to Clipboard"

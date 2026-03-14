@@ -49,12 +49,12 @@ Rectangle {
                     Rectangle {
                         Layout.fillWidth: true; Layout.preferredHeight: 28
                         color: _ndMa.containsMouse ? Theme.bgHover : "transparent"
-                        Behavior on color { ColorAnimation { duration: 80 } }
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                         RowLayout {
                             anchors.fill: parent
-                            anchors.leftMargin: 10; anchors.rightMargin: 8
-                            spacing: 6
+                            anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8
+                            spacing: Theme.s6
 
                             // Chevron
                             Text {
@@ -68,7 +68,7 @@ Rectangle {
 
                             // Type badge — DB-aware
                             Rectangle {
-                                width: 16; height: 16; radius: 4
+                                width: 16; height: 16; radius: Theme.r4
                                 color: Qt.rgba(
                                     modelData.type === "database" ? Theme.info.r : Theme.synKeyword.r,
                                     modelData.type === "database" ? Theme.info.g : Theme.synKeyword.g,
@@ -86,7 +86,7 @@ Rectangle {
                             // Name
                             Text {
                                 text: modelData.name || ""
-                                font.family: Theme.sans; font.pixelSize: 12
+                                font.family: Theme.sans; font.pixelSize: Theme.t12
                                 color: Theme.fg; elide: Text.ElideRight
                                 Layout.fillWidth: true
                             }
@@ -147,16 +147,16 @@ Rectangle {
                             Rectangle {
                                 Layout.fillWidth: true; Layout.preferredHeight: 26
                                 color: _chMa.containsMouse ? Theme.bgHover : "transparent"
-                                Behavior on color { ColorAnimation { duration: 80 } }
+                                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                                 RowLayout {
                                     anchors.fill: parent
                                     anchors.leftMargin: 32; anchors.rightMargin: 8
-                                    spacing: 6
+                                    spacing: Theme.s6
 
                                     // Icon — DB-aware badge
                                     Rectangle {
-                                        width: 14; height: 14; radius: 3
+                                        width: 14; height: 14; radius: Theme.r4
                                         color: Qt.rgba(
                                             modelData.type === "table" ? Theme.synKeyword.r : Theme.fgDim.r,
                                             modelData.type === "table" ? Theme.synKeyword.g : Theme.fgDim.g,
@@ -181,7 +181,7 @@ Rectangle {
                                     // Name
                                     Text {
                                         text: modelData.name || ""
-                                        font.family: Theme.sans; font.pixelSize: 11
+                                        font.family: Theme.sans; font.pixelSize: Theme.t11
                                         color: Theme.fg; opacity: 0.85
                                         elide: Text.ElideRight; Layout.fillWidth: true
                                     }
@@ -253,21 +253,21 @@ Rectangle {
                 visible: !schemaService || schemaService.tree.length === 0
 
                 Column {
-                    anchors.centerIn: parent; spacing: 6
+                    anchors.centerIn: parent; spacing: Theme.s6
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: databaseService && databaseService.connected
                             ? "Empty " + DB.entitySingular(_dbType)
                             : "Not connected"
-                        font.family: Theme.sans; font.pixelSize: 12; color: Theme.fgDim
+                        font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim
                     }
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: databaseService && databaseService.connected
                             ? "No " + DB.tableLabel(_dbType).toLowerCase() + " found"
                             : "Connect to a database to explore"
-                        font.family: Theme.sans; font.pixelSize: 10; color: Theme.fgDim; opacity: 0.5
+                        font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.5
                     }
                 }
             }

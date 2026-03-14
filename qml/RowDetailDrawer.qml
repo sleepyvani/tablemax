@@ -42,21 +42,21 @@ Rectangle {
 
             RowLayout {
                 anchors.fill: parent
-                anchors.leftMargin: 14; anchors.rightMargin: 10
-                spacing: 8
+                anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s8
+                spacing: Theme.s8
 
                 FlatIcon { icon: Icons.info; size: 14; color: Theme.accent }
 
                 Text {
                     text: tableName ? "Row #" + (selectedRow + 1) + " — " + tableName : "Row #" + (selectedRow + 1)
-                    font.pixelSize: 13; font.weight: Font.DemiBold
+                    font.pixelSize: Theme.t13; font.weight: Font.DemiBold
                     font.family: Theme.fontFamily; color: Theme.fg
                     Layout.fillWidth: true; elide: Text.ElideRight
                 }
 
                 // Copy as JSON
                 Rectangle {
-                    width: 28; height: 28; radius: 6
+                    width: 28; height: 28; radius: Theme.r6
                     color: jsonCopyMa.containsMouse ? Theme.bgHover : "transparent"
                     FlatIcon { anchors.centerIn: parent; icon: Icons.code; size: 13; color: Theme.fgMuted }
                     MouseArea {
@@ -72,7 +72,7 @@ Rectangle {
 
                 // Copy as SQL INSERT
                 Rectangle {
-                    width: 28; height: 28; radius: 6
+                    width: 28; height: 28; radius: Theme.r6
                     color: sqlCopyMa.containsMouse ? Theme.bgHover : "transparent"
                     FlatIcon { anchors.centerIn: parent; icon: Icons.database; size: 13; color: Theme.fgMuted }
                     MouseArea {
@@ -88,7 +88,7 @@ Rectangle {
 
                 // Close button
                 Rectangle {
-                    width: 28; height: 28; radius: 6
+                    width: 28; height: 28; radius: Theme.r6
                     color: closeMa.containsMouse ? Theme.bgHover : "transparent"
                     FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 14; color: Theme.fgMuted }
                     MouseArea {
@@ -106,10 +106,10 @@ Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 32; color: Theme.bgElevated
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14; spacing: 6
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s6
 
                 Rectangle {
-                    width: 24; height: 24; radius: 4
+                    width: 24; height: 24; radius: Theme.r4
                     color: prevMa.containsMouse ? Theme.bgHover : "transparent"; opacity: selectedRow > 0 ? 1 : 0.3
                     FlatIcon { anchors.centerIn: parent; icon: Icons.chevronLeft; size: 12; color: Theme.fgMuted }
                     MouseArea { id: prevMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: if (selectedRow > 0) selectedRow-- }
@@ -117,12 +117,12 @@ Rectangle {
 
                 Text {
                     text: (selectedRow + 1) + " / " + (resultModel ? resultModel.totalRows : 0)
-                    font.pixelSize: 11; font.family: Theme.mono; color: Theme.fgDim
+                    font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.fgDim
                     Layout.fillWidth: true; horizontalAlignment: Text.AlignHCenter
                 }
 
                 Rectangle {
-                    width: 24; height: 24; radius: 4
+                    width: 24; height: 24; radius: Theme.r4
                     color: nextMa.containsMouse ? Theme.bgHover : "transparent"; opacity: resultModel && selectedRow < resultModel.totalRows - 1 ? 1 : 0.3
                     FlatIcon { anchors.centerIn: parent; icon: Icons.chevronRight; size: 12; color: Theme.fgMuted }
                     MouseArea { id: nextMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: if (resultModel && selectedRow < resultModel.totalRows - 1) selectedRow++ }
@@ -160,19 +160,19 @@ Rectangle {
                             anchors.left: parent.left; anchors.right: parent.right
                             anchors.leftMargin: 14; anchors.rightMargin: 14
                             anchors.verticalCenter: parent.verticalCenter
-                            spacing: 4
+                            spacing: Theme.s4
 
                             // Column name + type badge
                             RowLayout {
-                                spacing: 6
+                                spacing: Theme.s6
                                 Text {
                                     text: resultModel ? resultModel.columnName(fieldItem.colIdx) : ""
-                                    font.pixelSize: 11; font.weight: Font.DemiBold
+                                    font.pixelSize: Theme.t11; font.weight: Font.DemiBold
                                     font.family: Theme.fontFamily; color: Theme.fgMuted
                                 }
                                 // Type badge
                                 Rectangle {
-                                    height: 14; width: typeLbl.implicitWidth + 8; radius: 7
+                                    height: 14; width: typeLbl.implicitWidth + Theme.s8; radius: Theme.rFull
                                     color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
                                     visible: resultModel !== null
                                     Text {
@@ -194,7 +194,7 @@ Rectangle {
                                     var v = resultModel.data(resultModel.index(selectedRow, fieldItem.colIdx), 0)
                                     return v !== undefined && v !== null ? String(v) : "NULL"
                                 }
-                                font.pixelSize: 13; font.family: Theme.mono
+                                font.pixelSize: Theme.t13; font.family: Theme.mono
                                 color: {
                                     if (!resultModel || selectedRow < 0) return Theme.fg
                                     var v = resultModel.data(resultModel.index(selectedRow, fieldItem.colIdx), 0)
@@ -242,7 +242,7 @@ Rectangle {
             Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
 
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: 14; anchors.rightMargin: 14; spacing: 8
+                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
 
                 FlatButton { text: "Duplicate Row"; variant: "ghost"; size: "sm"; onClicked: root.rowDuplicated(selectedRow) }
 
