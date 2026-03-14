@@ -30,31 +30,39 @@ T.Dialog {
         }
     }
 
-    header: ColumnLayout {
-        spacing: Theme.s4
-        Layout.margins: Theme.s24
+    header: Item {
         visible: root.dialogTitle.length > 0
+        implicitHeight: headerCol.implicitHeight + Theme.s24 + Theme.s8
 
-        Text {
-            text: root.dialogTitle
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeLg
-            font.weight: Font.DemiBold
-            color: Theme.foreground
-            Layout.fillWidth: true
+        ColumnLayout {
+            id: headerCol
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: Theme.s24
+            anchors.rightMargin: Theme.s24
+            anchors.topMargin: Theme.s24
+            spacing: Theme.s4
+
+            Text {
+                text: root.dialogTitle
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSizeLg
+                font.weight: Font.DemiBold
+                color: Theme.foreground
+                Layout.fillWidth: true
+            }
+
+            Text {
+                text: root.dialogDescription
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.fontSize
+                color: Theme.mutedForeground
+                wrapMode: Text.WordWrap
+                visible: root.dialogDescription.length > 0
+                Layout.fillWidth: true
+            }
         }
-
-        Text {
-            text: root.dialogDescription
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize
-            color: Theme.mutedForeground
-            wrapMode: Text.WordWrap
-            visible: root.dialogDescription.length > 0
-            Layout.fillWidth: true
-        }
-
-        Item { height: Theme.s8 }
     }
 
     background: Rectangle {

@@ -14,6 +14,7 @@ T.Dialog {
     property var dbTypes: ["postgres", "mysql", "sqlite", "mongodb", "redis", "mssql", "mariadb"]
     property string selectedColor: "#6366f1"
 
+    parent: Overlay.overlay
     anchors.centerIn: parent
     modal: true
     dim: true
