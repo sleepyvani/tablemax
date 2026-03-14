@@ -20,7 +20,7 @@ Rectangle {
     signal tableClicked()
 
     RowLayout {
-        anchors.fill: parent; anchors.leftMargin: 12; anchors.rightMargin: 12; spacing: 0
+        anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: 0
 
         // Server
         BreadcrumbItem {
@@ -58,9 +58,9 @@ Rectangle {
         // DB type badge
         Rectangle {
             visible: dbType !== ""
-            width: dbTypeBreadLbl.implicitWidth + 12; height: 18; radius: 9
+            width: dbTypeBreadLbl.implicitWidth + Theme.s12; height: 18; radius: Theme.rFull
             color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.08)
-            Text { id: dbTypeBreadLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: 8; font.weight: Font.Bold; color: Theme.accent; font.family: Theme.mono }
+            Text { id: dbTypeBreadLbl; anchors.centerIn: parent; text: dbType.toUpperCase(); font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.accent; font.family: Theme.mono }
         }
     }
 
@@ -75,14 +75,14 @@ Rectangle {
 
         signal clicked()
 
-        width: bcRow.implicitWidth + 12; height: 24; radius: 4
+        width: bcRow.implicitWidth + Theme.s12; height: 24; radius: Theme.r4
         color: bcItemMa.containsMouse ? Theme.bgHover : "transparent"
 
         RowLayout {
-            id: bcRow; anchors.centerIn: parent; spacing: 4
+            id: bcRow; anchors.centerIn: parent; spacing: Theme.s4
             FlatIcon { icon: parent.parent.icon; size: 11; color: parent.parent.isCurrent ? Theme.accent : Theme.fgMuted }
             Text {
-                text: label; font.pixelSize: 11
+                text: label; font.pixelSize: Theme.t11
                 font.weight: isCurrent ? Font.DemiBold : Font.Normal
                 font.family: Theme.fontFamily
                 color: isCurrent ? Theme.fg : Theme.fgMuted
@@ -99,6 +99,6 @@ Rectangle {
     // ── Breadcrumb separator ──
     component BreadcrumbSep : Item {
         width: 20; height: 24
-        Text { anchors.centerIn: parent; text: "›"; font.pixelSize: 12; color: Theme.fgDim; opacity: 0.5 }
+        Text { anchors.centerIn: parent; text: "›"; font.pixelSize: Theme.t12; color: Theme.fgDim; opacity: 0.5 }
     }
 }

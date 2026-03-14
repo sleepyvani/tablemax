@@ -30,7 +30,7 @@ Rectangle {
         // Row count
         Text {
             text: totalRows.toLocaleString() + " rows"
-            font.pixelSize: 11; color: Theme.fgMuted
+            font.pixelSize: Theme.t11; color: Theme.fgMuted
             font.family: Theme.fontFamily
         }
 
@@ -54,12 +54,12 @@ Rectangle {
         // Page info
         Text {
             text: "Page " + currentPage + " of " + Math.max(1, totalPages)
-            font.pixelSize: 11; color: Theme.fgMuted; font.family: Theme.fontFamily
+            font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.fontFamily
         }
 
         // Navigation buttons
         Row {
-            spacing: 2
+            spacing: Theme.s2
 
             // First page
             Rectangle {
@@ -88,7 +88,7 @@ Rectangle {
 
             // Page number pills
             Row {
-                spacing: 2
+                spacing: Theme.s2
                 Repeater {
                     model: computePageNumbers()
                     Rectangle {
@@ -98,7 +98,7 @@ Rectangle {
                         Text {
                             anchors.centerIn: parent
                             text: modelData === -1 ? "…" : modelData
-                            font.pixelSize: 11; font.family: Theme.fontFamily
+                            font.pixelSize: Theme.t11; font.family: Theme.fontFamily
                             color: modelData === currentPage ? "#fff" : Theme.fgMuted
                         }
                         MouseArea {
