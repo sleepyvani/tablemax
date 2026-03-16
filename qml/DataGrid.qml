@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "FormatHelper.js" as Fmt
@@ -30,7 +30,7 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent; spacing: 0
 
-        // ─── Header Bar ───
+        // â”€â”€â”€ Header Bar â”€â”€â”€
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 32; color: Theme.bgElevated
 
@@ -82,7 +82,7 @@ Rectangle {
             DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
-        // ─── Column Headers ───
+        // â”€â”€â”€ Column Headers â”€â”€â”€
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: resultModel && resultModel.totalColumns > 0 ? 28 : 0
@@ -139,7 +139,7 @@ Rectangle {
             BlueprintCrosshair { anchors.bottom: parent.bottom; anchors.right: parent.right; anchors.bottomMargin: -size/2; anchors.rightMargin: -size/2 }
         }
 
-        // ─── Table ───
+        // â”€â”€â”€ Table â”€â”€â”€
         TableView {
             id: tv; Layout.fillWidth: true; Layout.fillHeight: true
             clip: true; model: resultModel; visible: resultModel && resultModel.totalRows > 0
@@ -189,7 +189,7 @@ Rectangle {
                 }
             }
 
-            // Data cells — shifted right by row number column width
+            // Data cells â€” shifted right by row number column width
             leftMargin: 48
 
             delegate: Rectangle {
@@ -258,11 +258,9 @@ Rectangle {
                     }
                 }
             }
-
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
                 contentItem: Rectangle { implicitWidth: 4; radius: 2; color: Theme.borderLight; opacity: 0.6 }
-            }
             }
             ScrollBar.horizontal: ScrollBar {
                 policy: ScrollBar.AsNeeded
@@ -270,7 +268,7 @@ Rectangle {
             }
         }
 
-        // ─── Empty — DB-aware ───
+        //  Empty  DB-aware 
         Item {
             Layout.fillWidth: true; Layout.fillHeight: true; visible: !resultModel || resultModel.totalRows === 0
 
@@ -291,4 +289,16 @@ Rectangle {
                 }
             }
         }
+    }
+
+    // Cell Editor Dialog
+    CellEditor {
+        id: cellEditorDlg
+        onSaved: function(val) {
+            if (changeTracker && resultModel) {
+                changeTracker.updateCell(editRow, editCol, val)
+            }
+            root.toast("Cell updated", "success")
+        }
+    }
 }
