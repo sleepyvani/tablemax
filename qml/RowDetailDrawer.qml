@@ -98,7 +98,7 @@ Rectangle {
                 }
             }
 
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ── Row navigation ──
@@ -129,7 +129,7 @@ Rectangle {
                 }
             }
 
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ── Fields ──
@@ -224,7 +224,7 @@ Rectangle {
                             }
                         }
 
-                        Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                        DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
                     }
                 }
             }
@@ -239,7 +239,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 40; color: Theme.bgElevated
 
-            Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
 
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8

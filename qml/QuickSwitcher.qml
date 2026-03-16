@@ -55,7 +55,7 @@ FlatDialog {
             }
         }
 
-        Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border }
+        DashedLine { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border }
 
         // ── Results ──
         ListView {

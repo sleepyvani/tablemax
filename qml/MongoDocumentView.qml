@@ -53,7 +53,7 @@ Rectangle {
                     }
                 }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
 
@@ -202,11 +202,14 @@ Rectangle {
             }
         }
 
-        // Empty state
-        FlatEmpty {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter; visible: totalRows === 0
-            icon: Icons.database; title: "No documents"; description: "Run a query to see results"
         }
+    }
+    
+    // Empty state (absolute positioned in root so it centers perfectly)
+    FlatEmpty {
+        anchors.centerIn: parent
+        visible: totalRows === 0
+        icon: Icons.database; title: "No documents"; description: "Run a query to see results"
     }
 
     function getDocPreview(row) {

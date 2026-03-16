@@ -164,7 +164,7 @@ Rectangle {
                 }
             }
 
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ─── Editor Area ───
@@ -197,7 +197,7 @@ Rectangle {
                 }
             }
 
-            Rectangle { Layout.fillHeight: true; width: 1; color: Theme.border; opacity: 0.5 }
+            DashedLine { Layout.fillHeight: true; Layout.preferredWidth: 1; color: Theme.border; opacity: 0.5 }
 
             // Editor
             Flickable {

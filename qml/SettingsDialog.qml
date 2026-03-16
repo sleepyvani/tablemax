@@ -47,7 +47,7 @@ FlatDialog {
                         onClicked: if (appSettings) appSettings.resetAll()
                     }
                 }
-                Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border }
+                DashedLine { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border }
             }
 
             // ── Content area ──

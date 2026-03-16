@@ -9,6 +9,8 @@ import "Icons.js" as Icons
 Rectangle {
     id: root
     height: 36
+    Layout.preferredHeight: 36
+    Layout.minimumHeight: 36
     color: Theme.bgElevated
 
     property int currentPage: 1
@@ -20,7 +22,7 @@ Rectangle {
     signal pageChanged(int page)
     signal rowsPerPageChanged(int size)
 
-    Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
+    DashedLine { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
 
     RowLayout {
         anchors.fill: parent
@@ -49,7 +51,7 @@ Rectangle {
         }
 
         // Separator
-        Rectangle { width: 1; height: 20; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 20; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // Page info
         Text {

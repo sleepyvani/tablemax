@@ -48,7 +48,7 @@ Rectangle {
                     MouseArea { id: structCloseMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.closed() }
                 }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ── Column headers ──
@@ -64,7 +64,7 @@ Rectangle {
                 Text { text: "DEFAULT"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
                 Text { text: "EXTRA"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
         }
 
         // ── Column rows ──
@@ -153,7 +153,7 @@ Rectangle {
                     onClicked: root.columnClicked(colRow.modelData.name || "")
                 }
 
-                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
             }
 
             ScrollBar.vertical: ScrollBar {

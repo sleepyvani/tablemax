@@ -33,7 +33,7 @@ Rectangle {
                 }
                 Item { Layout.fillWidth: true }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ── Key List ──
@@ -120,7 +120,7 @@ Rectangle {
                 }
 
                 MouseArea { id: keyMa; anchors.fill: parent; hoverEnabled: true; z: -1 }
-                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
             }
         }
 

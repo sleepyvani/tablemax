@@ -8,7 +8,10 @@ import "Icons.js" as Icons
 
 Rectangle {
     id: root
-    height: visible ? 40 : 0; color: Theme.bgElevated
+    height: isOpen ? 40 : 0
+    Layout.preferredHeight: height
+    Layout.minimumHeight: height
+    color: Theme.bgElevated
     visible: isOpen
 
     property bool isOpen: false
@@ -93,7 +96,7 @@ Rectangle {
         }
 
         // Separator
-        Rectangle { width: 1; height: 20; color: Theme.border; opacity: 0.5 }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 20; color: Theme.border; opacity: 0.5 }
 
         // Column filter dropdown
         Rectangle {
@@ -174,7 +177,7 @@ Rectangle {
         }
     }
 
-    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+    DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
 
     function focusSearch() {
         isOpen = true
