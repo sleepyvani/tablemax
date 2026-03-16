@@ -201,8 +201,6 @@ Rectangle {
                 padding: 16
             }
         }
-
-        }
     }
     
     // Empty state (absolute positioned in root so it centers perfectly)
