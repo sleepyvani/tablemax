@@ -64,7 +64,15 @@ Rectangle {
         }
     }
 
-    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+    DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+    BlueprintCrosshair {
+        anchors.bottom: parent.bottom; anchors.left: parent.left
+        anchors.bottomMargin: -size/2; anchors.leftMargin: -size/2
+    }
+    BlueprintCrosshair {
+        anchors.bottom: parent.bottom; anchors.right: parent.right
+        anchors.bottomMargin: -size/2; anchors.rightMargin: -size/2
+    }
 
     // ── Breadcrumb item component ──
     component BreadcrumbItem : Rectangle {

@@ -102,7 +102,7 @@ Rectangle {
                         text: "#"; font.family: Theme.mono; font.pixelSize: Theme.t11; font.weight: Font.Bold
                         color: Theme.fgDim; opacity: 0.6
                     }
-                    Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
+                    DashedLine { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
                 }
 
                 Repeater {
@@ -126,7 +126,7 @@ Rectangle {
                         }
 
                         // Right border
-                        Rectangle {
+                        DashedLine {
                             anchors.right: parent.right; width: 1; height: parent.height
                             color: Theme.border; opacity: 0.4
                         }
