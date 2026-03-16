@@ -11,18 +11,23 @@ Item {
     property alias first: firstLoader.sourceComponent
     property alias second: secondLoader.sourceComponent
 
+    property bool firstVisible: true
+    property bool secondVisible: true
+
     // First panel
     Loader {
         id: firstLoader
+        visible: root.firstVisible
         x: 0
         y: 0
-        width: root.orientation === Qt.Vertical ? root.width : root.width * root.splitPosition - root.handleSize / 2
-        height: root.orientation === Qt.Vertical ? root.height * root.splitPosition - root.handleSize / 2 : root.height
+        width: !root.firstVisible ? 0 : (!root.secondVisible ? root.width : (root.orientation === Qt.Vertical ? root.width : root.width * root.splitPosition - root.handleSize / 2))
+        height: !root.firstVisible ? 0 : (!root.secondVisible ? root.height : (root.orientation === Qt.Vertical ? root.height * root.splitPosition - root.handleSize / 2 : root.height))
     }
 
     // Handle
     Rectangle {
         id: handle
+        visible: root.firstVisible && root.secondVisible
         color: dragArea.containsMouse || dragArea.drag.active ? Qt.lighter(Theme.border, 1.5) : Theme.border
 
         x: root.orientation === Qt.Vertical ? 0 : firstLoader.width
@@ -71,8 +76,9 @@ Item {
     // Second panel
     Loader {
         id: secondLoader
-        x: root.orientation === Qt.Vertical ? 0 : handle.x + root.handleSize
-        y: root.orientation === Qt.Vertical ? handle.y + root.handleSize : 0
+        visible: root.secondVisible
+        x: !root.firstVisible ? 0 : (root.orientation === Qt.Vertical ? 0 : handle.x + root.handleSize)
+        y: !root.firstVisible ? 0 : (root.orientation === Qt.Vertical ? handle.y + root.handleSize : 0)
         width: root.orientation === Qt.Vertical ? root.width : root.width - x
         height: root.orientation === Qt.Vertical ? root.height - y : root.height
     }

@@ -167,104 +167,59 @@ ApplicationWindow {
                         onFiltersClosed: root.showFilterPanel = false
                     }
 
-                    StackLayout {
-                        id: mainContentStack
+                    FlatResizable {
+                        id: mainContentSplit
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        currentIndex: {
+                        orientation: Qt.Vertical
+                        splitPosition: 0.45
+
+                        property bool isTableMode: {
                             var t = tabManager && tabManager.tabs && tabManager.tabs.length > 0 ? tabManager.getTab(tabManager.currentIndex) : null
-                            return (t && t.type === "table") ? 1 : 0
+                            return (t && t.type === "table")
                         }
 
-                        // Index 0: Query Tab (Split layout)
-                        FlatResizable {
-                            Layout.fillWidth: true; Layout.fillHeight: true
-                            orientation: Qt.Vertical
-                            splitPosition: 0.45
-                            first: Component { QueryEditor { focus: mainContentStack.currentIndex === 0 } }
-                            second: Component {
-                                Item {
-                                    ColumnLayout {
-                                        anchors.fill: parent; spacing: 0
+                        firstVisible: !isTableMode
+                        first: Component { QueryEditor { focus: !mainContentSplit.isTableMode } }
+                        second: Component {
+                            Item {
+                                ColumnLayout {
+                                    anchors.fill: parent; spacing: 0
 
-                                        SearchFilterBar {
-                                            id: searchBarQuery
-                                            Layout.fillWidth: true
-                                            isOpen: root.showSearchBar
-                                            resultModel: resultModel
-                                            onClosed: root.showSearchBar = false
-                                        }
-
-                                        DataGrid {
-                                            Layout.fillWidth: true; Layout.fillHeight: true
-                                            visible: root.activeDbType !== "mongodb" && root.activeDbType !== "redis"
-                                        }
-
-                                        MongoDocumentView {
-                                            Layout.fillWidth: true; Layout.fillHeight: true
-                                            visible: root.activeDbType === "mongodb"
-                                            resultModel: resultModel
-                                            onToast: function(msg, type) { root.toast(msg, type) }
-                                        }
-
-                                        RedisKeyBrowser {
-                                            Layout.fillWidth: true; Layout.fillHeight: true
-                                            visible: root.activeDbType === "redis"
-                                            resultModel: resultModel
-                                            onToast: function(msg, type) { root.toast(msg, type) }
-                                        }
-
-                                        PaginationBar {
-                                            Layout.fillWidth: true
-                                            visible: resultModel && resultModel.totalRows > 0
-                                            totalRows: resultModel ? resultModel.totalRows : 0
-                                            pageSize: appSettings ? appSettings.pageSize : 100
-                                            onPageChanged: function(page) { root.toast("Page " + (page + 1), "info") }
-                                        }
+                                    SearchFilterBar {
+                                        id: searchBar
+                                        Layout.fillWidth: true
+                                        isOpen: root.showSearchBar
+                                        resultModel: resultModel
+                                        onClosed: root.showSearchBar = false
                                     }
-                                }
-                            }
-                        }
 
-                        // Index 1: Table Data Tab (Full screen data view)
-                        Item {
-                            Layout.fillWidth: true; Layout.fillHeight: true
-                            ColumnLayout {
-                                anchors.fill: parent; spacing: 0
+                                    DataGrid {
+                                        Layout.fillWidth: true; Layout.fillHeight: true
+                                        visible: root.activeDbType !== "mongodb" && root.activeDbType !== "redis"
+                                    }
 
-                                SearchFilterBar {
-                                    id: searchBarTable
-                                    Layout.fillWidth: true
-                                    isOpen: root.showSearchBar
-                                    resultModel: resultModel
-                                    onClosed: root.showSearchBar = false
-                                }
+                                    MongoDocumentView {
+                                        Layout.fillWidth: true; Layout.fillHeight: true
+                                        visible: root.activeDbType === "mongodb"
+                                        resultModel: resultModel
+                                        onToast: function(msg, type) { root.toast(msg, type) }
+                                    }
 
-                                DataGrid {
-                                    Layout.fillWidth: true; Layout.fillHeight: true
-                                    visible: root.activeDbType !== "mongodb" && root.activeDbType !== "redis"
-                                }
+                                    RedisKeyBrowser {
+                                        Layout.fillWidth: true; Layout.fillHeight: true
+                                        visible: root.activeDbType === "redis"
+                                        resultModel: resultModel
+                                        onToast: function(msg, type) { root.toast(msg, type) }
+                                    }
 
-                                MongoDocumentView {
-                                    Layout.fillWidth: true; Layout.fillHeight: true
-                                    visible: root.activeDbType === "mongodb"
-                                    resultModel: resultModel
-                                    onToast: function(msg, type) { root.toast(msg, type) }
-                                }
-
-                                RedisKeyBrowser {
-                                    Layout.fillWidth: true; Layout.fillHeight: true
-                                    visible: root.activeDbType === "redis"
-                                    resultModel: resultModel
-                                    onToast: function(msg, type) { root.toast(msg, type) }
-                                }
-
-                                PaginationBar {
-                                    Layout.fillWidth: true
-                                    visible: resultModel && resultModel.totalRows > 0
-                                    totalRows: resultModel ? resultModel.totalRows : 0
-                                    pageSize: appSettings ? appSettings.pageSize : 100
-                                    onPageChanged: function(page) { root.toast("Page " + (page + 1), "info") }
+                                    PaginationBar {
+                                        Layout.fillWidth: true
+                                        visible: resultModel && resultModel.totalRows > 0
+                                        totalRows: resultModel ? resultModel.totalRows : 0
+                                        pageSize: appSettings ? appSettings.pageSize : 100
+                                        onPageChanged: function(page) { root.toast("Page " + (page + 1), "info") }
+                                    }
                                 }
                             }
                         }

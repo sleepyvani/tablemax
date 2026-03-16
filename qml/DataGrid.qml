@@ -148,40 +148,43 @@ Rectangle {
             rowHeightProvider: function() { return 28 }
 
             // Row numbers overlay
-            Column {
-                z: 2; y: -tv.contentY
+            ListView {
+                z: 2
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 width: 48
                 visible: resultModel && resultModel.totalRows > 0
+                interactive: false
+                boundsBehavior: Flickable.StopAtBounds
+                model: resultModel ? resultModel.totalRows : 0
+                contentY: tv.contentY
 
-                Repeater {
-                    model: resultModel ? resultModel.totalRows : 0
-
-                    Rectangle {
-                        width: 48; height: 28
-                        color: {
-                            if (changeTracker && changeTracker.isRowDeleted(index)) return Qt.rgba(1, 0, 0, 0.08)
-                            if (changeTracker && changeTracker.isRowInserted(index)) return Qt.rgba(0, 1, 0, 0.08)
-                            return index % 2 === 0 ? Theme.bgElevated : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
-                        }
-                        border.width: 0
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: (index + 1).toString()
-                            font.family: Theme.mono; font.pixelSize: Theme.t11
-                            color: Theme.fgDim; opacity: 0.5
-                        }
-
-                        // Row state indicator
-                        Rectangle {
-                            anchors.left: parent.left; width: 3; height: parent.height; radius: 1
-                            visible: changeTracker && (changeTracker.isRowDeleted(index) || changeTracker.isRowInserted(index))
-                            color: changeTracker && changeTracker.isRowDeleted(index) ? Theme.error : Theme.success
-                        }
-
-                        Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
-                        Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
+                delegate: Rectangle {
+                    width: 48; height: 28
+                    color: {
+                        if (changeTracker && changeTracker.isRowDeleted(index)) return Qt.rgba(1, 0, 0, 0.08)
+                        if (changeTracker && changeTracker.isRowInserted(index)) return Qt.rgba(0, 1, 0, 0.08)
+                        return index % 2 === 0 ? Theme.bgElevated : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.02)
                     }
+                    border.width: 0
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: (index + 1).toString()
+                        font.family: Theme.mono; font.pixelSize: Theme.t11
+                        color: Theme.fgDim; opacity: 0.5
+                    }
+
+                    // Row state indicator
+                    Rectangle {
+                        anchors.left: parent.left; width: 3; height: parent.height; radius: 1
+                        visible: changeTracker && (changeTracker.isRowDeleted(index) || changeTracker.isRowInserted(index))
+                        color: changeTracker && changeTracker.isRowDeleted(index) ? Theme.error : Theme.success
+                    }
+
+                    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                    Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
                 }
             }
 
