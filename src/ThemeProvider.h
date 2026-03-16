@@ -167,22 +167,22 @@ signals:
 private:
     void applyPalette() {
         if (m_dark) {
-            // ─── Dark (Vercel-inspired) ───
-            m_bg        = QColor("#09090b");
-            m_bgSidebar = QColor("#0c0c0e");
-            m_bgElevated= QColor("#111113");
-            m_bgSurface = QColor("#18181b");
-            m_bgHover   = QColor("#1c1c1f");
-            m_bgActive  = QColor("#222225");
-            m_fg        = QColor("#fafafa");
-            m_fgMuted   = QColor("#71717a");
-            m_fgDim     = QColor("#52525b");
-            m_border    = QColor("#27272a");
-            m_borderLight= QColor("#3f3f46");
-            m_borderFocus= QColor("#6366f1");
-            m_accent    = QColor("#6366f1");
-            m_accentHover= QColor("#818cf8");
-            m_accentDim = QColor::fromRgbF(0.39f, 0.4f, 0.95f, 0.12f);
+            // ─── Dark (Vercel Monochrome / Blueprint) ───
+            m_bg        = QColor("#000000"); // Pure black background
+            m_bgSidebar = QColor("#0a0a0a");
+            m_bgElevated= QColor("#0a0a0a");
+            m_bgSurface = QColor("#171717");
+            m_bgHover   = QColor("#262626");
+            m_bgActive  = QColor("#404040");
+            m_fg        = QColor("#ffffff");
+            m_fgMuted   = QColor("#a3a3a3");
+            m_fgDim     = QColor("#737373");
+            m_border    = QColor("#262626");
+            m_borderLight= QColor("#404040");
+            m_borderFocus= QColor("#ffffff");
+            m_accent    = QColor("#ffffff"); // White accent
+            m_accentHover= QColor("#e5e5e5");
+            m_accentDim = QColor::fromRgbF(1.0f, 1.0f, 1.0f, 0.1f);
             m_success   = QColor("#4ade80");
             m_warning   = QColor("#fbbf24");
             m_error     = QColor("#f87171");
@@ -192,26 +192,26 @@ private:
             m_synKeyword  = QColor("#c084fc");
             m_synString   = QColor("#4ade80");
             m_synNumber   = QColor("#60a5fa");
-            m_synComment  = QColor("#52525b");
+            m_synComment  = QColor("#737373");
             m_synFunction = QColor("#fbbf24");
             m_synType     = QColor("#f87171");
         } else {
-            // ─── Light (Vercel white) ───
+            // ─── Light (Vercel Monochrome / Blueprint) ───
             m_bg        = QColor("#ffffff");
             m_bgSidebar = QColor("#fafafa");
             m_bgElevated= QColor("#ffffff");
             m_bgSurface = QColor("#f4f4f5");
-            m_bgHover   = QColor("#f0f0f1");
-            m_bgActive  = QColor("#e4e4e7");
-            m_fg        = QColor("#09090b");
-            m_fgMuted   = QColor("#71717a");
+            m_bgHover   = QColor("#e4e4e7");
+            m_bgActive  = QColor("#d4d4d8");
+            m_fg        = QColor("#000000");
+            m_fgMuted   = QColor("#52525b");
             m_fgDim     = QColor("#a1a1aa");
             m_border    = QColor("#e4e4e7");
             m_borderLight= QColor("#d4d4d8");
-            m_borderFocus= QColor("#6366f1");
-            m_accent    = QColor("#6366f1");
-            m_accentHover= QColor("#4f46e5");
-            m_accentDim = QColor::fromRgbF(0.39f, 0.4f, 0.95f, 0.08f);
+            m_borderFocus= QColor("#000000");
+            m_accent    = QColor("#000000"); // Black accent
+            m_accentHover= QColor("#27272a");
+            m_accentDim = QColor::fromRgbF(0.0f, 0.0f, 0.0f, 0.06f);
             m_success   = QColor("#16a34a");
             m_warning   = QColor("#d97706");
             m_error     = QColor("#dc2626");

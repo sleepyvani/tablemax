@@ -79,7 +79,7 @@ Rectangle {
                 }
             }
 
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ─── Column Headers ───
@@ -134,8 +134,9 @@ Rectangle {
                 }
             }
 
-            // Bottom border
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
+            // Bottom dashed border
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
+            BlueprintCrosshair { anchors.bottom: parent.bottom; anchors.right: parent.right; anchors.bottomMargin: -size/2; anchors.rightMargin: -size/2 }
         }
 
         // ─── Table ───

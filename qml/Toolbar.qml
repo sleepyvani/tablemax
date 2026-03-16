@@ -57,20 +57,20 @@ Rectangle {
             }
         }
 
-        Rectangle { visible: tabType === "query" || tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { visible: tabType === "query" || tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Execute (Query Tab) ──
         ToolBtn { visible: tabType === "query"; icon: Icons.play; tip: "Execute (Ctrl+Enter)"; accent: true; spinning: executing; onClicked: executeQuery() }
         ToolBtn { visible: tabType === "query"; icon: Icons.formatText; tip: "Format SQL"; onClicked: formatQuery() }
 
-        Rectangle { visible: tabType === "query"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { visible: tabType === "query"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Row operations (Table Tab) ──
         ToolBtn { visible: tabType === "table"; icon: Icons.add; tip: "Add Row"; onClicked: addRow() }
         ToolBtn { visible: tabType === "table"; icon: Icons.trash; tip: "Delete Selected"; onClicked: deleteRows() }
         ToolBtn { visible: tabType === "table"; icon: Icons.refresh; tip: "Refresh Data"; onClicked: refreshData() }
         
-        Rectangle { visible: tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { visible: tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Undo / Redo ──
         ToolBtn { icon: Icons.undo; tip: "Undo (Ctrl+Z)"; enabled: canUndo; onClicked: undoAction() }
@@ -98,14 +98,23 @@ Rectangle {
         // Save
         ToolBtn { visible: hasChanges; icon: Icons.save; tip: "Save changes (Ctrl+S)"; accent: true; onClicked: saveChanges() }
 
-        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter; visible: !hasChanges }
+        DashedLine { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter; visible: !hasChanges }
 
         // ── Right side ──
         ToolBtn { icon: Icons.clock; tip: "History"; onClicked: toggleHistory() }
         ToolBtn { icon: Icons.settings; tip: "Settings"; onClicked: toggleSettings() }
     }
 
-    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+    DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+
+    BlueprintCrosshair {
+        anchors.bottom: parent.bottom; anchors.left: parent.left
+        anchors.bottomMargin: -size/2; anchors.leftMargin: -size/2
+    }
+    BlueprintCrosshair {
+        anchors.bottom: parent.bottom; anchors.right: parent.right
+        anchors.bottomMargin: -size/2; anchors.rightMargin: -size/2
+    }
 
     // ── Execution indicator animation ──
     Rectangle {

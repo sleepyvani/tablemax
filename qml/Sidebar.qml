@@ -77,7 +77,7 @@ Rectangle {
                 }
             }
 
-            Rectangle { Layout.fillWidth: true; height: 1; color: Theme.border; opacity: 0.5 }
+            DashedLine { Layout.fillWidth: true; height: 1; color: Theme.border; opacity: 0.5 }
 
             // ── Connections Label ──
             Item {
@@ -229,7 +229,7 @@ Rectangle {
                         MouseArea { id: _wsRefMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: schemaService.refresh(databaseService) }
                     }
                 }
-                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.5 }
+                DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.5 }
             }
 
             // ── Schema Tree ──

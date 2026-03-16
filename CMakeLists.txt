@@ -263,6 +263,9 @@ if(Qt6_FOUND)
             qml/SearchFilterBar.qml
             qml/TableStructureView.qml
             qml/BreadcrumbNav.qml
+            qml/BlueprintGrid.qml
+            qml/BlueprintCrosshair.qml
+            qml/DashedLine.qml
         SOURCES
             src/ConnectionManager.h
             src/DatabaseService.h

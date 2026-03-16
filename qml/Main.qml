@@ -29,6 +29,13 @@ ApplicationWindow {
 
     function toast(msg: string, type: string) : void { toastBar.show(msg, type || "info") }
 
+    // Background Grid
+    BlueprintGrid {
+        anchors.fill: parent
+        z: -1 
+        gridOpacity: Theme.darkMode ? 0.2 : 0.4
+    }
+
     RowLayout {
         anchors.fill: parent
         spacing: 0
@@ -42,11 +49,23 @@ ApplicationWindow {
             Behavior on Layout.preferredWidth { NumberAnimation { duration: Theme.slow; easing.type: Easing.OutCubic } }
         }
 
-        Rectangle {
+        // Dashed divider with crosshairs
+        Item {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
-            color: Theme.border
             visible: root.showSidebar
+
+            DashedLine { anchors.fill: parent; color: Theme.border }
+
+            // Crosshairs at top and bottom of sidebar divider
+            BlueprintCrosshair { 
+                anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: -size/2
+            }
+            BlueprintCrosshair { 
+                anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottomMargin: -size/2
+            }
         }
 
         // ── Main area ──
@@ -231,11 +250,21 @@ ApplicationWindow {
         }
 
         // ── Right side panels ──
-        Rectangle {
+        Item {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
-            color: Theme.border
             visible: root.showInfoPanel || root.showHistoryPanel || root.showRowDetail
+
+            DashedLine { anchors.fill: parent; color: Theme.border }
+
+            BlueprintCrosshair { 
+                anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: -size/2
+            }
+            BlueprintCrosshair { 
+                anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottomMargin: -size/2
+            }
         }
 
         // Info Panel
