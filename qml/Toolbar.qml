@@ -17,6 +17,7 @@ Rectangle {
     property bool hasChanges: false
     property bool canUndo: false
     property bool canRedo: false
+    property string tabType: "query"
 
     signal executeQuery()
     signal formatQuery()
@@ -56,20 +57,20 @@ Rectangle {
             }
         }
 
-        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        Rectangle { visible: tabType === "query" || tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
-        // ── Execute ──
-        ToolBtn { icon: Icons.play; tip: "Execute (Ctrl+Enter)"; accent: true; spinning: executing; onClicked: executeQuery() }
-        ToolBtn { icon: Icons.formatText; tip: "Format SQL"; onClicked: formatQuery() }
+        // ── Execute (Query Tab) ──
+        ToolBtn { visible: tabType === "query"; icon: Icons.play; tip: "Execute (Ctrl+Enter)"; accent: true; spinning: executing; onClicked: executeQuery() }
+        ToolBtn { visible: tabType === "query"; icon: Icons.formatText; tip: "Format SQL"; onClicked: formatQuery() }
 
-        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        Rectangle { visible: tabType === "query"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
-        // ── Row operations ──
-        ToolBtn { icon: Icons.add; tip: "Add Row"; onClicked: addRow() }
-        ToolBtn { icon: Icons.trash; tip: "Delete Selected"; onClicked: deleteRows() }
-        ToolBtn { icon: Icons.refresh; tip: "Refresh"; onClicked: refreshData() }
-
-        Rectangle { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        // ── Row operations (Table Tab) ──
+        ToolBtn { visible: tabType === "table"; icon: Icons.add; tip: "Add Row"; onClicked: addRow() }
+        ToolBtn { visible: tabType === "table"; icon: Icons.trash; tip: "Delete Selected"; onClicked: deleteRows() }
+        ToolBtn { visible: tabType === "table"; icon: Icons.refresh; tip: "Refresh Data"; onClicked: refreshData() }
+        
+        Rectangle { visible: tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Undo / Redo ──
         ToolBtn { icon: Icons.undo; tip: "Undo (Ctrl+Z)"; enabled: canUndo; onClicked: undoAction() }

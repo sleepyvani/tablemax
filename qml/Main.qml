@@ -78,6 +78,10 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 visible: tabManager && tabManager.tabs.length > 0
                 connected: databaseService ? databaseService.connected : false
+                tabType: {
+                    var t = tabManager && tabManager.tabs && tabManager.tabs.length > 0 ? tabManager.getTab(tabManager.currentIndex) : null
+                    return (t && t.type === "table") ? "table" : "query"
+                }
                 connectionName: {
                     if (!connectionManager) return ""
                     var c = connectionManager.get(connectionManager.activeIndex)
@@ -163,59 +167,104 @@ ApplicationWindow {
                         onFiltersClosed: root.showFilterPanel = false
                     }
 
-                    FlatResizable {
+                    StackLayout {
+                        id: mainContentStack
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        orientation: Qt.Vertical
-                        splitPosition: 0.45
-                        first: Component { QueryEditor {} }
-                        second: Component {
-                            // ── DataGrid View Router ──
-                            Item {
-                                ColumnLayout {
-                                    anchors.fill: parent; spacing: 0
+                        currentIndex: {
+                            var t = tabManager && tabManager.tabs && tabManager.tabs.length > 0 ? tabManager.getTab(tabManager.currentIndex) : null
+                            return (t && t.type === "table") ? 1 : 0
+                        }
 
-                                    // ── In-grid search ──
-                                    SearchFilterBar {
-                                        id: searchBar
-                                        Layout.fillWidth: true
-                                        isOpen: root.showSearchBar
-                                        resultModel: resultModel
-                                        onClosed: root.showSearchBar = false
-                                    }
+                        // Index 0: Query Tab (Split layout)
+                        FlatResizable {
+                            Layout.fillWidth: true; Layout.fillHeight: true
+                            orientation: Qt.Vertical
+                            splitPosition: 0.45
+                            first: Component { QueryEditor { focus: mainContentStack.currentIndex === 0 } }
+                            second: Component {
+                                Item {
+                                    ColumnLayout {
+                                        anchors.fill: parent; spacing: 0
 
-                                    // SQL Table Grid (default)
-                                    DataGrid {
-                                        Layout.fillWidth: true; Layout.fillHeight: true
-                                        visible: root.activeDbType !== "mongodb" && root.activeDbType !== "redis"
-                                    }
+                                        SearchFilterBar {
+                                            id: searchBarQuery
+                                            Layout.fillWidth: true
+                                            isOpen: root.showSearchBar
+                                            resultModel: resultModel
+                                            onClosed: root.showSearchBar = false
+                                        }
 
-                                    // MongoDB Document View
-                                    MongoDocumentView {
-                                        Layout.fillWidth: true; Layout.fillHeight: true
-                                        visible: root.activeDbType === "mongodb"
-                                        resultModel: resultModel
-                                        onToast: function(msg, type) { root.toast(msg, type) }
-                                    }
+                                        DataGrid {
+                                            Layout.fillWidth: true; Layout.fillHeight: true
+                                            visible: root.activeDbType !== "mongodb" && root.activeDbType !== "redis"
+                                        }
 
-                                    // Redis Key Browser
-                                    RedisKeyBrowser {
-                                        Layout.fillWidth: true; Layout.fillHeight: true
-                                        visible: root.activeDbType === "redis"
-                                        resultModel: resultModel
-                                        onToast: function(msg, type) { root.toast(msg, type) }
-                                    }
+                                        MongoDocumentView {
+                                            Layout.fillWidth: true; Layout.fillHeight: true
+                                            visible: root.activeDbType === "mongodb"
+                                            resultModel: resultModel
+                                            onToast: function(msg, type) { root.toast(msg, type) }
+                                        }
 
-                                    // ── Pagination Bar ──
-                                    PaginationBar {
-                                        Layout.fillWidth: true
-                                        visible: resultModel && resultModel.totalRows > 0
-                                        totalRows: resultModel ? resultModel.totalRows : 0
-                                        pageSize: appSettings ? appSettings.pageSize : 100
-                                        onPageChanged: function(page) {
-                                            root.toast("Page " + (page + 1), "info")
+                                        RedisKeyBrowser {
+                                            Layout.fillWidth: true; Layout.fillHeight: true
+                                            visible: root.activeDbType === "redis"
+                                            resultModel: resultModel
+                                            onToast: function(msg, type) { root.toast(msg, type) }
+                                        }
+
+                                        PaginationBar {
+                                            Layout.fillWidth: true
+                                            visible: resultModel && resultModel.totalRows > 0
+                                            totalRows: resultModel ? resultModel.totalRows : 0
+                                            pageSize: appSettings ? appSettings.pageSize : 100
+                                            onPageChanged: function(page) { root.toast("Page " + (page + 1), "info") }
                                         }
                                     }
+                                }
+                            }
+                        }
+
+                        // Index 1: Table Data Tab (Full screen data view)
+                        Item {
+                            Layout.fillWidth: true; Layout.fillHeight: true
+                            ColumnLayout {
+                                anchors.fill: parent; spacing: 0
+
+                                SearchFilterBar {
+                                    id: searchBarTable
+                                    Layout.fillWidth: true
+                                    isOpen: root.showSearchBar
+                                    resultModel: resultModel
+                                    onClosed: root.showSearchBar = false
+                                }
+
+                                DataGrid {
+                                    Layout.fillWidth: true; Layout.fillHeight: true
+                                    visible: root.activeDbType !== "mongodb" && root.activeDbType !== "redis"
+                                }
+
+                                MongoDocumentView {
+                                    Layout.fillWidth: true; Layout.fillHeight: true
+                                    visible: root.activeDbType === "mongodb"
+                                    resultModel: resultModel
+                                    onToast: function(msg, type) { root.toast(msg, type) }
+                                }
+
+                                RedisKeyBrowser {
+                                    Layout.fillWidth: true; Layout.fillHeight: true
+                                    visible: root.activeDbType === "redis"
+                                    resultModel: resultModel
+                                    onToast: function(msg, type) { root.toast(msg, type) }
+                                }
+
+                                PaginationBar {
+                                    Layout.fillWidth: true
+                                    visible: resultModel && resultModel.totalRows > 0
+                                    totalRows: resultModel ? resultModel.totalRows : 0
+                                    pageSize: appSettings ? appSettings.pageSize : 100
+                                    onPageChanged: function(page) { root.toast("Page " + (page + 1), "info") }
                                 }
                             }
                         }
@@ -453,5 +502,5 @@ ApplicationWindow {
     }}
     Shortcut { sequence: "Ctrl+Z"; onActivated: { if (changeTracker) changeTracker.undo() } }
     Shortcut { sequence: "Ctrl+Y"; onActivated: { if (changeTracker) changeTracker.redo() } }
-    Shortcut { sequence: "Ctrl+G"; onActivated: { root.showSearchBar = true; if (searchBar) searchBar.focusSearch() } }
+    Shortcut { sequence: "Ctrl+G"; onActivated: { root.showSearchBar = true } }
 }
