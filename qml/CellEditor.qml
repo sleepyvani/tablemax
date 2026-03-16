@@ -134,7 +134,7 @@ Rectangle {
                 FlatButton { text: "Format"; variant: "ghost"; size: "sm"; onClicked: jsonTextArea.text = tryPrettyJson(jsonTextArea.text) }
                 FlatButton { text: "Save"; size: "sm"; onClicked: root.commit() }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         ScrollView {

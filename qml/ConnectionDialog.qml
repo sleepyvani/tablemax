@@ -429,7 +429,7 @@ T.Dialog {
         //  FOOTER
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         Item { Layout.preferredHeight: 12 }
-        Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border }
+        DashedLine { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border }
 
         RowLayout {
             Layout.fillWidth: true

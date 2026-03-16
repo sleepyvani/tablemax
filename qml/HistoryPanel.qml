@@ -41,7 +41,7 @@ Rectangle {
                     MouseArea { id: closeMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.close() }
                 }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ── Search ──
@@ -68,7 +68,7 @@ Rectangle {
                     MouseArea { id: clearMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { searchInput.text = ""; searchQuery = "" } }
                 }
             }
-            Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
         // ── History List ──
@@ -135,7 +135,7 @@ Rectangle {
                     onDoubleClicked: root.querySelected(modelData.query || "")
                 }
 
-                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
             }
 
             // Empty state
@@ -151,7 +151,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 32; color: Theme.bgElevated
             visible: filteredEntries.length > 0
-            Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
+            DashedLine { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
             RowLayout {
                 anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
                 Item { Layout.fillWidth: true }
