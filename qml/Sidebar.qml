@@ -123,7 +123,14 @@ Rectangle {
                         id: _connMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; z: -1; acceptedButtons: Qt.LeftButton | Qt.RightButton
                         onClicked: function(mouse) {
                             sidebar.forceActiveFocus()
-                            if (mouse.button === Qt.RightButton) { _ctx.connIdx = index; _ctx.x = mouse.x; _ctx.y = mouse.y; _ctx.open() }
+                            if (mouse.button === Qt.RightButton) { 
+                                connCtxMenu.connIdx = index; 
+                                // Menu needs global or mapped position, but since FlatContextMenu uses Menu popup,
+                                // we can just pass the mouse coordinates and call open
+                                connCtxMenu.x = mouse.x; 
+                                connCtxMenu.y = mouse.y; 
+                                connCtxMenu.popup(null) // Or open() depends on FlatContextMenu API 
+                            }
                             else {
                                 if (connectionManager.activeIndex === index && databaseService.connected) return
                                 connectionManager.activeIndex = index
@@ -131,29 +138,32 @@ Rectangle {
                             }
                         }
                     }
-                    FlatContextMenu {
-                        id: _ctx; property int connIdx: -1
-                        menuModel: {
-                            var isActive = connectionManager.activeIndex === index && databaseService.connected
-                            return [isActive ? "Disconnect" : "Connect", "Edit", "-", "Copy Connection String", "Duplicate", "-", "Delete"]
-                        }
-                        onMenuItemClicked: function(idx, label) {
-                            var ci = _ctx.connIdx
-                            if (label === "Connect") {
-                                if (connectionManager.activeIndex === ci && databaseService.connected) return
-                                connectionManager.activeIndex = ci; var c = connectionManager.get(ci); databaseService.connect(c.dbType, c.connectionString)
-                            } else if (label === "Disconnect") { databaseService.disconnect(); connectionManager.activeIndex = -1; root.toast("Disconnected", "info") }
-                            else if (label === "Edit") { connDialog.editIdx = ci; connDialog.open() }
-                            else if (label === "Copy Connection String") { var cc = connectionManager.get(ci); if (cc) { _clip.text = cc.connectionString || ""; _clip.selectAll(); _clip.copy() }; root.toast("Connection string copied", "success") }
-                            else if (label === "Duplicate") { var dc = connectionManager.get(ci); if (dc) connectionManager.add({ name: (dc.name || "Untitled") + " (copy)", dbType: dc.dbType, connectionString: dc.connectionString, color: dc.color }) }
-                            else if (label === "Delete") { _delDlg.deleteIdx = ci; _delDlg.open() }
-                        }
-                    }
                 }
                 footer: Item {
                     width: _connList.width; height: 48; visible: !connectionManager || connectionManager.connections.length === 0
                     RowLayout { anchors.centerIn: parent; spacing: Theme.s6; FlatIcon { icon: Icons.add; size: 12; color: Theme.fgDim }; Text { text: "Add connection"; font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: connDialog.open() } } }
                 }
+            }
+
+            // ── Shared Context Menu ──
+            FlatContextMenu {
+                id: connCtxMenu; property int connIdx: -1
+                menuModel: {
+                    var isActive = connectionManager.activeIndex === connIdx && databaseService.connected
+                    return [isActive ? "Disconnect" : "Connect", "Edit", "-", "Copy Connection String", "Duplicate", "-", "Delete"]
+                }
+                onMenuItemClicked: function(idx, label) {
+                    var ci = connCtxMenu.connIdx
+                    if (label === "Connect") {
+                        if (connectionManager.activeIndex === ci && databaseService.connected) return
+                        connectionManager.activeIndex = ci; var c = connectionManager.get(ci); databaseService.connect(c.dbType, c.connectionString)
+                    } else if (label === "Disconnect") { databaseService.disconnect(); connectionManager.activeIndex = -1; root.toast("Disconnected", "info") }
+                    else if (label === "Edit") { connDialog.editIdx = ci; connDialog.open() }
+                    else if (label === "Copy Connection String") { var cc = connectionManager.get(ci); if (cc) { _clip.text = cc.connectionString || ""; _clip.selectAll(); _clip.copy() }; root.toast("Connection string copied", "success") }
+                    else if (label === "Duplicate") { var dc = connectionManager.get(ci); if (dc) connectionManager.add({ name: (dc.name || "Untitled") + " (copy)", dbType: dc.dbType, connectionString: dc.connectionString, color: dc.color }) }
+                    else if (label === "Delete") { _delDlg.deleteIdx = ci; _delDlg.open() }
+                }
+            }
             }
         }
 

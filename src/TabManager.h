@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QVariantList>
 #include <QVariantMap>
+#include <QString>
+#include <algorithm>
 
 using namespace std;
 
