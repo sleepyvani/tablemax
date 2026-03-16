@@ -184,8 +184,8 @@ Rectangle {
                         color: changeTracker && changeTracker.isRowDeleted(index) ? Theme.error : Theme.success
                     }
 
-                    Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
-                    Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
+                    DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.3 }
+                    DashedLine { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.4 }
                 }
             }
 
@@ -201,8 +201,8 @@ Rectangle {
                     return row % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
                 }
 
-                Rectangle { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.4 }
-                Rectangle { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.3 }
+                DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.4 }
+                DashedLine { anchors.right: parent.right; width: 1; height: parent.height; color: Theme.border; opacity: 0.3 }
 
                 // Modified cell indicator (top-right triangle)
                 Canvas {

@@ -41,7 +41,7 @@ Item {
                     }
 
                     // Right border
-                    Rectangle {
+                    DashedLine {
                         anchors.right: parent.right
                         width: 1
                         height: parent.height
@@ -69,7 +69,7 @@ Item {
                 Behavior on color { ColorAnimation { duration: Theme.durationFast } }
 
                 // Bottom border
-                Rectangle {
+                DashedLine {
                     anchors.bottom: parent.bottom
                     width: parent.width
                     height: 1

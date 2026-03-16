@@ -70,12 +70,12 @@ Item {
 
                         Component {
                             id: sepComp
-                            Rectangle {
+                            DashedLine {
                                 height: 1
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                anchors.margins: 4
+                                anchors.leftMargin: 4; anchors.rightMargin: 4
                                 color: Theme.border
                             }
                         }

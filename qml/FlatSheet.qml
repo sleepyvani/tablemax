@@ -29,7 +29,7 @@ T.Drawer {
         border.width: side === "right" || side === "left" ? 1 : 0
         border.color: Theme.border
 
-        Rectangle {
+        DashedLine {
             visible: side === "top" || side === "bottom"
             width: parent.width
             height: 1

@@ -17,7 +17,7 @@ Item {
         NumberAnimation { duration: Theme.durationSlow; easing.type: Easing.OutCubic }
     }
 
-    Rectangle {
+    DashedLine {
         anchors.bottom: parent.bottom
         width: parent.width
         height: 1
