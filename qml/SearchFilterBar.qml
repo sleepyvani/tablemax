@@ -26,6 +26,13 @@ Rectangle {
     signal previousMatch()
     signal closed()
 
+    onIsOpenChanged: {
+        if (isOpen) {
+            searchInput.forceActiveFocus()
+            searchInput.selectAll()
+        }
+    }
+
     Behavior on height { NumberAnimation { duration: Theme.normal; easing.type: Easing.OutCubic } }
 
     RowLayout {

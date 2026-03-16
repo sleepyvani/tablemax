@@ -263,6 +263,7 @@ Rectangle {
                 policy: ScrollBar.AsNeeded
                 contentItem: Rectangle { implicitWidth: 4; radius: 2; color: Theme.borderLight; opacity: 0.6 }
             }
+            }
             ScrollBar.horizontal: ScrollBar {
                 policy: ScrollBar.AsNeeded
                 contentItem: Rectangle { implicitHeight: 4; radius: 2; color: Theme.borderLight; opacity: 0.6 }
@@ -276,8 +277,21 @@ Rectangle {
             ColumnLayout {
                 anchors.centerIn: parent; spacing: Theme.s12
 
-                Rectangle {
-                    Layout.alignment: Qt.AlignHCenter; width: 40; height: 40; radius: Theme.r8; color: Theme.bgSurface
+                FlatIcon {
+                    Layout.alignment: Qt.AlignHCenter
+                    icon: Icons.table; size: 48; color: Theme.fgMuted; opacity: 0.5
+                }
+                Text {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "No data available"; font.family: Theme.sans; font.pixelSize: Theme.t16; font.weight: Font.DemiBold; color: Theme.fg
+                }
+                Text {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: "Run a SQL query or select a table from the sidebar to view data."; font.family: Theme.sans; font.pixelSize: Theme.t13; color: Theme.fgMuted
+                }
+            }
+        }
+
                     FlatIcon { anchors.centerIn: parent; icon: Icons.grid; size: 18; color: Theme.fgDim }
                 }
                 Text { text: "No results"; font.family: Theme.sans; font.pixelSize: Theme.t14; font.weight: Font.DemiBold; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter }

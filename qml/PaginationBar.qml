@@ -74,6 +74,7 @@ Rectangle {
                     id: firstMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: if (currentPage > 1) pageChanged(1)
                 }
+                FlatTooltip { text: "First Page"; visible: firstMa.containsMouse }
             }
 
             // Previous page
@@ -86,6 +87,7 @@ Rectangle {
                     id: prevMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: if (currentPage > 1) pageChanged(currentPage - 1)
                 }
+                FlatTooltip { text: "Previous Page"; visible: prevMa.containsMouse }
             }
 
             // Page number pills
@@ -122,6 +124,7 @@ Rectangle {
                     id: nextMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: if (currentPage < totalPages) pageChanged(currentPage + 1)
                 }
+                FlatTooltip { text: "Next Page"; visible: nextMa.containsMouse }
             }
 
             // Last page
@@ -135,6 +138,7 @@ Rectangle {
                     id: lastMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: if (currentPage < totalPages) pageChanged(totalPages)
                 }
+                FlatTooltip { text: "Last Page"; visible: lastMa.containsMouse }
             }
         }
     }

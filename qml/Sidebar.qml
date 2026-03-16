@@ -73,6 +73,7 @@ Rectangle {
                         Behavior on color { ColorAnimation { duration: Theme.fast } }
                         FlatIcon { anchors.centerIn: parent; icon: Icons.add; size: 12; color: Theme.fgMuted }
                         MouseArea { id: _addMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: connDialog.open() }
+                        FlatTooltip { text: "Add new connection"; visible: _addMa.containsMouse }
                     }
                 }
             }

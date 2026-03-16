@@ -46,9 +46,22 @@ T.Dialog {
         Behavior on opacity { NumberAnimation { duration: Theme.normal } }
     }
 
+    Timer {
+        id: focusTimer
+        interval: 100; repeat: false
+        onTriggered: {
+            if (nameIn.visible) {
+                nameIn.forceActiveFocus()
+            }
+        }
+    }
+
     Connections {
         target: dlg
-        function onOpened() { dlg.initForm() }
+        function onOpened() { 
+            dlg.initForm() 
+            focusTimer.start()
+        }
     }
 
     contentItem: ColumnLayout {
