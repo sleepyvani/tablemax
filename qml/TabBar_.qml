@@ -7,6 +7,7 @@ import "Icons.js" as Icons
 Rectangle {
     Layout.fillWidth: true
     Layout.preferredHeight: 38
+    Layout.minimumHeight: 38
     color: Theme.bgElevated
 
     RowLayout {

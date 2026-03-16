@@ -79,6 +79,8 @@ ApplicationWindow {
             // ── Breadcrumb Navigation ──
             BreadcrumbNav {
                 Layout.fillWidth: true
+                Layout.preferredHeight: 32
+                Layout.minimumHeight: 32
                 visible: databaseService && databaseService.connected && tabManager && tabManager.tabs.length > 0
                 serverName: {
                     if (!connectionManager) return ""
@@ -115,14 +117,14 @@ ApplicationWindow {
                 onExecuteQuery: {
                     if (!tabManager || tabManager.tabs.length === 0) return
                     var t = tabManager.getTab(tabManager.currentIndex)
-                    if (t && t.query) {
+                    if (t && t.content) {
                         root.executing = true
-                        databaseService.executeQuery(t.query, function(ok, err) {
+                        databaseService.executeQuery(t.content, function(ok, err) {
                             root.executing = false
                             if (!ok) root.toast("Error: " + err, "error")
                             else {
                                 root.toast("Query executed", "success")
-                                if (historyService) historyService.addEntry(t.query, activeDbType, ok, 0, resultModel ? resultModel.totalRows : 0)
+                                if (historyService) historyService.addEntry(t.content, activeDbType, ok, 0, resultModel ? resultModel.totalRows : 0)
                             }
                         })
                     }
@@ -289,7 +291,9 @@ ApplicationWindow {
             onQuerySelected: function(query) {
                 if (!tabManager || tabManager.tabs.length === 0) return
                 var t = tabManager.getTab(tabManager.currentIndex)
-                if (t) t.query = query
+                if (t) {
+                    tabManager.updateContent(tabManager.currentIndex, query)
+                }
                 root.toast("Query loaded to editor", "success")
             }
             onClose: root.showHistoryPanel = false
@@ -356,7 +360,9 @@ ApplicationWindow {
 
         onTableSelected: function(name) {
             var t = tabManager.getTab(tabManager.currentIndex)
-            if (t) t.query = 'SELECT * FROM "' + name + '" LIMIT 100'
+            if (t) {
+                tabManager.updateContent(tabManager.currentIndex, 'SELECT * FROM "' + name + '" LIMIT 100')
+            }
         }
         onDatabaseSelected: function(name) {
             databaseService.switchDatabase(name)

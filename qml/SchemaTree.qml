@@ -126,6 +126,8 @@ Rectangle {
                                     var query = DB.buildSelectQuery(_dbType, entityName)
                                     tabManager.addTab(entityName, query, "table")
                                     root.currentTableName = entityName
+                                    
+                                    // Trigger execution
                                     var res = databaseService.executeQuery(query, resultModel)
                                     if (res.success) {
                                         root.toast(res.rowCount + " rows from " + entityName, "success")
@@ -204,6 +206,8 @@ Rectangle {
                                             var sql = DB.buildSelectQuery(_dbType, tName)
                                             tabManager.addTab(tName, sql, "table")
                                             root.currentTableName = tName
+                                            
+                                            // Trigger execution
                                             var r = databaseService.executeQuery(sql, resultModel)
                                             if (r.success) {
                                                 root.toast(r.rowCount + " rows from " + tName, "success")
