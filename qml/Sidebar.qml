@@ -129,7 +129,7 @@ Rectangle {
                                 // we can just pass the mouse coordinates and call open
                                 connCtxMenu.x = mouse.x; 
                                 connCtxMenu.y = mouse.y; 
-                                connCtxMenu.popup(null) // Or open() depends on FlatContextMenu API 
+                                connCtxMenu.open() 
                             }
                             else {
                                 if (connectionManager.activeIndex === index && databaseService.connected) return
@@ -163,7 +163,6 @@ Rectangle {
                     else if (label === "Duplicate") { var dc = connectionManager.get(ci); if (dc) connectionManager.add({ name: (dc.name || "Untitled") + " (copy)", dbType: dc.dbType, connectionString: dc.connectionString, color: dc.color }) }
                     else if (label === "Delete") { _delDlg.deleteIdx = ci; _delDlg.open() }
                 }
-            }
             }
         }
 
