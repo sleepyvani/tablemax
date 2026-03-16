@@ -291,17 +291,4 @@ Rectangle {
                 }
             }
         }
-
-                    FlatIcon { anchors.centerIn: parent; icon: Icons.grid; size: 18; color: Theme.fgDim }
-                }
-                Text { text: "No results"; font.family: Theme.sans; font.pixelSize: Theme.t14; font.weight: Font.DemiBold; color: Theme.fgMuted; Layout.alignment: Qt.AlignHCenter }
-                Text {
-                    text: databaseService && databaseService.connected
-                        ? "Execute a " + DB.queryMode(_dbType) + " query to see data"
-                        : "Connect to a database first"
-                    font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fgDim; Layout.alignment: Qt.AlignHCenter
-                }
-            }
-        }
-    }
 }
