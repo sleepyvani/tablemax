@@ -141,7 +141,22 @@ Rectangle {
                 }
                 footer: Item {
                     width: _connList.width; height: 48; visible: !connectionManager || connectionManager.connections.length === 0
-                    RowLayout { anchors.centerIn: parent; spacing: Theme.s6; FlatIcon { icon: Icons.add; size: 12; color: Theme.fgDim }; Text { text: "Add connection"; font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fgDim; MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: connDialog.open() } } }
+                    RowLayout {
+                        anchors.centerIn: parent
+                        spacing: Theme.s6
+                        FlatIcon { icon: Icons.add; size: 12; color: Theme.fgDim }
+                        Text {
+                            text: "Add connection"
+                            font.family: Theme.sans
+                            font.pixelSize: Theme.t11
+                            color: Theme.fgDim
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: connDialog.open()
+                            }
+                        }
+                    }
                 }
             }
 
