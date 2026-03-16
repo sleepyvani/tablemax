@@ -190,8 +190,4 @@ Rectangle {
         isOpen = true
         if (visible) searchInput.forceActiveFocus()
     }
-
-    onIsOpenChanged: {
-        if (isOpen && visible) searchInput.forceActiveFocus()
-    }
 }

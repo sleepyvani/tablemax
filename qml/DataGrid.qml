@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "FormatHelper.js" as Fmt
@@ -294,9 +294,9 @@ Rectangle {
     // Cell Editor Dialog
     CellEditor {
         id: cellEditorDlg
-        onSaved: function(val) {
+        onCommitted: function(row, col, val) {
             if (changeTracker && resultModel) {
-                changeTracker.updateCell(editRow, editCol, val)
+                changeTracker.updateCell(row, col, val)
             }
             root.toast("Cell updated", "success")
         }
