@@ -10,19 +10,20 @@ Canvas {
     property int dashLength: 4
     property int dashSpace: 4
     property bool vertical: root.width < root.height
+    property int lineWidth: 1 // Added lineWidth property
 
     // Optimization for static views
     renderStrategy: Canvas.Threaded
     antialiasing: false
 
     onPaint: {
-        var ctx = getContext("2d")
-        ctx.clearRect(0, 0, width, height)
+        var ctx = getContext("2d") // Use getContext directly
+        ctx.clearRect(0, 0, width, height) // Use width/height directly
         ctx.beginPath()
         
         // QML Canvas supports setLineDash
-        ctx.setLineDash([root.dashLength, root.dashSpace])
-        ctx.lineWidth = 1
+        ctx.setLineDash([root.dashLength, root.dashSpace]) // Use root.dashLength, root.dashSpace
+        ctx.lineWidth = root.lineWidth // Use root.lineWidth
         ctx.strokeStyle = root.color
         
         // Ensure crisp lines by rendering on half-pixels

@@ -77,7 +77,7 @@ Rectangle {
                 }
             }
 
-            DashedLine { Layout.fillWidth: true; height: 1; color: Theme.border; opacity: 0.5 }
+            DashedLine { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border; opacity: 0.5 }
 
             // ── Connections Label ──
             Item {
@@ -212,12 +212,12 @@ Rectangle {
                     Column {
                         Layout.fillWidth: true; spacing: 2
                         Text {
-                            text: { var c = connectionManager.get(connectionManager.activeIndex); return c ? c.name : "Server" }
+                            text: { var c = connectionManager.get(connectionManager.activeIndex); return (c && c.name) ? c.name : "Server" }
                             font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: Theme.fg
                             elide: Text.ElideRight; width: parent.width
                         }
                         Text {
-                            text: { var c = connectionManager.get(connectionManager.activeIndex); return c ? DB.displayName(c.dbType) : "Connected" }
+                            text: { var c = connectionManager.get(connectionManager.activeIndex); return (c && c.dbType) ? DB.displayName(c.dbType) : "Connected" }
                             font.family: Theme.mono; font.pixelSize: 10; color: Theme.success; opacity: 0.8
                         }
                     }

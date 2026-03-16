@@ -57,20 +57,20 @@ Rectangle {
             }
         }
 
-        DashedLine { visible: tabType === "query" || tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { visible: tabType === "query" || tabType === "table"; Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Execute (Query Tab) ──
         ToolBtn { visible: tabType === "query"; icon: Icons.play; tip: "Execute (Ctrl+Enter)"; accent: true; spinning: executing; onClicked: executeQuery() }
         ToolBtn { visible: tabType === "query"; icon: Icons.formatText; tip: "Format SQL"; onClicked: formatQuery() }
 
-        DashedLine { visible: tabType === "query"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { visible: tabType === "query"; Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Row operations (Table Tab) ──
         ToolBtn { visible: tabType === "table"; icon: Icons.add; tip: "Add Row"; onClicked: addRow() }
         ToolBtn { visible: tabType === "table"; icon: Icons.trash; tip: "Delete Selected"; onClicked: deleteRows() }
         ToolBtn { visible: tabType === "table"; icon: Icons.refresh; tip: "Refresh Data"; onClicked: refreshData() }
         
-        DashedLine { visible: tabType === "table"; width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        DashedLine { visible: tabType === "table"; Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
 
         // ── Undo / Redo ──
         ToolBtn { icon: Icons.undo; tip: "Undo (Ctrl+Z)"; enabled: canUndo; onClicked: undoAction() }
@@ -98,7 +98,7 @@ Rectangle {
         // Save
         ToolBtn { visible: hasChanges; icon: Icons.save; tip: "Save changes (Ctrl+S)"; accent: true; onClicked: saveChanges() }
 
-        DashedLine { width: 1; height: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter; visible: !hasChanges }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter; visible: !hasChanges }
 
         // ── Right side ──
         ToolBtn { icon: Icons.clock; tip: "History"; onClicked: toggleHistory() }

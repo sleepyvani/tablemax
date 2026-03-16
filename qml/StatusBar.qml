@@ -7,7 +7,15 @@ import "Icons.js" as Icons
 Rectangle {
     Layout.fillWidth: true; Layout.preferredHeight: 24; color: Theme.bgElevated
 
-    Rectangle { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
+    DashedLine { anchors.top: parent.top; width: parent.width; height: 1; color: Theme.border }
+    BlueprintCrosshair {
+        anchors.top: parent.top; anchors.left: parent.left
+        anchors.topMargin: -size/2; anchors.leftMargin: -size/2
+    }
+    BlueprintCrosshair {
+        anchors.top: parent.top; anchors.right: parent.right
+        anchors.topMargin: -size/2; anchors.rightMargin: -size/2
+    }
 
     RowLayout {
         anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
@@ -30,7 +38,7 @@ Rectangle {
             }
         }
 
-        Rectangle { width: 1; height: 10; color: Theme.border; opacity: 0.5 }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 14; color: Theme.border; opacity: 0.5 }
 
         // Result info
         Text {
@@ -39,7 +47,7 @@ Rectangle {
             font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim
         }
 
-        Rectangle { width: 1; height: 10; color: Theme.border; opacity: 0.5; visible: _execTime.visible }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 14; color: Theme.border; opacity: 0.5; visible: _execTime.visible }
 
         // Last execution time
         Text {
@@ -52,8 +60,8 @@ Rectangle {
         }
 
         // Query mode badge
-        Rectangle {
-            width: 1; height: 10; color: Theme.border; opacity: 0.5
+        DashedLine {
+            Layout.preferredWidth: 1; Layout.preferredHeight: 14; color: Theme.border; opacity: 0.5
             visible: databaseService && databaseService.connected
         }
         Rectangle {
@@ -100,7 +108,7 @@ Rectangle {
             }
         }
 
-        Rectangle { width: 1; height: 10; color: Theme.border; opacity: 0.5 }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 14; color: Theme.border; opacity: 0.5 }
 
         Text { text: "v0.2.0"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4 }
     }

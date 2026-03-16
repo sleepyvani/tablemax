@@ -8,7 +8,7 @@ T.Dialog {
     property string dialogTitle: ""
     property string dialogDescription: ""
 
-    parent: Overlay.overlay
+    parent: T.Overlay.overlay
     anchors.centerIn: parent
     modal: true
     dim: true

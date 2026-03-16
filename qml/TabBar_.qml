@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
+import "Icons.js" as Icons
 
 Rectangle {
     Layout.fillWidth: true
