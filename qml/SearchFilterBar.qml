@@ -178,6 +178,10 @@ Rectangle {
 
     function focusSearch() {
         isOpen = true
-        searchInput.forceActiveFocus()
+        if (visible) searchInput.forceActiveFocus()
+    }
+
+    onIsOpenChanged: {
+        if (isOpen && visible) searchInput.forceActiveFocus()
     }
 }

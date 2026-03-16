@@ -124,8 +124,7 @@ Rectangle {
                                 if (modelData.type === "table" && databaseService && databaseService.connected) {
                                     var entityName = modelData.name
                                     var query = DB.buildSelectQuery(_dbType, entityName)
-                                    if (tabManager.tabs.length === 0) tabManager.addTab()
-                                    tabManager.updateContent(tabManager.currentIndex, query)
+                                    tabManager.addTab(entityName, query, "table")
                                     root.currentTableName = entityName
                                     var res = databaseService.executeQuery(query, resultModel)
                                     if (res.success) {
@@ -203,8 +202,7 @@ Rectangle {
                                         if (modelData.type === "table" && databaseService && databaseService.connected) {
                                             var tName = modelData.name
                                             var sql = DB.buildSelectQuery(_dbType, tName)
-                                            if (tabManager.tabs.length === 0) tabManager.addTab()
-                                            tabManager.updateContent(tabManager.currentIndex, sql)
+                                            tabManager.addTab(tName, sql, "table")
                                             root.currentTableName = tName
                                             var r = databaseService.executeQuery(sql, resultModel)
                                             if (r.success) {
@@ -279,8 +277,7 @@ Rectangle {
                 root.toast("Copied: " + nodeName, "success")
             } else if (idx === 0 && nodeType === "table" && databaseService && databaseService.connected) {
                 var sql = DB.buildSelectQuery(_dbType, nodeName)
-                if (tabManager.tabs.length === 0) tabManager.addTab()
-                tabManager.updateContent(tabManager.currentIndex, sql)
+                tabManager.addTab(nodeName, sql, "table")
                 root.currentTableName = nodeName
                 var r = databaseService.executeQuery(sql, resultModel)
                 if (r.success) root.toast(r.rowCount + " rows from " + nodeName, "success")

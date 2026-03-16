@@ -81,14 +81,21 @@ Rectangle {
                         anchors.rightMargin: Theme.s6
                         spacing: Theme.s4
 
-                        // Modified indicator dot
+                        // Modified indicator dot (only for queries)
                         Rectangle {
                             width: 5; height: 5; radius: 3
                             color: Theme.accent; opacity: 0.6
                             visible: {
                                 var t = tabManager.getTab(index)
-                                return t && t.content && t.content.trim().length > 0
+                                return t && t.content && t.content.trim().length > 0 && t.type !== "table"
                             }
+                        }
+
+                        FlatIcon {
+                            icon: (modelData.type === "table") ? Icons.table : Icons.code
+                            size: 11
+                            color: isActive ? Theme.accent : Theme.fgDim
+                            opacity: isActive ? 1.0 : 0.7
                         }
 
                         Text {
