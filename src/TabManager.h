@@ -25,11 +25,11 @@ public:
         }
     }
 
-    Q_INVOKABLE int addTab(const QString& title = "Query", const QString& content = "", const QString& type = "query") {
+    Q_INVOKABLE int addTab(const QString& title = QString(), const QString& content = QString(), const QString& type = QString()) {
         QVariantMap tab;
-        tab["title"] = title;
+        tab["title"] = title.isEmpty() ? "Query" : title;
         tab["content"] = content;
-        tab["type"] = type; // "query" or "table"
+        tab["type"] = type.isEmpty() ? "query" : type; // "query" or "table"
         tab["result"] = QVariantList();
         tab["error"] = "";
         tab["executionTime"] = 0.0;
