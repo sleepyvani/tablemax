@@ -16,6 +16,7 @@ Rectangle {
     property int matchCount: 0
     property int currentMatch: 0
     property var resultModel: null
+    property string currentColumnFilter: "All Columns"
 
     signal searchChanged(string text)
     signal nextMatch()
@@ -103,12 +104,36 @@ Rectangle {
             RowLayout {
                 id: colFilterRow; anchors.centerIn: parent; spacing: Theme.s4
                 FlatIcon { icon: Icons.filter; size: 10; color: Theme.fgMuted }
-                Text { text: "All Columns"; font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.fgMuted; font.family: Theme.sans }
+                Text {
+                    text: root.currentColumnFilter
+                    font.pixelSize: Theme.t11; font.weight: Font.Medium
+                    color: Theme.fgMuted; font.family: Theme.sans
+                }
             }
 
             MouseArea {
                 id: colFilterMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                onClicked: {} // TODO: column filter dropdown
+                onClicked: {
+                    var cols = ["All Columns", "-"]
+                    if (root.resultModel && root.resultModel.totalColumns > 0) {
+                        for (var i = 0; i < root.resultModel.totalColumns; i++) {
+                            cols.push(root.resultModel.columnName(i))
+                        }
+                    }
+                    ctxMenu.menuModel = cols
+                    ctxMenu.x = 0
+                    ctxMenu.y = 28
+                    ctxMenu.open()
+                }
+            }
+
+            FlatContextMenu {
+                id: ctxMenu
+                onMenuItemClicked: function(index, text) {
+                    if (text !== "-") {
+                        root.currentColumnFilter = text
+                    }
+                }
             }
         }
 

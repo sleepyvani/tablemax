@@ -119,6 +119,43 @@ public:
         return result;
     }
 
+    Q_INVOKABLE QVariantMap executeBatch(const QStringList& queries) {
+        QVariantMap result;
+        result["success"] = false;
+        result["executed"] = 0;
+        result["error"] = "";
+
+        if (connId_ < 0) {
+            result["error"] = "Not connected";
+            setError("Not connected");
+            return result;
+        }
+
+        setLoading(true);
+        int count = 0;
+        for (const QString& q : queries) {
+            QString trimmed = q.trimmed();
+            if (trimmed.isEmpty() || trimmed.startsWith("--")) continue;
+            auto stream = engine_.execute(connId_, trimmed.toStdString());
+            if (!stream) {
+                QString err = QString::fromStdString(engine_.last_error());
+                result["error"] = err;
+                setError(err);
+                result["executed"] = count;
+                setLoading(false);
+                return result;
+            }
+            stream->close();
+            count++;
+        }
+
+        result["success"] = true;
+        result["executed"] = count;
+        setError("");
+        setLoading(false);
+        return result;
+    }
+
     Q_INVOKABLE QStringList listDatabases() {
         if (connId_ < 0) return {};
         QStringList result;

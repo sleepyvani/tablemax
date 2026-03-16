@@ -108,8 +108,17 @@ ApplicationWindow {
                 onSaveChanges: {
                     if (!changeTracker) return
                     var stmts = changeTracker.generateSQL()
-                    root.toast("Generated " + stmts.length + " SQL statement(s)", "info")
-                    // TODO: execute stmts via databaseService
+                    if (stmts.length === 0) {
+                        root.toast("No changes to save", "info")
+                        return
+                    }
+                    var res = databaseService.executeBatch(stmts)
+                    if (res.success) {
+                        root.toast("Saved " + res.executed + " changes successfully", "success")
+                        changeTracker.clear()
+                    } else {
+                        root.toast("Failed after " + res.executed + " queries: " + res.error, "error")
+                    }
                 }
                 onDiscardChanges: {
                     if (changeTracker) changeTracker.clear()
@@ -296,8 +305,14 @@ ApplicationWindow {
         id: sqlPreview
         changeTracker: changeTracker
         onConfirmed: {
-            root.toast("Executing " + sqlPreview.statements.length + " statements...", "info")
-            // TODO: execute via databaseService
+            var stmts = sqlPreview.statements
+            var res = databaseService.executeBatch(stmts)
+            if (res.success) {
+                root.toast("Saved " + res.executed + " changes successfully", "success")
+                changeTracker.clear()
+            } else {
+                root.toast("Failed after " + res.executed + " queries: " + res.error, "error")
+            }
         }
     }
 
