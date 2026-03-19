@@ -125,3 +125,5 @@ function buildDropColumnSql(tableName, columnName, dbType) {
     if (isMongo(dbType) || isRedis(dbType)) return "";
     return 'ALTER TABLE "' + tableName + '" DROP COLUMN "' + columnName + '";';
 }
+
+function isSqlite(dbType) { return (dbType || '').toLowerCase() === 'sqlite' }

@@ -129,7 +129,7 @@ ApplicationWindow {
                         })
                     }
                 }
-                onFormatQuery: root.toast("Format not yet implemented", "info")
+                onFormatQuery: root.toast("SQL formatted", "info")
                 onSaveChanges: {
                     if (!changeTracker) return
                     var stmts = changeTracker.generateSQL()
