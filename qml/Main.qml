@@ -326,6 +326,20 @@ ApplicationWindow {
     ConnectionDialog { id: connDialog }
     FlatToast { id: toastBar }
 
+    CreateTableDialog {
+        id: createTableDialog
+        onTableCreated: function(tName) {
+            schemaService.refresh(databaseService)
+            // Optionally auto-open the new table
+            if (tabManager) {
+                var sql = DB.buildSelectQuery(createTableDialog.dbType, tName)
+                tabManager.addTab(tName, sql, "table")
+                root.currentTableName = tName
+                databaseService.executeQuery(sql, resultModel)
+            }
+        }
+    }
+
     ExportDialog {
         id: exportDialog
         resultModel: null // Set when export is triggered

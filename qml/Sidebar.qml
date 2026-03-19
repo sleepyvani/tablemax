@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -8,10 +8,10 @@ Rectangle {
     id: sidebar
     color: Theme.bgSidebar
 
-    // ── Clipboard helper ──
+    // â”€â”€ Clipboard helper â”€â”€
     TextEdit { id: _clip; visible: false }
 
-    // ── Auto-refresh schema on connect + toast feedback ──
+    // â”€â”€ Auto-refresh schema on connect + toast feedback â”€â”€
     Connections {
         target: databaseService
         function onConnectedChanged() {
@@ -36,18 +36,18 @@ Rectangle {
     }
     focus: false
 
-    // ════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     //  LAYOUT
-    // ════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     Item {
         anchors.fill: parent
 
-        // ════ CONNECTION MODE ════
+        // â•â•â•â• CONNECTION MODE â•â•â•â•
         ColumnLayout {
             anchors.fill: parent; spacing: 0
             visible: !databaseService || !databaseService.connected
 
-            // ── Search + Actions Bar ──
+            // â”€â”€ Search + Actions Bar â”€â”€
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 38
                 RowLayout {
@@ -62,7 +62,7 @@ Rectangle {
                             TextInput {
                                 id: _search; width: parent.width - 40; anchors.verticalCenter: parent.verticalCenter
                                 font.family: Theme.sans; font.pixelSize: Theme.t11; color: Theme.fg; selectByMouse: true; clip: true; focus: false
-                                Text { visible: !_search.text && !_search.activeFocus; text: "Filter…"; font: parent.font; color: Theme.fgDim; opacity: 0.5 }
+                                Text { visible: !_search.text && !_search.activeFocus; text: "Filterâ€¦"; font: parent.font; color: Theme.fgDim; opacity: 0.5 }
                                 Keys.onEscapePressed: { _search.text = ""; sidebar.forceActiveFocus() }
                             }
                             Text { anchors.verticalCenter: parent.verticalCenter; visible: !_search.activeFocus && !_search.text; text: "/"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4 }
@@ -80,13 +80,13 @@ Rectangle {
 
             DashedLine { Layout.fillWidth: true; Layout.preferredHeight: 1; color: Theme.border; opacity: 0.5 }
 
-            // ── Connections Label ──
+            // â”€â”€ Connections Label â”€â”€
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 22; Layout.leftMargin: Theme.s8; Layout.topMargin: Theme.s4
                 Text { anchors.verticalCenter: parent.verticalCenter; text: "CONNECTIONS"; font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold; font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7 }
             }
 
-            // ── Connection List ──
+            // â”€â”€ Connection List â”€â”€
             ListView {
                 id: _connList; Layout.fillWidth: true; Layout.fillHeight: true; clip: true; spacing: 0; boundsBehavior: Flickable.StopAtBounds
                 model: {
@@ -161,7 +161,7 @@ Rectangle {
                 }
             }
 
-            // ── Shared Context Menu ──
+            // â”€â”€ Shared Context Menu â”€â”€
             FlatContextMenu {
                 id: connCtxMenu; property int connIdx: -1
                 menuModel: {
@@ -182,12 +182,12 @@ Rectangle {
             }
         }
 
-        // ════ WORKSPACE MODE (Only Schema) ════
+        // â•â•â•â• WORKSPACE MODE (Only Schema) â•â•â•â•
         ColumnLayout {
             anchors.fill: parent; spacing: 0
             visible: databaseService && databaseService.connected
 
-            // ── Connected Header ──
+            // â”€â”€ Connected Header â”€â”€
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 46
                 Rectangle { anchors.fill: parent; color: Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.04) }
@@ -223,6 +223,14 @@ Rectangle {
                         }
                     }
 
+                    // Add Table
+                    Rectangle {
+                        width: 28; height: 28; radius: Theme.r4; color: _wsAddMa.containsMouse ? Theme.bgHover : "transparent"
+                        FlatIcon { anchors.centerIn: parent; icon: Icons.add; size: 14; color: Theme.fgMuted }
+                        MouseArea { id: _wsAddMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.showCreateTableDialog() }
+                        FlatTooltip { visible: _wsAddMa.containsMouse; text: "Create Table" }
+                    }
+
                     // Refresh
                     Rectangle {
                         width: 28; height: 28; radius: Theme.r4; color: _wsRefMa.containsMouse ? Theme.bgHover : "transparent"
@@ -233,14 +241,14 @@ Rectangle {
                 DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.5 }
             }
 
-            // ── Schema Tree ──
+            // â”€â”€ Schema Tree â”€â”€
             SchemaTree {
                 Layout.fillWidth: true; Layout.fillHeight: true
             }
         }
     }
 
-    // ── Delete Confirmation Dialog ──
+    // â”€â”€ Delete Confirmation Dialog â”€â”€
     FlatDialog {
         id: _delDlg
         property int deleteIdx: -1
@@ -273,3 +281,4 @@ Rectangle {
         }
     }
 }
+
