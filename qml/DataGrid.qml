@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "FormatHelper.js" as Fmt
@@ -70,9 +70,13 @@ Rectangle {
                     MouseArea {
                         id: exportMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            var csv = databaseService.exportCsv(resultModel)
-                            _csvClip.text = csv; _csvClip.selectAll(); _csvClip.copy()
-                            root.toast("CSV data copied to clipboard", "success")
+                            if (typeof exportDialog !== "undefined" && exportDialog) {
+                                exportDialog.open()
+                            } else {
+                                var csv = databaseService.exportCsv(resultModel)
+                                _csvClip.text = csv; _csvClip.selectAll(); _csvClip.copy()
+                                root.toast("CSV copied — use File > Export to save to file", "success")
+                            }
                         }
                     }
                     FlatTooltip { visible: exportMa.containsMouse; text: "Export CSV"; x: exportMa.mouseX; y: -30 }

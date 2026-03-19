@@ -153,9 +153,44 @@ ApplicationWindow {
                 onRedoAction: { if (changeTracker) changeTracker.redo() }
                 onToggleHistory: root.showHistoryPanel = !root.showHistoryPanel
                 onToggleSettings: settingsDialog.open()
-                onAddRow: root.toast("Add row â€” coming soon", "info")
-                onDeleteRows: root.toast("Delete rows â€” coming soon", "info")
-                onRefreshData: root.toast("Refresh â€” re-execute query", "info")
+                onAddRow: {
+                    if (!databaseService || !databaseService.connected || !root.currentTableName) {
+                        root.toast("Select a table to add rows to", "warning"); return
+                    }
+                    var sc = databaseService.getTableSchema(root.currentTableName)
+                    if (!sc || sc.length === 0) { root.toast("Cannot retrieve schema", "error"); return }
+                    var npc = sc.filter(function(c) { return !c.primaryKey })
+                    if (npc.length === 0) { root.toast("No editable columns", "warning"); return }
+                    var colStr = npc.map(function(c) { return '"' + c.name + '"' }).join(", ")
+                    var valStr = npc.map(function() { return "NULL" }).join(", ")
+                    var isql = 'INSERT INTO "' + root.currentTableName + '" (' + colStr + ') VALUES (' + valStr + ');'
+                    var ires = databaseService.executeBatch([isql])
+                    if (ires.success) {
+                        root.toast("Row inserted  double-click a cell to edit its value", "success")
+                        databaseService.executeQuery('SELECT * FROM "' + root.currentTableName + '" LIMIT 500', resultModel)
+                    } else { root.toast("Insert failed: " + ires.error, "error") }
+                }
+                onDeleteRows: {
+                    if (!changeTracker || !changeTracker.hasChanges) {
+                        root.toast("Right-click rows to mark for deletion first", "info"); return
+                    }
+                    var dstmts = changeTracker.generateSQL()
+                    if (dstmts.length === 0) { root.toast("Nothing to delete", "info"); return }
+                    var dr = databaseService.executeBatch(dstmts)
+                    if (dr.success) {
+                        root.toast("Deleted " + dr.executed + " row(s) successfully", "success")
+                        changeTracker.clear()
+                        databaseService.executeQuery('SELECT * FROM "' + root.currentTableName + '" LIMIT 500', resultModel)
+                    } else { root.toast("Delete failed: " + dr.error, "error") }
+                }
+                onRefreshData: {
+                    if (!databaseService || !databaseService.connected) { root.toast("Not connected", "warning"); return }
+                    var rt = tabManager && tabManager.tabs.length > 0 ? tabManager.getTab(tabManager.currentIndex) : null
+                    if (!rt || !rt.content) { root.toast("No active query to refresh", "info"); return }
+                    var rr = databaseService.executeQuery(rt.content, resultModel)
+                    if (rr.success) root.toast("Refreshed: " + rr.rowCount + " rows", "success")
+                    else root.toast("Refresh error: " + rr.error, "error")
+                }
             }
 
             // Content area
