@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "Icons.js" as Icons
@@ -40,7 +40,7 @@ ApplicationWindow {
         anchors.fill: parent
         spacing: 0
 
-        // ── Left Sidebar ──
+        // â”€â”€ Left Sidebar â”€â”€
         Sidebar {
             id: sidebar
             Layout.preferredWidth: root.showSidebar ? 252 : 0
@@ -68,7 +68,7 @@ ApplicationWindow {
             }
         }
 
-        // ── Main area ──
+        // â”€â”€ Main area â”€â”€
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -76,7 +76,7 @@ ApplicationWindow {
 
             TabBar_ {}
 
-            // ── Breadcrumb Navigation ──
+            // â”€â”€ Breadcrumb Navigation â”€â”€
             BreadcrumbNav {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 32
@@ -93,7 +93,7 @@ ApplicationWindow {
                 onDatabaseClicked: dbSwitcher.open()
             }
 
-            // ── Toolbar ──
+            // â”€â”€ Toolbar â”€â”€
             Toolbar {
                 id: toolbar
                 Layout.fillWidth: true
@@ -153,9 +153,9 @@ ApplicationWindow {
                 onRedoAction: { if (changeTracker) changeTracker.redo() }
                 onToggleHistory: root.showHistoryPanel = !root.showHistoryPanel
                 onToggleSettings: settingsDialog.open()
-                onAddRow: root.toast("Add row — coming soon", "info")
-                onDeleteRows: root.toast("Delete rows — coming soon", "info")
-                onRefreshData: root.toast("Refresh — re-execute query", "info")
+                onAddRow: root.toast("Add row â€” coming soon", "info")
+                onDeleteRows: root.toast("Delete rows â€” coming soon", "info")
+                onRefreshData: root.toast("Refresh â€” re-execute query", "info")
             }
 
             // Content area
@@ -251,7 +251,7 @@ ApplicationWindow {
             StatusBar {}
         }
 
-        // ── Right side panels ──
+        // â”€â”€ Right side panels â”€â”€
         Item {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
@@ -322,7 +322,7 @@ ApplicationWindow {
         }
     }
 
-    // ── Dialogs ──
+    // â”€â”€ Dialogs â”€â”€
     ConnectionDialog { id: connDialog }
     FlatToast { id: toastBar }
 
@@ -347,6 +347,37 @@ ApplicationWindow {
 
     ImportDialog { id: importDialog }
 
+    
+    FlatDialog {
+        id: tableStructureDialog
+        dialogTitle: 'Table Structure'
+        dialogDescription: 'View and alter table schema'
+        width: 650; height: 500
+        contentItem: TableStructureView {
+            width: parent.width; height: parent.height - 40
+            schemaService: schemaService
+            tableName: tableStructureDialog.targetTable
+            columns: {
+                if (!databaseService || !tableStructureDialog.targetTable) return [];
+                return databaseService.getTableSchema(tableStructureDialog.targetTable);
+            }
+            onClosed: tableStructureDialog.close()
+            onDropColumnRequested: function(tName, cName) {
+                var sql = DB.buildDropColumnSql(tName, cName, connectionManager.get(connectionManager.activeIndex).dbType);
+                var res = databaseService.executeBatch([sql]);
+                if (res.success) {
+                    toast('Dropped column ' + cName, 'success');
+                    tableStructureDialog.targetTable = '';
+                    tableStructureDialog.targetTable = tName; // trigger bound UI update
+                    schemaService.refresh(databaseService);
+                } else {
+                    toast('Error: ' + res.error, 'error');
+                }
+            }
+        }
+        property string targetTable: ''
+        function view(tName) { targetTable = tName; open(); }
+    }
     SettingsDialog {
         id: settingsDialog
         appSettings: appSettings
@@ -400,7 +431,7 @@ ApplicationWindow {
         }
     }
 
-    // ── Inline Cell Editor (overlay) ──
+    // â”€â”€ Inline Cell Editor (overlay) â”€â”€
     CellEditor {
         id: cellEditor
         parent: Overlay.overlay
@@ -413,7 +444,7 @@ ApplicationWindow {
         }
     }
 
-    // ── Keyboard Shortcuts Dialog ──
+    // â”€â”€ Keyboard Shortcuts Dialog â”€â”€
     FlatDialog {
         id: shortcutsDialog
         dialogTitle: "Keyboard Shortcuts"
@@ -479,7 +510,7 @@ ApplicationWindow {
         if (tabManager && tabManager.tabs.length === 0) tabManager.addTab()
     }
 
-    // ── Shortcuts ──
+    // â”€â”€ Shortcuts â”€â”€
     Shortcut { sequence: "Ctrl+N"; onActivated: tabManager.addTab() }
     Shortcut {
         sequence: "Ctrl+W"
@@ -508,3 +539,5 @@ ApplicationWindow {
     Shortcut { sequence: "Ctrl+Y"; onActivated: { if (changeTracker) changeTracker.redo() } }
     Shortcut { sequence: "Ctrl+G"; onActivated: { root.showSearchBar = true } }
 }
+
+

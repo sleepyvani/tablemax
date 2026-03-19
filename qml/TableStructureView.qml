@@ -15,6 +15,7 @@ Rectangle {
     property var columns: []  // [{ name, type, nullable, default, pk, extra }]
 
     signal columnClicked(string colName)
+    signal dropColumnRequested(string tName, string cName)
     signal closed()
 
     ColumnLayout {
@@ -62,7 +63,8 @@ Rectangle {
                 Text { text: "TYPE"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 120 }
                 Text { text: "NULL"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 48 }
                 Text { text: "DEFAULT"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
-                Text { text: "EXTRA"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 100 }
+                Text { text: "EXTRA"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 80 }
+                Text { text: "ACTION"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono; Layout.preferredWidth: 40; horizontalAlignment: Text.AlignHCenter }
             }
             DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
         }
@@ -142,9 +144,31 @@ Rectangle {
                     // Extra (AUTO_INCREMENT, etc.)
                     Text {
                         text: colRow.modelData.extra || "—"
-                        font.pixelSize: Theme.t11; font.family: Theme.mono; Layout.preferredWidth: 100
+                        font.pixelSize: Theme.t11; font.family: Theme.mono; Layout.preferredWidth: 80
                         color: (colRow.modelData.extra || "") !== "" ? Theme.accent : Theme.fgDim
                         elide: Text.ElideRight
+                    }
+
+                    // Action (Drop Column)
+                    Rectangle {
+                        Layout.preferredWidth: 40; height: 36; color: "transparent"
+                        Rectangle {
+                            anchors.centerIn: parent; width: 24; height: 24; radius: Theme.r4
+                            color: _dropMa.containsMouse ? Theme.error : "transparent"
+                            Behavior on color { ColorAnimation { duration: Theme.fast } }
+                            FlatIcon { anchors.centerIn: parent; icon: Icons.trash; size: 12; color: _dropMa.containsMouse ? "#fff" : Theme.fgMuted }
+                            MouseArea {
+                                id: _dropMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    if (root.parent !== null && typeof root.parent.dropColumn === "function") {
+                                        root.parent.dropColumn(root.tableName, colRow.modelData.name)
+                                    } else {
+                                        root.dropColumnRequested(root.tableName, colRow.modelData.name)
+                                    }
+                                }
+                            }
+                            FlatTooltip { visible: _dropMa.containsMouse; text: "Drop Column"; y: -28 }
+                        }
                     }
                 }
 

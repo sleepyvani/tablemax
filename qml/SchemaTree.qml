@@ -292,11 +292,10 @@ Rectangle {
                     tabManager.updateContent(tabManager.currentIndex, (t.content || "") + nodeName + " ")
                 }
             } else if (text === "View Schema") {
-                var cols = databaseService.getTableSchema(nodeName)
-                if (cols && cols.length > 0) {
-                    var info = cols.map(function(c) { return c.name + " " + c.type }).join("\n")
-                    if (tabManager.tabs.length === 0) tabManager.addTab()
-                    tabManager.updateContent(tabManager.currentIndex, "-- Schema: " + nodeName + "\n-- " + info.replace(/\n/g, "\n-- "))
+                if (typeof tableStructureDialog !== "undefined") {
+                    tableStructureDialog.view(nodeName)
+                } else {
+                    root.toast("Schema Viewer not initialized", "warning")
                 }
             }
         }
