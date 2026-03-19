@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -14,7 +14,7 @@ Rectangle {
         return c ? (c.dbType || "") : ""
     }
 
-    // ── Sync syntax highlighter with editor document ──
+    //  Sync syntax highlighter with editor document 
     Timer {
         interval: 0; running: true; repeat: false
         onTriggered: {
@@ -23,7 +23,7 @@ Rectangle {
         }
     }
 
-    // ── Load content when switching tabs ──
+    //  Load content when switching tabs 
     Connections {
         target: tabManager
         function onCurrentIndexChanged() {
@@ -85,10 +85,125 @@ Rectangle {
         editor.text = sql.trim()
     }
 
+    //  AutoComplete Logic 
+    property var sqlKeywords: [
+        "SELECT", "FROM", "WHERE", "INSERT", "INTO", "UPDATE", "SET", "DELETE", "JOIN", 
+        "INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "ON", "GROUP BY", "ORDER BY", "HAVING", 
+        "LIMIT", "OFFSET", "AND", "OR", "NOT", "IN", "EXISTS", "BETWEEN", "LIKE", "IS NULL", "AS",
+        "CREATE TABLE", "DROP TABLE", "ALTER TABLE", "ADD COLUMN", "PRIMARY KEY", "FOREIGN KEY", "COUNT", "MAX", "MIN", "AVG", "SUM"
+    ]
+
+    function updateAutoComplete() {
+        if (!editor.activeFocus || editor.text.length === 0) {
+            autoComplete.close();
+            return;
+        }
+
+        var textBeforeCursor = editor.text.substring(0, editor.cursorPosition);
+        var match = textBeforeCursor.match(/([a-zA-Z0-9_]+)$/);
+        
+        if (!match) {
+            autoComplete.close();
+            return;
+        }
+
+        var word = match[1].toLowerCase();
+        if (word.length < 1) {
+            autoComplete.close();
+            return;
+        }
+
+        var results = [];
+        
+        // 1. Match Keywords
+        for (var i = 0; i < sqlKeywords.length; i++) {
+            if (sqlKeywords[i].toLowerCase().indexOf(word) === 0) {
+                results.push({ text: sqlKeywords[i], type: "keyword" });
+            }
+        }
+        
+        // 2. Match Tables and Columns from SchemaService
+        if (schemaService && schemaService.tree) {
+            var dbTree = schemaService.tree;
+            for (var d = 0; d < dbTree.length; d++) {
+                var dNode = dbTree[d];
+                // if it's a table node directly (sqlite)
+                if (dNode.type === "table") {
+                    if (dNode.name.toLowerCase().indexOf(word) >= 0) {
+                        results.push({ text: dNode.name, type: "table" });
+                    }
+                    if (dNode.children) {
+                        for (var c = 0; c < dNode.children.length; c++) {
+                            if (dNode.children[c].name.toLowerCase().indexOf(word) >= 0) {
+                                // Add column only if not already in results
+                                var exists = false;
+                                for (var k=0; k<results.length; k++) { if (results[k].text === dNode.children[c].name && results[k].type==="column") {exists=true; break;}}
+                                if (!exists) results.push({ text: dNode.children[c].name, type: "column" });
+                            }
+                        }
+                    }
+                } 
+                // if it's a db node (pg/mysql)
+                else if (dNode.type === "database" && dNode.children) {
+                    for (var t = 0; t < dNode.children.length; t++) {
+                        var tNode = dNode.children[t];
+                        if (tNode.name.toLowerCase().indexOf(word) >= 0) {
+                            results.push({ text: tNode.name, type: "table" });
+                        }
+                        if (tNode.children) {
+                            for (var c2 = 0; c2 < tNode.children.length; c2++) {
+                                if (tNode.children[c2].name.toLowerCase().indexOf(word) >= 0) {
+                                    var exists2 = false;
+                                    for (var k2=0; k2<results.length; k2++) { if (results[k2].text === tNode.children[c2].name && results[k2].type==="column") {exists2=true; break;}}
+                                    if (!exists2) results.push({ text: tNode.children[c2].name, type: "column" });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Sort results: exact start match first
+        results.sort(function(a, b) {
+            var aStart = a.text.toLowerCase().indexOf(word) === 0 ? 0 : 1;
+            var bStart = b.text.toLowerCase().indexOf(word) === 0 ? 0 : 1;
+            if (aStart !== bStart) return aStart - bStart;
+            return a.text.length - b.text.length;
+        });
+
+        // Limit results
+        if (results.length > 20) results = results.slice(0, 20);
+
+        if (results.length > 0) {
+            autoComplete.suggestions = results;
+            
+            // Calculate popup position
+            var rect = editor.positionToRectangle(editor.cursorPosition);
+            autoComplete.x = rect.x;
+            autoComplete.y = rect.y + rect.height;
+            autoComplete.open();
+        } else {
+            autoComplete.close();
+        }
+    }
+
+    function insertSuggestion(suggestionText) {
+        var textBeforeCursor = editor.text.substring(0, editor.cursorPosition);
+        var match = textBeforeCursor.match(/([a-zA-Z0-9_]+)$/);
+        if (match) {
+            var word = match[1];
+            var startPos = editor.cursorPosition - word.length;
+            
+            editor.remove(startPos, editor.cursorPosition);
+            editor.insert(startPos, suggestionText + " ");
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent; spacing: 0
 
-        // ─── Toolbar ───
+        //  Toolbar 
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 38; color: Theme.bgElevated
 
@@ -106,7 +221,7 @@ Rectangle {
 
                     RowLayout {
                         id: runContent; anchors.centerIn: parent; spacing: Theme.s4
-                        Text { text: "▶"; font.pixelSize: Theme.t11; color: "#fff" }
+                        Text { text: ""; font.pixelSize: Theme.t11; color: "#fff" }
                         Text { text: "Run"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: "#fff" }
                     }
                     MouseArea {
@@ -136,7 +251,7 @@ Rectangle {
 
                 Item { Layout.fillWidth: true }
 
-                // Format — SQL only
+                // Format  SQL only
                 Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: fmtMa.containsMouse ? Theme.bgHover : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
@@ -155,7 +270,7 @@ Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: clrMa.containsMouse ? Theme.bgHover : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                    Text { anchors.centerIn: parent; text: "⌫"; font.pixelSize: Theme.t13; color: Theme.fgMuted }
+                    Text { anchors.centerIn: parent; text: ""; font.pixelSize: Theme.t13; color: Theme.fgMuted }
                     MouseArea {
                         id: clrMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: editor.text = ""
@@ -167,7 +282,7 @@ Rectangle {
             DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
-        // ─── Editor Area ───
+        //  Editor Area 
         RowLayout {
             Layout.fillWidth: true; Layout.fillHeight: true; spacing: 0
 
@@ -216,9 +331,41 @@ Rectangle {
                     onTextChanged: {
                         if (!loadingContent_ && tabManager)
                             tabManager.updateContent(tabManager.currentIndex, text)
+                        updateAutoComplete()
                     }
 
-                    // Placeholder — DB-aware
+                    Keys.onPressed: (e) => {
+                        // Priority 1: Ctrl+Enter to execute query
+                        if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) {
+                            executeCurrentQuery();
+                            e.accepted = true;
+                            return;
+                        }
+                        
+                        // Priority 2: AutoComplete interaction
+                        if (autoComplete.visible) {
+                            if (e.key === Qt.Key_Up) {
+                                autoComplete.moveUp();
+                                e.accepted = true;
+                                return;
+                            } else if (e.key === Qt.Key_Down) {
+                                autoComplete.moveDown();
+                                e.accepted = true;
+                                return;
+                            } else if (e.key === Qt.Key_Return || e.key === Qt.Key_Tab || e.key === Qt.Key_Enter) {
+                                if (autoComplete.acceptCurrent()) {
+                                    e.accepted = true;
+                                    return;
+                                }
+                            } else if (e.key === Qt.Key_Escape) {
+                                autoComplete.close();
+                                e.accepted = true;
+                                return;
+                            }
+                        }
+                    }
+
+                    // Placeholder  DB-aware
                     Text {
                         x: Theme.s12; y: Theme.s8
                         text: DB.queryPlaceholder(_dbType)
@@ -234,6 +381,11 @@ Rectangle {
                             NumberAnimation { to: 1; duration: 400 }
                         }
                     }
+                    
+                    FlatAutoComplete {
+                        id: autoComplete
+                        onSuggestionAccepted: (txt) => { insertSuggestion(txt); editor.forceActiveFocus() }
+                    }
                 }
 
                 ScrollBar.vertical: ScrollBar {
@@ -243,7 +395,7 @@ Rectangle {
             }
         }
 
-        // ─── Loading overlay ───
+        //  Loading overlay 
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: databaseService && databaseService.loading ? 3 : 0
             color: "transparent"; clip: true
@@ -267,6 +419,4 @@ Rectangle {
     property real lineHeight: 20
 
     Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { executeCurrentQuery(); e.accepted = true } }
-
-
 }

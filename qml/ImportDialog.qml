@@ -1,10 +1,10 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import "Icons.js" as Icons
 
-// ── Import Dialog ────────────────────────────────────────────
+// â”€â”€ Import Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Execute SQL files with progress feedback
 
 FlatDialog {
@@ -20,7 +20,7 @@ FlatDialog {
     contentItem: ColumnLayout {
         spacing: Theme.s16; width: parent.width
 
-        // ── File info ──
+        // â”€â”€ File info â”€â”€
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 80; radius: Theme.r8
             color: Theme.bgSurface; border.width: 1; border.color: Theme.border
@@ -47,14 +47,14 @@ FlatDialog {
             }
         }
 
-        // ── Options ──
+        // â”€â”€ Options â”€â”€
         ColumnLayout {
             spacing: Theme.s8; Layout.fillWidth: true
             FlatCheckbox { id: wrapTransaction; text: "Wrap in transaction"; checked: true }
             FlatCheckbox { id: stopOnError; text: "Stop on first error"; checked: true }
         }
 
-        // ── Progress ──
+        // â”€â”€ Progress â”€â”€
         Rectangle {
             visible: importing || importResult
             Layout.fillWidth: true; Layout.preferredHeight: 56; radius: Theme.r8
@@ -89,7 +89,7 @@ FlatDialog {
             }
         }
 
-        // ── Actions ──
+        // â”€â”€ Actions â”€â”€
         RowLayout {
             spacing: Theme.s8; Layout.fillWidth: true; Layout.alignment: Qt.AlignRight
 
@@ -118,7 +118,7 @@ FlatDialog {
     function doImport() {
         if (!contentItem.selectedFilePath) return
         importing = true; importResult = ""
-        var result = database.importSqlFile(contentItem.selectedFilePath)
+        var result = databaseService.importSqlFile(contentItem.selectedFilePath)
         importing = false
         if (result.success) {
             importResult = "\u2705 Successfully executed " + result.executed + " statements"

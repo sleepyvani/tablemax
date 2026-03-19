@@ -1,10 +1,10 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import "Icons.js" as Icons
 
-// ── Export Dialog ─────────────────────────────────────────────
+// â”€â”€ Export Dialog â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Ported from TablePro's Export views (CSV, JSON, SQL)
 // Premium UI with format cards, live preview, and options
 
@@ -22,11 +22,11 @@ FlatDialog {
     function refreshPreview() {
         if (!resultModel) return
         if (selectedFormat === "csv")
-            previewText = database.exportCsv(resultModel).substring(0, 500)
+            previewText = databaseService.exportCsv(resultModel).substring(0, 500)
         else if (selectedFormat === "json")
-            previewText = database.exportJson(resultModel, true).substring(0, 500)
+            previewText = databaseService.exportJson(resultModel, true).substring(0, 500)
         else if (selectedFormat === "sql")
-            previewText = database.exportSql(resultModel, tableNameField.text || "table").substring(0, 500)
+            previewText = databaseService.exportSql(resultModel, tableNameField.text || "table").substring(0, 500)
     }
 
     onOpened: refreshPreview()
@@ -34,7 +34,7 @@ FlatDialog {
     contentItem: ColumnLayout {
         spacing: Theme.s16; width: parent.width
 
-        // ── Format Cards ──
+        // â”€â”€ Format Cards â”€â”€
         RowLayout {
             spacing: Theme.s8; Layout.fillWidth: true
 
@@ -79,7 +79,7 @@ FlatDialog {
             }
         }
 
-        // ── Format-specific options ──
+        // â”€â”€ Format-specific options â”€â”€
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: optCol.implicitHeight + 24
             radius: Theme.r8; color: Theme.bgSurface; border.width: 1; border.color: Theme.border
@@ -119,7 +119,7 @@ FlatDialog {
             }
         }
 
-        // ── Preview ──
+        // â”€â”€ Preview â”€â”€
         Rectangle {
             Layout.fillWidth: true; Layout.preferredHeight: 140
             radius: Theme.r8; color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.03)
@@ -154,7 +154,7 @@ FlatDialog {
             }
         }
 
-        // ── Action Buttons ──
+        // â”€â”€ Action Buttons â”€â”€
         RowLayout {
             spacing: Theme.s8; Layout.fillWidth: true; Layout.alignment: Qt.AlignRight
 
@@ -193,7 +193,7 @@ FlatDialog {
         onAccepted: {
             var content = generateExport()
             var path = selectedFile.toString().replace("file:///", "")
-            if (database.exportToFile(path, content))
+            if (databaseService.exportToFile(path, content))
                 root.toast("Exported successfully!", "success")
             else
                 root.toast("Export failed", "error")
@@ -204,11 +204,11 @@ FlatDialog {
     function generateExport() {
         if (!resultModel) return ""
         if (selectedFormat === "csv")
-            return database.exportCsv(resultModel, delimiterSelect.currentText, headersCheck.checked)
+            return databaseService.exportCsv(resultModel, delimiterSelect.currentText, headersCheck.checked)
         if (selectedFormat === "json")
-            return database.exportJson(resultModel, prettyCheck.checked)
+            return databaseService.exportJson(resultModel, prettyCheck.checked)
         if (selectedFormat === "sql")
-            return database.exportSql(resultModel, tableNameField.text || "exported_table")
+            return databaseService.exportSql(resultModel, tableNameField.text || "exported_table")
         return ""
     }
 }

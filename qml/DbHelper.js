@@ -93,3 +93,35 @@ function displayName(dbType) {
         default:            return dbType || "Database"
     }
 }
+
+function buildCreateTableSql(tableName, columns, dbType) {
+    if (isMongo(dbType) || isRedis(dbType)) return "";
+    var lines = [];
+    for (var i = 0; i < columns.length; i++) {
+        var c = columns[i];
+        if (!c.name) continue;
+        var line = '"' + c.name + '" ' + (c.type || "VARCHAR(255)");
+        if (c.pk) line += " PRIMARY KEY";
+        if (!c.nullable && !c.pk) line += " NOT NULL";
+        if (c.defaultVal) {
+            var isStr = isNaN(c.defaultVal) && c.defaultVal.toUpperCase() !== "NULL";
+            line += " DEFAULT " + (isStr ? "'" + c.defaultVal + "'" : c.defaultVal);
+        }
+        lines.push(line);
+    }
+    if (lines.length === 0) return "";
+    return 'CREATE TABLE "' + (tableName || "new_table") + '" (\n    ' + lines.join(",\n    ") + '\n);';
+}
+
+function buildAddColumnSql(tableName, column, dbType) {
+    if (isMongo(dbType) || isRedis(dbType)) return "";
+    var def = '"' + column.name + '" ' + (column.type || "VARCHAR(255)");
+    if (!column.nullable) def += " NOT NULL";
+    if (column.defaultVal) def += " DEFAULT " + column.defaultVal;
+    return 'ALTER TABLE "' + tableName + '" ADD COLUMN ' + def + ';';
+}
+
+function buildDropColumnSql(tableName, columnName, dbType) {
+    if (isMongo(dbType) || isRedis(dbType)) return "";
+    return 'ALTER TABLE "' + tableName + '" DROP COLUMN "' + columnName + '";';
+}
