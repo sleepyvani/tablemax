@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -221,13 +221,14 @@ Rectangle {
 
                     RowLayout {
                         id: runContent; anchors.centerIn: parent; spacing: Theme.s4
-                        Text { text: ""; font.pixelSize: Theme.t11; color: "#fff" }
+                        FlatIcon { icon: Icons.play; size: 11; color: "#fff" }
                         Text { text: "Run"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: "#fff" }
                     }
                     MouseArea {
                         id: runMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: executeCurrentQuery()
                     }
+                    FlatTooltip { visible: runMa.containsMouse; text: "Execute query (Ctrl+Enter)"; y: -30 }
                 }
 
                 // Shortcut hint
@@ -257,7 +258,7 @@ Rectangle {
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
                     visible: DB.isSQL(_dbType)
 
-                    Text { anchors.centerIn: parent; text: "{}"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgMuted }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.formatText; size: 13; color: Theme.fgMuted }
                     MouseArea {
                         id: fmtMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: formatSql()
@@ -270,12 +271,30 @@ Rectangle {
                     width: 26; height: 26; radius: Theme.r6; color: clrMa.containsMouse ? Theme.bgHover : "transparent"
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                    Text { anchors.centerIn: parent; text: ""; font.pixelSize: Theme.t13; color: Theme.fgMuted }
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.trash; size: 12; color: Theme.fgMuted }
                     MouseArea {
                         id: clrMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                         onClicked: editor.text = ""
                     }
                     FlatTooltip { visible: clrMa.containsMouse; text: "Clear editor"; y: -30 }
+                }
+
+                // Copy query to clipboard
+                Rectangle {
+                    width: 26; height: 26; radius: Theme.r6; color: cpyMa.containsMouse ? Theme.bgHover : "transparent"
+                    visible: editor.text.trim().length > 0
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
+
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.copy; size: 12; color: Theme.fgMuted }
+                    MouseArea {
+                        id: cpyMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            _qeClip.text = editor.text
+                            _qeClip.selectAll(); _qeClip.copy()
+                            root.toast("Query copied to clipboard", "success")
+                        }
+                    }
+                    FlatTooltip { visible: cpyMa.containsMouse; text: "Copy query"; y: -30 }
                 }
             }
 
@@ -417,6 +436,9 @@ Rectangle {
     }
 
     property real lineHeight: 20
+
+    // Clipboard helper for copy-query button
+    TextEdit { id: _qeClip; visible: false }
 
     Keys.onPressed: (e) => { if (e.key === Qt.Key_Return && (e.modifiers & Qt.ControlModifier)) { executeCurrentQuery(); e.accepted = true } }
 }

@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -66,8 +66,7 @@ FlatDialog {
                     Layout.fillWidth: true
                     Text { text: "Columns"; font.pixelSize: Theme.t13; font.family: Theme.sans; color: Theme.fg; font.weight: Font.DemiBold; Layout.fillWidth: true }
                     FlatButton {
-                        text: "Add Column"
-                        icon.source: Icons.add
+                        text: "+ Add Column"
                         onClicked: {
                             columnsModel.append({ "name": "new_column", "type": "VARCHAR(255)", "pk": false, "notNull": false, "defaultVal": "" })
                             refreshSql()
@@ -164,29 +163,35 @@ FlatDialog {
 
                 Item { Layout.fillHeight: true } // spacer
 
-                FlatButton {
-                    Layout.fillWidth: true
-                    text: "Execute SQL"
-                    accent: true
-                    icon.source: Icons.play
-                    onClicked: {
-                        if (!databaseService || !databaseService.connected) return
-                        if (generatedSql.trim() === "") return
+                Rectangle {
+                    Layout.fillWidth: true; height: 30; radius: Theme.r6
+                    color: execMa.containsMouse ? Theme.accentHover : Theme.accent
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                        // Switch DB first if needed
-                        if (activeDatabase && !DB.isSqlite(dbType)) {
-                            databaseService.switchDatabase(activeDatabase)
-                        }
+                    RowLayout {
+                        anchors.centerIn: parent; spacing: Theme.s6
+                        FlatIcon { icon: Icons.play; size: 12; color: "#fff" }
+                        Text { text: "Execute SQL"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: Font.DemiBold; color: "#fff" }
+                    }
 
-                        var res = databaseService.executeBatch([generatedSql])
-                        if (res.success) {
-                            root.toast("Table '" + tableNameField.text + "' created successfully", "success")
-                            tableCreated(tableNameField.text)
-                            createTableDialog.close()
-                        } else {
-                            root.toast("Error: " + res.error, "error")
+                    MouseArea {
+                        id: execMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (!databaseService || !databaseService.connected) return
+                            if (generatedSql.trim() === "") return
+                            if (activeDatabase && !DB.isSqlite(dbType))
+                                databaseService.switchDatabase(activeDatabase)
+                            var res = databaseService.executeBatch([generatedSql])
+                            if (res.success) {
+                                root.toast("Table '" + tableNameField.text + "' created successfully", "success")
+                                tableCreated(tableNameField.text)
+                                createTableDialog.close()
+                            } else {
+                                root.toast("Error: " + res.error, "error")
+                            }
                         }
                     }
+                    FlatTooltip { visible: execMa.containsMouse; text: "CREATE TABLE " + tableNameField.text; y: -30 }
                 }
             }
         }

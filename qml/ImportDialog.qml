@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtQuick.Dialogs
@@ -17,32 +17,61 @@ FlatDialog {
     property string importResult: ""
     property string selectedFilePath: ""
 
+    function fileBasename(path) {
+        if (!path) return ""
+        var parts = path.replace(/\\/g, "/").split("/")
+        return parts[parts.length - 1]
+    }
+
     contentItem: ColumnLayout {
         spacing: Theme.s16; width: parent.width
 
-        // â”€â”€ File info â”€â”€
+        // ── File drop zone ──
         Rectangle {
-            Layout.fillWidth: true; Layout.preferredHeight: 80; radius: Theme.r8
-            color: Theme.bgSurface; border.width: 1; border.color: Theme.border
+            Layout.fillWidth: true; Layout.preferredHeight: 90; radius: Theme.r8
+            color: dzMa.containsMouse
+                   ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.05)
+                   : Theme.bgSurface
+            border.width: selectedFilePath ? 2 : 1
+            border.color: selectedFilePath ? Theme.accent
+                         : dzMa.containsMouse ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.4)
+                         : Theme.border
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
+            Behavior on border.color { ColorAnimation { duration: Theme.fast } }
 
             ColumnLayout {
-                anchors.centerIn: parent; spacing: Theme.s8
+                anchors.centerIn: parent; spacing: Theme.s6
 
                 FlatIcon {
-                    icon: Icons.fileCode; size: 28; color: Theme.fgMuted
+                    icon: selectedFilePath ? Icons.fileCode : Icons.upload
+                    size: 24
+                    color: selectedFilePath ? Theme.accent : Theme.fgMuted
                     Layout.alignment: Qt.AlignHCenter
                 }
 
                 Text {
-                    text: selectedFilePath || "No file selected"
-                    font.family: Theme.mono; font.pixelSize: Theme.t12; color: Theme.fgMuted
-                    Layout.alignment: Qt.AlignHCenter; elide: Text.ElideMiddle
+                    text: selectedFilePath
+                          ? importDialog.fileBasename(selectedFilePath)
+                          : "Click to browse for a .sql file"
+                    font.family: selectedFilePath ? Theme.mono : Theme.sans
+                    font.pixelSize: Theme.t12
+                    color: selectedFilePath ? Theme.fg : Theme.fgMuted
+                    Layout.alignment: Qt.AlignHCenter
+                    elide: Text.ElideMiddle
                     Layout.maximumWidth: 360
+                }
+
+                Text {
+                    visible: !selectedFilePath
+                    text: "or drag and drop"
+                    font.family: Theme.sans; font.pixelSize: Theme.t11
+                    color: Theme.fgDim
+                    Layout.alignment: Qt.AlignHCenter
                 }
             }
 
             MouseArea {
-                anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                id: dzMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                 onClicked: fileDialog.open()
             }
         }
