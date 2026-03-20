@@ -4,7 +4,7 @@ Item {
     id: root
 
     property int size: 20
-    property color color: Theme.foreground
+    property color color: Theme.accent
 
     implicitWidth: size
     implicitHeight: size
