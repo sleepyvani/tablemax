@@ -8,19 +8,19 @@ T.Popup {
 
     enter: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.durationFast }
-            NumberAnimation { property: "scale"; from: 0.95; to: 1.0; duration: Theme.durationFast; easing.type: Easing.OutQuad }
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.fast }
+            NumberAnimation { property: "scale"; from: 0.95; to: 1.0; duration: Theme.fast; easing.type: Easing.OutQuad }
         }
     }
 
     exit: Transition {
-        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.durationFast }
+        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.fast }
     }
 
     background: Rectangle {
-        color: Theme.popover
+        color: Theme.bgElevated
         border.width: 1
         border.color: Theme.border
-        radius: Theme.radiusMd
+        radius: Theme.r8
     }
 }

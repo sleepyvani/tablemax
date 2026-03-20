@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import "Icons.js" as Icons
 
 Item {
     id: root
@@ -15,28 +16,20 @@ Item {
     RowLayout {
         id: row
         anchors.centerIn: parent
-        spacing: 4
+        spacing: Theme.s2
 
         // Previous
         Rectangle {
             width: 32; height: 32
-            radius: Theme.radius
-            color: prevMouse.containsMouse ? Theme.muted : "transparent"
-            opacity: root.currentPage > 1 ? 1.0 : 0.4
+            radius: Theme.r6
+            color: prevMouse.containsMouse ? Theme.bgHover : "transparent"
+            opacity: root.currentPage > 1 ? 1.0 : 0.35
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-            Behavior on color { ColorAnimation { duration: Theme.durationFast } }
-
-            Text {
-                anchors.centerIn: parent
-                text: "‹"
-                font.pixelSize: 16
-                color: Theme.foreground
-            }
+            FlatIcon { anchors.centerIn: parent; icon: Icons.left; size: 12; color: Theme.fg }
 
             MouseArea {
-                id: prevMouse
-                anchors.fill: parent
-                hoverEnabled: true
+                id: prevMouse; anchors.fill: parent; hoverEnabled: true
                 cursorShape: root.currentPage > 1 ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: if (root.currentPage > 1) root.pageChanged(root.currentPage - 1)
             }
@@ -55,28 +48,23 @@ Item {
 
             Rectangle {
                 width: 32; height: 32
-                radius: Theme.radius
+                radius: Theme.r6
                 color: modelData === root.currentPage
-                       ? Theme.primary
-                       : (pageMouse.containsMouse ? Theme.muted : "transparent")
-
-                Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+                       ? Theme.accent
+                       : (pageMouse.containsMouse ? Theme.bgHover : "transparent")
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                 Text {
                     anchors.centerIn: parent
                     text: modelData
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSizeSm
-                    font.weight: modelData === root.currentPage ? Font.Medium : Font.Normal
-                    color: modelData === root.currentPage
-                           ? Theme.primaryForeground
-                           : Theme.foreground
+                    font.family: Theme.sans
+                    font.pixelSize: Theme.t12
+                    font.weight: modelData === root.currentPage ? Font.DemiBold : Font.Normal
+                    color: modelData === root.currentPage ? "#ffffff" : Theme.fg
                 }
 
                 MouseArea {
-                    id: pageMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
+                    id: pageMouse; anchors.fill: parent; hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: root.pageChanged(modelData)
                 }
@@ -86,23 +74,15 @@ Item {
         // Next
         Rectangle {
             width: 32; height: 32
-            radius: Theme.radius
-            color: nextMouse.containsMouse ? Theme.muted : "transparent"
-            opacity: root.currentPage < root.totalPages ? 1.0 : 0.4
+            radius: Theme.r6
+            color: nextMouse.containsMouse ? Theme.bgHover : "transparent"
+            opacity: root.currentPage < root.totalPages ? 1.0 : 0.35
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-            Behavior on color { ColorAnimation { duration: Theme.durationFast } }
-
-            Text {
-                anchors.centerIn: parent
-                text: "›"
-                font.pixelSize: 16
-                color: Theme.foreground
-            }
+            FlatIcon { anchors.centerIn: parent; icon: Icons.right; size: 12; color: Theme.fg }
 
             MouseArea {
-                id: nextMouse
-                anchors.fill: parent
-                hoverEnabled: true
+                id: nextMouse; anchors.fill: parent; hoverEnabled: true
                 cursorShape: root.currentPage < root.totalPages ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: if (root.currentPage < root.totalPages) root.pageChanged(root.currentPage + 1)
             }

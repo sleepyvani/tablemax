@@ -5,8 +5,8 @@ Rectangle {
 
     implicitWidth: 200
     implicitHeight: 16
-    radius: Theme.radius
-    color: Theme.muted
+    radius: Theme.r4
+    color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08)
 
     SequentialAnimation on opacity {
         loops: Animation.Infinite

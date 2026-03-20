@@ -25,7 +25,7 @@ T.Drawer {
             : parent.height
 
     background: Rectangle {
-        color: Theme.background
+        color: Theme.bg
         border.width: side === "right" || side === "left" ? 1 : 0
         border.color: Theme.border
 
@@ -40,14 +40,14 @@ T.Drawer {
 
     T.Overlay.modal: Rectangle {
         color: Qt.rgba(0, 0, 0, 0.6)
-        Behavior on opacity { NumberAnimation { duration: Theme.durationModal } }
+        Behavior on opacity { NumberAnimation { duration: Theme.normal } }
     }
 
     enter: Transition {
-        NumberAnimation { property: "position"; from: 0; to: 1; duration: Theme.durationSlow; easing.type: Easing.OutCubic }
+        NumberAnimation { property: "position"; from: 0; to: 1; duration: Theme.slow; easing.type: Easing.OutCubic }
     }
 
     exit: Transition {
-        NumberAnimation { property: "position"; from: 1; to: 0; duration: Theme.duration; easing.type: Easing.InCubic }
+        NumberAnimation { property: "position"; from: 1; to: 0; duration: Theme.fast; easing.type: Easing.InCubic }
     }
 }

@@ -35,14 +35,14 @@ Item {
         width: root.orientation === Qt.Vertical ? root.width : root.handleSize
         height: root.orientation === Qt.Vertical ? root.handleSize : root.height
 
-        Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+        Behavior on color { ColorAnimation { duration: Theme.fast } }
 
         // Center dot
         Rectangle {
             anchors.centerIn: parent
             width: root.orientation === Qt.Vertical ? 32 : 3
             height: root.orientation === Qt.Vertical ? 3 : 32
-            radius: Theme.radiusFull
+            radius: Theme.rFull
             color: parent.color
         }
 

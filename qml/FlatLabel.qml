@@ -1,8 +1,8 @@
 import QtQuick
 
 Text {
-    font.family: Theme.fontFamily
-    font.pixelSize: Theme.fontSize
+    font.family: Theme.sans
+    font.pixelSize: Theme.t13
     font.weight: Font.Medium
-    color: Theme.foreground
+    color: Theme.fg
 }

@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -28,9 +28,9 @@ Rectangle {
                 color: sbToggle.containsMouse ? Theme.bgHover : "transparent"
                 Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                Text {
+                FlatIcon {
                     anchors.centerIn: parent
-                    text: "☰"; font.pixelSize: Theme.t14
+                    icon: Icons.menu; size: 14
                     color: Theme.fgMuted
                 }
             }
@@ -213,9 +213,9 @@ Rectangle {
                 color: newTabMa.containsMouse ? Theme.bgHover : "transparent"
                 Behavior on color { ColorAnimation { duration: Theme.fast } }
 
-                Text {
+                FlatIcon {
                     anchors.centerIn: parent
-                    text: "+"; font.pixelSize: Theme.t16
+                    icon: Icons.add; size: 14
                     color: newTabMa.containsMouse ? Theme.accent : Theme.fgMuted
                     Behavior on color { ColorAnimation { duration: Theme.fast } }
                 }
