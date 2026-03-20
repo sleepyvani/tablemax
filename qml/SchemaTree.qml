@@ -255,7 +255,6 @@ Rectangle {
         }
     }
 
-    // ── Context Menu — DB-aware ──
     FlatContextMenu {
         id: _treeCtx
         property string nodeName: ""
@@ -263,43 +262,165 @@ Rectangle {
 
         menuModel: {
             if (nodeType === "table") {
-                var selectLabel = DB.isRedis(_dbType) ? "GET Key" : DB.isMongo(_dbType) ? "Find Documents" : "SELECT TOP 100"
+                var selectLabel = DB.isRedis(_dbType) ? "GET Key" : DB.isMongo(_dbType) ? "Find Documents" : "Browse Data"
                 var copyLabel = DB.isMongo(_dbType) ? "Copy Collection Name" : DB.isRedis(_dbType) ? "Copy Key Name" : "Copy Table Name"
-                return [selectLabel, copyLabel, "-", "View Schema"]
+                if (DB.isMongo(_dbType)) {
+                    return [selectLabel, "Table Structure", copyLabel, "-", "Export Collection", "-", "Drop Collection"]
+                } else if (DB.isRedis(_dbType)) {
+                    return [selectLabel, copyLabel, "-", "Delete Key"]
+                } else {
+                    // SQL
+                    return [selectLabel, "Table Structure", copyLabel, "Export Table", "-",
+                            "Rename Table", "-", "Truncate Table", "Drop Table"]
+                }
             }
             if (nodeType === "column") {
                 var colCopyLabel = DB.isMongo(_dbType) ? "Copy Field Name" : "Copy Column Name"
                 return [colCopyLabel, "Insert into Query"]
             }
-            if (nodeType === "database") return ["Copy Database Name"]
+            if (nodeType === "database") return ["Copy Database Name", "Refresh"]
             return []
         }
 
         onMenuItemClicked: function(idx, text) {
-            if (text.indexOf("Copy") === 0) {
+            if (text === "Browse Data" || text === "Find Documents" || text === "GET Key" || (idx === 0 && nodeType === "table")) {
+                if (databaseService && databaseService.connected) {
+                    var sql = DB.buildSelectQuery(_dbType, nodeName)
+                    tabManager.addTab(nodeName, sql, "table")
+                    root.currentTableName = nodeName
+                    var r = databaseService.executeQuery(sql, resultModel)
+                    if (r.success) root.toast(r.rowCount + " rows from " + nodeName, "success")
+                    else root.toast("Error: " + r.error, "destructive")
+                }
+            } else if (text === "Table Structure") {
+                if (typeof tableStructureDialog !== "undefined") tableStructureDialog.view(nodeName)
+                else root.toast("Schema Viewer not initialized", "warning")
+            } else if (text.indexOf("Copy") === 0) {
                 _clipHelper.text = nodeName; _clipHelper.selectAll(); _clipHelper.copy()
                 root.toast("Copied: " + nodeName, "success")
-            } else if (idx === 0 && nodeType === "table" && databaseService && databaseService.connected) {
-                var sql = DB.buildSelectQuery(_dbType, nodeName)
-                tabManager.addTab(nodeName, sql, "table")
-                root.currentTableName = nodeName
-                var r = databaseService.executeQuery(sql, resultModel)
-                if (r.success) root.toast(r.rowCount + " rows from " + nodeName, "success")
-                else root.toast("Error: " + r.error, "destructive")
             } else if (text === "Insert into Query") {
                 if (tabManager && tabManager.tabs.length > 0) {
                     var t = tabManager.getTab(tabManager.currentIndex)
                     tabManager.updateContent(tabManager.currentIndex, (t.content || "") + nodeName + " ")
                 }
-            } else if (text === "View Schema") {
-                if (typeof tableStructureDialog !== "undefined") {
-                    tableStructureDialog.view(nodeName)
-                } else {
-                    root.toast("Schema Viewer not initialized", "warning")
+            } else if (text === "Export Table" || text === "Export Collection") {
+                if (typeof exportDialog !== "undefined") exportDialog.open()
+                else root.toast("Export: " + nodeName, "info")
+            } else if (text === "Truncate Table") {
+                truncateConfirmDlg.tableName = nodeName
+                truncateConfirmDlg.open()
+            } else if (text === "Drop Table") {
+                dropConfirmDlg.tableName = nodeName
+                dropConfirmDlg.isDrop = true
+                dropConfirmDlg.open()
+            } else if (text === "Drop Collection") {
+                dropConfirmDlg.tableName = nodeName
+                dropConfirmDlg.isDrop = true
+                dropConfirmDlg.open()
+            } else if (text === "Delete Key") {
+                if (databaseService && databaseService.connected) {
+                    databaseService.executeQuery("DEL " + nodeName, null)
+                    root.toast("Key deleted: " + nodeName, "destructive")
                 }
+            } else if (text === "Rename Table") {
+                renameTableDlg.tableName = nodeName
+                renameTableDlg.open()
+            } else if (text === "Refresh") {
+                if (schemaService) schemaService.refresh()
             }
         }
     }
 
-    TextEdit { id: _clipHelper; visible: false }
-}
+    // Truncate confirm dialog
+    FlatDialog {
+        id: truncateConfirmDlg
+        property string tableName: ""
+        title: "Truncate Table"
+        message: "This will permanently delete ALL rows from \"" + tableName + "\". This cannot be undone."
+        confirmLabel: "Truncate"; confirmVariant: "destructive"
+        onConfirmed: {
+            if (databaseService && databaseService.connected) {
+                var r = databaseService.executeQuery("TRUNCATE TABLE " + tableName, null)
+                root.toast(r.success ? "Table truncated: " + tableName : "Error: " + r.error,
+                           r.success ? "warning" : "destructive")
+                if (schemaService) schemaService.refresh()
+            }
+        }
+    }
+
+    // Drop confirm dialog
+    FlatDialog {
+        id: dropConfirmDlg
+        property string tableName: ""
+        property bool isDrop: true
+        title: (isDrop ? "Drop" : "Delete") + " \"" + tableName + "\"?"
+        message: "This action is irreversible. \"" + tableName + "\" will be permanently deleted."
+        confirmLabel: "Drop"; confirmVariant: "destructive"
+        onConfirmed: {
+            if (databaseService && databaseService.connected) {
+                var cmd = DB.isMongo(_dbType)
+                    ? ("db." + tableName + ".drop()")
+                    : ("DROP TABLE IF EXISTS " + tableName)
+                var r = databaseService.executeQuery(cmd, null)
+                root.toast(r.success ? "Dropped: " + tableName : "Error: " + r.error,
+                           r.success ? "destructive" : "destructive")
+                if (schemaService) schemaService.refresh()
+            }
+        }
+    }
+
+    // Rename table dialog — simple input popup
+    Rectangle {
+        id: renameTableDlg
+        property string tableName: ""
+        function open() { renameTableDlg.visible = true; newNameInput.text = tableName; newNameInput.forceActiveFocus() }
+
+        anchors.fill: parent; visible: false; z: 200
+        color: Qt.rgba(0, 0, 0, 0.5)
+
+        Rectangle {
+            width: 320; anchors.centerIn: parent
+            height: renameContent.implicitHeight + Theme.s32
+            radius: Theme.r12; color: Theme.bg; border.width: 1; border.color: Theme.border
+
+            ColumnLayout {
+                id: renameContent
+                anchors { left: parent.left; right: parent.right; top: parent.top; margins: Theme.s20 }
+                spacing: Theme.s12
+
+                Text { text: "Rename Table"; font.family: Theme.sans; font.pixelSize: Theme.t15; font.weight: Font.DemiBold; color: Theme.fg }
+                Text { text: "Rename \"" + renameTableDlg.tableName + "\" to:"; font.family: Theme.sans; font.pixelSize: Theme.t13; color: Theme.fgMuted; wrapMode: Text.Wrap; Layout.fillWidth: true }
+
+                FlatInput {
+                    id: newNameInput
+                    Layout.fillWidth: true
+                    placeholderText: "New table name"
+                    Keys.onReturnPressed: doRename()
+                    Keys.onEscapePressed: renameTableDlg.visible = false
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true; spacing: Theme.s8
+                    Item { Layout.fillWidth: true }
+                    FlatButton { text: "Cancel"; variant: "ghost"; size: "sm"; onClicked: renameTableDlg.visible = false }
+                    FlatButton {
+                        text: "Rename"; size: "sm"; enabled: newNameInput.text.trim() !== ""
+                        opacity: enabled ? 1 : 0.5
+                        onClicked: doRename()
+                    }
+                }
+            }
+        }
+
+        function doRename() {
+            var newName = newNameInput.text.trim()
+            if (!newName || !databaseService) { renameTableDlg.visible = false; return }
+            var cmd = "ALTER TABLE " + renameTableDlg.tableName + " RENAME TO " + newName
+            var r = databaseService.executeQuery(cmd, null)
+            root.toast(r.success ? "Renamed to: " + newName : "Error: " + r.error, r.success ? "success" : "destructive")
+            renameTableDlg.visible = false
+            if (schemaService) schemaService.refresh()
+        }
+
+        MouseArea { anchors.fill: parent; z: -1; onClicked: renameTableDlg.visible = false }
+    }

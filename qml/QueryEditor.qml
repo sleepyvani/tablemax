@@ -38,6 +38,7 @@ Rectangle {
     }
 
     property bool loadingContent_: false
+    property bool pipelineMode: false  // Toggle for MongoDB pipeline builder
 
     function executeCurrentQuery() {
         if (!tabManager || !databaseService || !databaseService.connected) return
@@ -296,14 +297,55 @@ Rectangle {
                     }
                     FlatTooltip { visible: cpyMa.containsMouse; text: "Copy query"; y: -30 }
                 }
+                // Pipeline Builder toggle (MongoDB only)
+                Rectangle {
+                    visible: DB.isMongo(_dbType)
+                    width: plBtnRow.implicitWidth + Theme.s16; height: 26; radius: Theme.r6
+                    color: pipelineMode
+                        ? Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.15)
+                        : plMa.containsMouse ? Theme.bgHover : Theme.bgSurface
+                    border.width: 1
+                    border.color: pipelineMode
+                        ? Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.4)
+                        : Theme.border
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
+                    RowLayout { id: plBtnRow; anchors.centerIn: parent; spacing: Theme.s4
+                        FlatIcon { icon: Icons.filter; size: 11; color: pipelineMode ? Theme.warning : Theme.fgMuted }
+                        Text { text: pipelineMode ? "Text Mode" : "Pipeline Builder"; font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold; color: pipelineMode ? Theme.warning : Theme.fgMuted }
+                    }
+                    MouseArea { id: plMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: pipelineMode = !pipelineMode }
+                    FlatTooltip { visible: plMa.containsMouse; text: pipelineMode ? "Switch to text editor" : "Open MongoDB Pipeline Builder"; y: -30 }
+                }
+
             }
 
             DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
 
+        // Pipeline Builder (MongoDB only, shown when pipelineMode = true)
+        MongoPipelineBuilder {
+            id: pipelineBuilder
+            Layout.fillWidth: true; Layout.fillHeight: true
+            visible: DB.isMongo(_dbType) && pipelineMode
+            resultModel: root.resultModel
+            collectionName: {
+                var t = tabManager ? tabManager.getTab(tabManager.currentIndex) : null
+                return t ? (t.title || "") : ""
+            }
+            onToast: function(msg, type) { root.toast(msg, type) }
+            onRunPipeline: function(pipeline) {
+                if (databaseService && databaseService.connected) {
+                    var res = databaseService.executeQuery(pipeline, resultModel)
+                    if (res.success) root.toast(Fmt.formatNumber(res.rowCount) + " docs returned", "success")
+                    else root.toast("Pipeline error: " + res.error, "destructive")
+                }
+            }
+        }
+
         //  Editor Area 
         RowLayout {
             Layout.fillWidth: true; Layout.fillHeight: true; spacing: 0
+            visible: !pipelineMode
 
             // Line numbers
             Rectangle {
