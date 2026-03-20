@@ -135,38 +135,7 @@ Rectangle {
                             color: Theme.border; opacity: 0.4
                         }
                     }
-                }
-            }
-
-            // Bottom dashed border
-            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border; opacity: 0.6 }
-            BlueprintCrosshair { anchors.bottom: parent.bottom; anchors.right: parent.right; anchors.bottomMargin: -size/2; anchors.rightMargin: -size/2 }
-        }
-
-        // â”€â”€â”€ Table â”€â”€â”€
-        TableView {
-            id: tv; Layout.fillWidth: true; Layout.fillHeight: true
-            clip: true; model: resultModel; visible: resultModel && resultModel.totalRows > 0
-            boundsBehavior: Flickable.StopAtBounds; columnSpacing: 0; rowSpacing: 0
-
-            columnWidthProvider: function(c) { return calcColWidth(c) }
-            rowHeightProvider: function() { return 28 }
-
-            // Row numbers overlay
-            ListView {
-                z: 2
-                anchors.left: parent.left
-                anchors.top: parent.top
-                        }
-                    }
-                    FlatTooltip { visible: exportMa.containsMouse; text: "Export CSV"; x: exportMa.mouseX; y: -30 }
-                }
-            }
-
-            DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
-        }
-
-        // â”€â”€â”€ Column Headers â”€â”€â”€
+            // â”€â”€â”€ Column Headers â”€â”€â”€
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: resultModel && resultModel.totalColumns > 0 ? 28 : 0
