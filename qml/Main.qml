@@ -214,13 +214,13 @@ ApplicationWindow {
                     visible: tabManager && tabManager.tabs.length > 0
                     spacing: 0
 
-                    // Filter panel (collapsible)
+                    // Filter panel (collapsible) — SQL only
                     FilterPanel {
                         id: filterPanel
                         Layout.fillWidth: true
-                        Layout.preferredHeight: root.showFilterPanel ? implicitHeight : 0
-                        Layout.margins: root.showFilterPanel ? 8 : 0
-                        visible: root.showFilterPanel
+                        Layout.preferredHeight: root.showFilterPanel && DB.isSQL(_dbType) ? implicitHeight : 0
+                        Layout.margins: root.showFilterPanel && DB.isSQL(_dbType) ? 8 : 0
+                        visible: root.showFilterPanel && DB.isSQL(_dbType)
                         clip: true
                         Behavior on Layout.preferredHeight { NumberAnimation { duration: Theme.normal; easing.type: Easing.OutCubic } }
                         onFiltersApplied: function(where) {
@@ -407,6 +407,7 @@ ApplicationWindow {
             width: parent.width; height: parent.height - 40
             schemaService: schemaService
             tableName: tableStructureDialog.targetTable
+            dbType: _dbType
             columns: {
                 if (!databaseService || !tableStructureDialog.targetTable) return [];
                 return databaseService.getTableSchema(tableStructureDialog.targetTable);

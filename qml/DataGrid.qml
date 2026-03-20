@@ -487,13 +487,13 @@ Rectangle {
             var cn = resultModel.columnName(c) || ("col_" + c)
             var v = resultModel.cellValue(row, c)
             var vs = v !== undefined && v !== null ? String(v) : null
-            colNames.push("`" + cn + "`")
+            colNames.push(DB.quoteIdentifier(cn, _dbType))
             if (vs === null || vs.toLowerCase() === "null") values.push("NULL")
             else if (!isNaN(vs) && vs !== "") values.push(vs)
             else values.push("'" + vs.replace(/'/g, "''") + "'")
         }
-        // Try to guess table name from active tab or use "_table"
-        var tname = "_table"
-        return "INSERT INTO " + tname + " (" + colNames.join(", ") + ") VALUES (" + values.join(", ") + ")"
+        var tname = tabManager ? (tabManager.getTab(tabManager.currentIndex).title || "_table") : "_table"
+        var q = DB.quoteIdentifier(tname, _dbType)
+        return "INSERT INTO " + q + " (" + colNames.join(", ") + ") VALUES (" + values.join(", ") + ")"
     }
 }

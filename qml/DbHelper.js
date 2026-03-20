@@ -171,3 +171,15 @@ function quoteIdentifier(name, dbType) {
     if (isOracle(dbType)) return '"' + name + '"'
     return '"' + name + '"'
 }
+
+// Build DROP INDEX command — DB-specific syntax
+// MSSQL: DROP INDEX [table].[index]
+// MySQL/MariaDB: DROP INDEX `idx` ON `table`
+// ClickHouse: ALTER TABLE t DROP INDEX idx
+// Postgres/Oracle/SQLite/DuckDB: DROP INDEX IF EXISTS "idx"
+function buildDropIndexSql(indexName, tableName, dbType) {
+    if (isMSSQL(dbType)) return 'DROP INDEX [' + tableName + '].[' + indexName + ']'
+    if (isMySQL(dbType)) return 'DROP INDEX `' + indexName + '` ON `' + tableName + '`'
+    if (isClickHouse(dbType)) return 'ALTER TABLE ' + tableName + ' DROP INDEX ' + indexName
+    return 'DROP INDEX IF EXISTS "' + indexName + '"'
+}
