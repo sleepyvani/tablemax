@@ -65,12 +65,24 @@ FlatDialog {
                 RowLayout {
                     Layout.fillWidth: true
                     Text { text: "Columns"; font.pixelSize: Theme.t13; font.family: Theme.sans; color: Theme.fg; font.weight: Font.DemiBold; Layout.fillWidth: true }
-                    FlatButton {
-                        text: "+ Add Column"
-                        onClicked: {
-                            columnsModel.append({ "name": "new_column", "type": "VARCHAR(255)", "pk": false, "notNull": false, "defaultVal": "" })
-                            refreshSql()
-                            colsListView.positionViewAtEnd()
+                    Rectangle {
+                        height: 26; width: addColContent.implicitWidth + 16; radius: Theme.r6
+                        color: addColMa.containsMouse ? Theme.bgHover : Theme.bgSurface
+                        border.width: 1; border.color: Theme.border
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
+
+                        RowLayout {
+                            id: addColContent; anchors.centerIn: parent; spacing: Theme.s4
+                            FlatIcon { icon: Icons.add; size: 11; color: Theme.accent }
+                            Text { text: "Add Column"; font.family: Theme.sans; font.pixelSize: Theme.t12; color: Theme.fg }
+                        }
+                        MouseArea {
+                            id: addColMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                columnsModel.append({ "name": "new_column", "type": "VARCHAR(255)", "pk": false, "notNull": false, "defaultVal": "" })
+                                refreshSql()
+                                colsListView.positionViewAtEnd()
+                            }
                         }
                     }
                 }

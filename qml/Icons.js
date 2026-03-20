@@ -1,4 +1,4 @@
-﻿// Icons.js — Phosphor Icons (Regular weight)
+// Icons.js — Phosphor Icons (Regular weight)
 // Font: resources/fonts/Phosphor.ttf (488KB, MIT license)
 // https://phosphoricons.com
 
@@ -6,6 +6,7 @@
 var search        = "\uE30C"   // magnifying-glass
 var filter        = "\uE266"   // funnel
 var add           = "\uE3D4"   // plus
+var minus         = "\uE310"   // minus
 var close         = "\uE4F6"   // x
 var check         = "\uE182"   // check
 var settings      = "\uE270"   // gear
@@ -21,6 +22,9 @@ var undo          = "\uE08A"   // arrow-u-up-left
 var redo          = "\uE08C"   // arrow-u-up-right
 var list          = "\uE2F0"   // list
 var command       = "\uE1C4"   // command
+var sort          = "\uE45E"   // sort-ascending
+var pin           = "\uE3D6"   // push-pin
+var externalLink  = "\uE222"   // arrow-square-out
 
 // ── Files & Data ──
 var save          = "\uE248"   // floppy-disk
@@ -67,6 +71,7 @@ var sun           = "\uE474"   // sun
 var chat          = "\uE17A"   // chat-text
 var send          = "\uE398"   // paper-plane-tilt
 var attach        = "\uE39A"   // paperclip
+var person        = "\uE39E"   // person
 
 // ── Code & Edit ──
 var code          = "\uE1BC"   // code

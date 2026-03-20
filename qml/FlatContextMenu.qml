@@ -13,20 +13,32 @@ T.Popup {
 
     enter: Transition {
         ParallelAnimation {
-            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.durationFast }
-            NumberAnimation { property: "scale"; from: 0.95; to: 1.0; duration: Theme.durationFast; easing.type: Easing.OutQuad }
+            NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.fast }
+            NumberAnimation { property: "scale"; from: 0.95; to: 1.0; duration: Theme.fast; easing.type: Easing.OutQuad }
         }
     }
 
     exit: Transition {
-        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.durationFast }
+        NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.fast }
     }
 
     background: Rectangle {
-        color: Theme.popover
+        color: Theme.bgSurface
         border.width: 1
         border.color: Theme.border
-        radius: Theme.radiusMd
+        radius: Theme.r8
+        layer.enabled: true
+        layer.effect: null
+
+        // Shadow simulation via extra border
+        Rectangle {
+            anchors.fill: parent; anchors.margins: -1
+            radius: Theme.r8 + 1
+            color: "transparent"
+            border.width: 1
+            border.color: Qt.rgba(0, 0, 0, 0.15)
+            z: -1
+        }
     }
 
     contentItem: ColumnLayout {
@@ -60,19 +72,19 @@ T.Popup {
                         Rectangle {
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: Theme.radiusSm
-                            color: itemMouse.containsMouse ? Theme.accent : "transparent"
+                            radius: Theme.r4
+                            color: itemMouse.containsMouse ? Theme.bgHover : "transparent"
 
-                            Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+                            Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                             Text {
                                 anchors.fill: parent
-                                anchors.leftMargin: 8
+                                anchors.leftMargin: Theme.s8
                                 verticalAlignment: Text.AlignVCenter
                                 text: modelData
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSizeSm
-                                color: Theme.foreground
+                                font.family: Theme.sans
+                                font.pixelSize: Theme.t12
+                                color: Theme.fg
                             }
 
                             MouseArea {
