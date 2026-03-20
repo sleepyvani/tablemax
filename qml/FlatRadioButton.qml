@@ -8,35 +8,35 @@ T.RadioButton {
     implicitHeight: 20
     spacing: 8
 
-    font.family: Theme.fontFamily
-    font.pixelSize: Theme.fontSize
+    font.family: Theme.sans
+    font.pixelSize: Theme.t13
 
     opacity: enabled ? 1.0 : 0.5
 
     indicator: Rectangle {
         x: 0
         y: (root.height - height) / 2
-        width: 16
-        height: 16
-        radius: Theme.radiusFull
+        width: 16; height: 16
+        radius: Theme.rFull
         color: "transparent"
-        border.width: 1
-        border.color: root.checked ? Theme.primary : (root.hovered ? Theme.ring : Theme.input)
+        border.width: 1.5
+        border.color: root.checked
+            ? Theme.accent
+            : (root.hovered ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.5) : Theme.border)
 
-        Behavior on border.color { ColorAnimation { duration: Theme.duration } }
+        Behavior on border.color { ColorAnimation { duration: Theme.fast } }
 
         Rectangle {
             anchors.centerIn: parent
-            width: 8
-            height: 8
-            radius: Theme.radiusFull
-            color: Theme.primary
+            width: 8; height: 8
+            radius: Theme.rFull
+            color: Theme.accent
 
             scale: root.checked ? 1.0 : 0.0
             opacity: root.checked ? 1.0 : 0.0
 
-            Behavior on scale { NumberAnimation { duration: Theme.duration; easing.type: Easing.OutBack } }
-            Behavior on opacity { NumberAnimation { duration: Theme.durationFast } }
+            Behavior on scale   { NumberAnimation { duration: Theme.fast; easing.type: Easing.OutBack } }
+            Behavior on opacity { NumberAnimation { duration: Theme.fast } }
         }
     }
 
@@ -44,7 +44,7 @@ T.RadioButton {
         leftPadding: root.indicator.width + root.spacing
         text: root.text
         font: root.font
-        color: Theme.foreground
+        color: Theme.fg
         verticalAlignment: Text.AlignVCenter
     }
 

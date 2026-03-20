@@ -7,10 +7,9 @@ Rectangle {
     property string src: ""
     property int size: 32
 
-    width: size
-    height: size
-    radius: Theme.radiusFull
-    color: Theme.muted
+    width: size; height: size
+    radius: Theme.rFull
+    color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.1)
     clip: true
 
     Image {
@@ -23,10 +22,10 @@ Rectangle {
     Text {
         anchors.centerIn: parent
         text: root.text ? root.text.charAt(0).toUpperCase() : ""
-        font.family: Theme.fontFamily
-        font.pixelSize: root.size * 0.4
-        font.weight: Font.Medium
-        color: Theme.foreground
+        font.family: Theme.sans
+        font.pixelSize: root.size * 0.38
+        font.weight: Font.DemiBold
+        color: Theme.fg
         visible: !root.src || root.src.length === 0
     }
 }

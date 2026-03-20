@@ -6,8 +6,8 @@ Rectangle {
 
     implicitWidth: kbdText.implicitWidth + 12
     implicitHeight: 20
-    radius: Theme.radiusSm
-    color: Theme.muted
+    radius: Theme.r4
+    color: Theme.bgSurface
     border.width: 1
     border.color: Theme.border
 
@@ -15,8 +15,8 @@ Rectangle {
         id: kbdText
         anchors.centerIn: parent
         text: root.text
-        font.family: Theme.monoFamily
-        font.pixelSize: Theme.fontSizeXs
-        color: Theme.mutedForeground
+        font.family: Theme.mono
+        font.pixelSize: Theme.t10
+        color: Theme.fgMuted
     }
 }

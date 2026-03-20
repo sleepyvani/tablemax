@@ -33,7 +33,7 @@ Rectangle {
         }
     }
 
-    Behavior on height { NumberAnimation { duration: Theme.normal; easing.type: Easing.OutCubic } }
+    Behavior on height { NumberAnimation { duration: Theme.fast; easing.type: Easing.OutCubic } }
 
     RowLayout {
         anchors.fill: parent

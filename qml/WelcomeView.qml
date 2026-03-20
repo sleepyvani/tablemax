@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Layouts
 import "DbHelper.js" as DB
 import "Icons.js" as Icons
@@ -109,8 +109,8 @@ Rectangle {
                         border.color: cardMa.containsMouse ? Theme.borderLight : Theme.border
                         scale: cardMa.pressed ? 0.97 : 1
 
-                        Behavior on color { ColorAnimation { duration: Theme.normal } }
-                        Behavior on border.color { ColorAnimation { duration: Theme.normal } }
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
+                        Behavior on border.color { ColorAnimation { duration: Theme.fast } }
                         Behavior on scale { NumberAnimation { duration: Theme.fast } }
 
                         // Hover glow
