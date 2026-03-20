@@ -1,4 +1,4 @@
-// Toolbar.qml — Main toolbar with connection status + action buttons
+﻿// Toolbar.qml — Main toolbar with connection status + action buttons
 // Ported from TablePro TableProToolbarView.swift
 
 import QtQuick
@@ -33,6 +33,13 @@ Rectangle {
     signal addRow()
     signal deleteRows()
     signal refreshData()
+
+    property bool filterActive: false
+    property int filterCount: 0
+    signal toggleFilter()
+    signal exportData()
+    signal importData()
+    signal showShortcuts()
 
     RowLayout {
         anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s6
@@ -103,9 +110,33 @@ Rectangle {
 
         DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter; visible: !hasChanges }
 
+        // ── Filter active badge ──
+        Rectangle {
+            visible: filterActive
+            width: filterRow.implicitWidth + Theme.s12; height: 22; radius: Theme.rFull
+            color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.15)
+            border.width: 1; border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.4)
+            RowLayout {
+                id: filterRow; anchors.centerIn: parent; spacing: Theme.s4
+                FlatIcon { icon: Icons.filter; size: 10; color: Theme.accent }
+                Text {
+                    text: filterCount > 0 ? filterCount + " filters" : "Filter active"
+                    font.pixelSize: Theme.t10; font.weight: Font.Medium; color: Theme.accent; font.family: Theme.sans
+                }
+            }
+            MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: toggleFilter() }
+            FlatTooltip { visible: parent.containsMouse; text: "Click to clear filters"; y: -30 }
+        }
+
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+
         // ── Right side ──
-        ToolBtn { icon: Icons.clock; tip: "History"; onClicked: toggleHistory() }
-        ToolBtn { icon: Icons.settings; tip: "Settings"; onClicked: toggleSettings() }
+        ToolBtn { icon: Icons.upload; tip: "Import (Ctrl+Shift+I)"; onClicked: importData() }
+        ToolBtn { icon: Icons.download; tip: "Export (Ctrl+E)"; onClicked: exportData() }
+        DashedLine { Layout.preferredWidth: 1; Layout.preferredHeight: 24; color: Theme.border; Layout.alignment: Qt.AlignVCenter }
+        ToolBtn { icon: Icons.clock; tip: "Toggle History (Ctrl+H)"; onClicked: toggleHistory() }
+        ToolBtn { icon: Icons.keyboard; tip: "Keyboard Shortcuts (Ctrl+/)"; onClicked: showShortcuts() }
+        ToolBtn { icon: Icons.settings; tip: "Settings (Ctrl+,)"; onClicked: toggleSettings() }
     }
 
     DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }

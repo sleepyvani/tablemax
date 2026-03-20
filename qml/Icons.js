@@ -1,4 +1,4 @@
-// Icons.js — Phosphor Icons (Regular weight)
+﻿// Icons.js — Phosphor Icons (Regular weight)
 // Font: resources/fonts/Phosphor.ttf (488KB, MIT license)
 // https://phosphoricons.com
 
@@ -75,6 +75,9 @@ var stop          = "\uE46C"   // stop
 var edit          = "\uE3B4"   // pencil-simple
 var formatText    = "\uE6EE"   // text-aa
 var terminal      = "\uE47E"   // terminal
+
+// ── Input & Keyboard ──
+var keyboard      = "\uE2D4"   // keyboard
 
 // ── Connection ──
 var connect       = "\uEB5A"   // plugs-connected

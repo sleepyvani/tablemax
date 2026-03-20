@@ -1,4 +1,4 @@
-// HistoryPanel.qml — Searchable query history sidebar
+﻿// HistoryPanel.qml — Searchable query history sidebar
 // Ported from TablePro HistoryPanelView.swift
 
 import QtQuick
@@ -31,9 +31,16 @@ Rectangle {
                 FlatIcon { icon: Icons.clock; size: 14; color: Theme.accent }
                 Text { text: "Query History"; font.pixelSize: Theme.t13; font.weight: Font.DemiBold; color: Theme.fg; font.family: Theme.sans; Layout.fillWidth: true }
                 Text {
-                    text: filteredEntries.length
+                    text: filteredEntries.length + " entries"
                     font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans
                     visible: filteredEntries.length > 0
+                }
+                Rectangle {
+                    width: 20; height: 20; radius: Theme.r4; color: clearAllMa.containsMouse ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.1) : "transparent"
+                    visible: filteredEntries.length > 0
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.trash; size: 10; color: clearAllMa.containsMouse ? Theme.error : Theme.fgMuted }
+                    MouseArea { id: clearAllMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: { if (historyService) historyService.clear() } }
+                    FlatTooltip { visible: clearAllMa.containsMouse; text: "Clear history"; y: 24 }
                 }
                 Rectangle {
                     width: 20; height: 20; radius: Theme.r4; color: closeMa.containsMouse ? Theme.bgHover : "transparent"

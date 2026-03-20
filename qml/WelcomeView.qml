@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Layouts
 import "DbHelper.js" as DB
 import "Icons.js" as Icons
@@ -254,11 +254,13 @@ Rectangle {
 
                 Repeater {
                     model: [
+                        { k: "Ctrl+K", d: "Quick switcher" },
                         { k: "Ctrl+N", d: "New tab" },
-                        { k: "Ctrl+B", d: "Toggle sidebar" },
                         { k: "Ctrl+Enter", d: "Execute query" },
+                        { k: "Ctrl+S", d: "Save changes" },
+                        { k: "Ctrl+B", d: "Toggle sidebar" },
                         { k: "Ctrl+T", d: "Toggle theme" },
-                        { k: "Ctrl+W", d: "Close tab" }
+                        { k: "Ctrl+/", d: "All shortcuts" }
                     ]
 
                     RowLayout {

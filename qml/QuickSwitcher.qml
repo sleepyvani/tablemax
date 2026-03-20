@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "Icons.js" as Icons
@@ -175,9 +175,14 @@ FlatDialog {
         resultsModel.clear()
         var q = searchField.text.toLowerCase()
         var actions = [
-            { name: "New Query Tab", itemType: "action", action: "newTab" },
-            { name: "Toggle Theme", itemType: "action", action: "toggleTheme" },
-            { name: "Export Data", itemType: "action", action: "export" }
+            { name: "New Query Tab",     itemType: "action", action: "newTab" },
+            { name: "Create Table",      itemType: "action", action: "createTable" },
+            { name: "Export Data",       itemType: "action", action: "export" },
+            { name: "Import SQL File",   itemType: "action", action: "import" },
+            { name: "Settings",         itemType: "action", action: "settings" },
+            { name: "Toggle History",   itemType: "action", action: "history" },
+            { name: "Toggle Sidebar",   itemType: "action", action: "toggleSidebar" },
+            { name: "Toggle Dark Mode", itemType: "action", action: "toggleTheme" }
         ]
         for (var a = 0; a < actions.length; a++) {
             if (q === "" || actions[a].name.toLowerCase().indexOf(q) >= 0)

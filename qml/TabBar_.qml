@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -110,6 +110,38 @@ Rectangle {
                             color: isActive ? Theme.fg : Theme.fgMuted
                             elide: Text.ElideRight
                             Layout.fillWidth: true
+                            visible: !tabRenameInput.editing
+                        }
+
+                        // Inline rename field (visible on double-click)
+                        TextInput {
+                            id: tabRenameInput
+                            property bool editing: false
+                            visible: editing
+                            Layout.fillWidth: true
+                            font.family: Theme.sans; font.pixelSize: Theme.t12
+                            font.weight: Font.DemiBold; color: Theme.fg
+                            selectByMouse: true; clip: true
+
+                            function beginEdit() {
+                                text = modelData.title || "Query"
+                                editing = true
+                                forceActiveFocus()
+                                selectAll()
+                            }
+                            function commitEdit() {
+                                if (text.trim().length > 0)
+                                    tabManager.renameTab(index, text.trim())
+                                editing = false
+                            }
+                            Keys.onReturnPressed: commitEdit()
+                            Keys.onEscapePressed: editing = false
+                            onActiveFocusChanged: { if (!activeFocus && editing) commitEdit() }
+
+                            Rectangle {
+                                anchors.fill: parent; anchors.margins: -3; radius: Theme.r4
+                                color: "transparent"; border.width: 1; border.color: Theme.accent; opacity: 0.5
+                            }
                         }
 
                         Rectangle {
@@ -158,6 +190,11 @@ Rectangle {
                             _tabCtx.open()
                         } else {
                             tabManager.currentIndex = index
+                        }
+                    }
+                    onDoubleClicked: function(mouse) {
+                        if (mouse.button === Qt.LeftButton && isActive) {
+                            tabRenameInput.beginEdit()
                         }
                     }
                 }

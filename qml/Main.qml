@@ -113,6 +113,8 @@ ApplicationWindow {
                 hasChanges: changeTracker ? changeTracker.hasChanges : false
                 canUndo: changeTracker ? changeTracker.canUndo : false
                 canRedo: changeTracker ? changeTracker.canRedo : false
+                filterActive: root.showFilterPanel
+                filterCount: filterPanel ? filterPanel.filterCount : 0
 
                 onExecuteQuery: {
                     if (!tabManager || tabManager.tabs.length === 0) return
@@ -152,6 +154,10 @@ ApplicationWindow {
                 onUndoAction: { if (changeTracker) changeTracker.undo() }
                 onRedoAction: { if (changeTracker) changeTracker.redo() }
                 onToggleHistory: root.showHistoryPanel = !root.showHistoryPanel
+                onToggleFilter: root.showFilterPanel = !root.showFilterPanel
+                onExportData: exportDialog.open()
+                onImportData: importDialog.open()
+                onShowShortcuts: shortcutsDialog.open()
                 onToggleSettings: settingsDialog.open()
                 onAddRow: {
                     if (!databaseService || !databaseService.connected || !root.currentTableName) {
@@ -439,9 +445,13 @@ ApplicationWindow {
         databases: databaseService && databaseService.connected ? databaseService.listDatabases() : []
 
         onTableSelected: function(name) {
-            var t = tabManager.getTab(tabManager.currentIndex)
-            if (t) {
-                tabManager.updateContent(tabManager.currentIndex, 'SELECT * FROM "' + name + '" LIMIT 100')
+            var sql = 'SELECT * FROM "' + name + '" LIMIT 100'
+            tabManager.addTab(name, sql, "table")
+            root.currentTableName = name
+            if (databaseService && databaseService.connected) {
+                var r = databaseService.executeQuery(sql, resultModel)
+                if (r.success) root.toast(r.rowCount + " rows from " + name, "success")
+                else root.toast("Error: " + r.error, "destructive")
             }
         }
         onDatabaseSelected: function(name) {
@@ -449,11 +459,14 @@ ApplicationWindow {
             root.toast("Switched to " + name, "success")
         }
         onActionTriggered: function(action) {
-            if (action === "newTab") tabManager.addTab()
-            else if (action === "toggleTheme") Theme.toggleTheme()
-            else if (action === "export") exportDialog.open()
-            else if (action === "settings") settingsDialog.open()
-            else if (action === "history") root.showHistoryPanel = !root.showHistoryPanel
+            if      (action === "newTab")       tabManager.addTab()
+            else if (action === "toggleTheme")  Theme.toggleTheme()
+            else if (action === "export")       exportDialog.open()
+            else if (action === "import")       importDialog.open()
+            else if (action === "settings")     settingsDialog.open()
+            else if (action === "history")      root.showHistoryPanel = !root.showHistoryPanel
+            else if (action === "toggleSidebar") root.showSidebar = !root.showSidebar
+            else if (action === "createTable")  root.showCreateTableDialog()
         }
     }
 

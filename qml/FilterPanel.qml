@@ -1,4 +1,4 @@
-import QtQuick
+﻿import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "Icons.js" as Icons
@@ -15,6 +15,7 @@ Rectangle {
 
     property var columns: []
     property alias filterCount: filterModel.count
+    property alias activeFilterCount: filterModel.count
 
     signal filtersApplied(string whereClause)
     signal filtersClosed()
