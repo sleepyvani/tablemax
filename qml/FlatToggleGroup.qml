@@ -11,8 +11,8 @@ Rectangle {
 
     implicitWidth: row.implicitWidth + 4
     implicitHeight: 32
-    radius: Theme.radius
-    color: Theme.muted
+    radius: Theme.r6
+    color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.05)
     border.width: 1
     border.color: Theme.border
 
@@ -28,25 +28,25 @@ Rectangle {
             delegate: Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                radius: Theme.radiusSm
+                radius: Theme.r4
 
                 color: root.currentIndex === index
-                       ? Theme.background
-                       : (toggleMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.04) : "transparent")
+                       ? Theme.bgSurface
+                       : (toggleMouse.containsMouse ? Theme.bgHover : "transparent")
 
                 Behavior on color {
-                    ColorAnimation { duration: Theme.duration; easing.type: Easing.OutCubic }
+                    ColorAnimation { duration: Theme.fast; easing.type: Easing.OutCubic }
                 }
 
                 Text {
                     anchors.centerIn: parent
                     text: modelData
-                    font.family: Theme.fontFamily
-                    font.pixelSize: Theme.fontSizeSm
-                    font.weight: root.currentIndex === index ? Font.Medium : Font.Normal
-                    color: root.currentIndex === index ? Theme.foreground : Theme.mutedForeground
+                    font.family: Theme.sans
+                    font.pixelSize: Theme.t12
+                    font.weight: root.currentIndex === index ? Font.DemiBold : Font.Normal
+                    color: root.currentIndex === index ? Theme.fg : Theme.fgMuted
 
-                    Behavior on color { ColorAnimation { duration: Theme.duration } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
                 }
 
                 MouseArea {

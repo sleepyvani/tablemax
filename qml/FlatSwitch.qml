@@ -12,27 +12,22 @@ T.Switch {
     indicator: Rectangle {
         width: 36
         height: 20
-        radius: Theme.radiusFull
-        color: root.checked ? Theme.primary : Theme.input
+        radius: Theme.rFull
+        color: root.checked ? Theme.accent : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.15)
 
-        Behavior on color { ColorAnimation { duration: Theme.durationSlow } }
+        Behavior on color { ColorAnimation { duration: Theme.slow } }
 
         Rectangle {
             x: root.checked ? parent.width - width - 2 : 2
-            y: 2
-            width: 16
-            height: 16
-            radius: Theme.radiusFull
-            color: root.checked ? Theme.primaryForeground : Theme.foreground
+            y: 2; width: 16; height: 16
+            radius: Theme.rFull
+            color: "#ffffff"
 
             Behavior on x {
-                NumberAnimation {
-                    duration: Theme.durationSlow
-                    easing.type: Easing.InOutCubic
-                }
+                NumberAnimation { duration: Theme.slow; easing.type: Easing.InOutCubic }
             }
 
-            Behavior on color { ColorAnimation { duration: Theme.duration } }
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
         }
     }
 
