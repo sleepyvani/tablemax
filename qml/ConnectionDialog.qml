@@ -483,14 +483,14 @@ T.Dialog {
     //  LOGIC
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    function buildConnStr(): string {
+    function buildConnStr() {
         if (dlg.modeIdx === 1) return connStrIn.text
         var t = dlg.dbTypes[dlg.dbTypeIdx]
         if (t === "sqlite") return sqliteFileIn.text
         return Conn.buildConnStr(t, hostIn.text, portIn.text, userIn.text, passIn.text, dbNameIn.text, redisPassIn.text)
     }
 
-    function runTest(): void {
+    function runTest() {
         dlg.testStatus = "testing"
         dlg.testMsg = "Testing connection..."
         var cs = dlg.buildConnStr()
@@ -500,7 +500,7 @@ T.Dialog {
         dlg.testMsg = ok ? "Connection successful!" : (databaseService.error || "Connection failed")
     }
 
-    function saveConn(): void {
+    function saveConn() {
         var c = {
             name: nameIn.text || "Untitled",
             dbType: dlg.dbTypes[dlg.dbTypeIdx],
@@ -512,7 +512,7 @@ T.Dialog {
         dlg.close()
     }
 
-    function clearForm(): void {
+    function clearForm() {
         nameIn.text = ""
         hostIn.text = ""
         portIn.text = ""
@@ -529,7 +529,7 @@ T.Dialog {
         dlg.selectedColor = "#6366f1"
     }
 
-    function initForm(): void {
+    function initForm() {
         if (dlg.editIdx >= 0) {
             var c = connectionManager.get(dlg.editIdx)
             nameIn.text = c.name || ""
