@@ -100,7 +100,7 @@ Rectangle {
                             visible: colRow.modelData.pk === true
                             width: 18; height: 14; radius: Theme.r4
                             color: Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.15)
-                            Text { anchors.centerIn: parent; text: "PK"; font.pixelSize: 7; font.weight: Font.Bold; color: Theme.warning; font.family: Theme.mono }
+                            Text { anchors.centerIn: parent; text: "PK"; font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.warning; font.family: Theme.mono }
                         }
 
                         Text {

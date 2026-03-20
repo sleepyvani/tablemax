@@ -98,7 +98,7 @@ Rectangle {
                             Text {
                                 visible: modelData.children && modelData.children.length > 0
                                 text: modelData.children ? modelData.children.length : ""
-                                font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4
+                                font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4
                             }
                         }
 

@@ -101,7 +101,7 @@ FlatDialog {
                                     return Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.06)
                                 }
                                 Text {
-                                    anchors.centerIn: parent; font.pixelSize: 9; font.weight: Font.Bold; font.family: Theme.mono
+                                    anchors.centerIn: parent; font.pixelSize: Theme.t11; font.weight: Font.Bold; font.family: Theme.mono
                                     color: {
                                         var s = stmtItem.stmtIdx < root.statements.length ? root.statements[stmtItem.stmtIdx] : ""
                                         if (s.indexOf("INSERT") === 0) return Theme.success
