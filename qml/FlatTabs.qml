@@ -16,8 +16,8 @@ Item {
     Rectangle {
         id: tabBar
         anchors.fill: parent
-        color: Theme.muted
-        radius: Theme.radius
+        color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.05)
+        radius: Theme.r6
 
         RowLayout {
             id: tabRow
@@ -32,24 +32,22 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    radius: Theme.radiusSm
+                    radius: Theme.r4
                     color: root.currentIndex === index
-                           ? Theme.background
-                           : (tabMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.04) : "transparent")
+                           ? Theme.bgSurface
+                           : (tabMouse.containsMouse ? Theme.bgHover : "transparent")
 
-                    Behavior on color { ColorAnimation { duration: Theme.duration } }
+                    Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                     Text {
                         anchors.centerIn: parent
                         text: modelData
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeSm
-                        font.weight: root.currentIndex === index ? Font.Medium : Font.Normal
-                        color: root.currentIndex === index
-                               ? Theme.foreground
-                               : Theme.mutedForeground
+                        font.family: Theme.sans
+                        font.pixelSize: Theme.t12
+                        font.weight: root.currentIndex === index ? Font.DemiBold : Font.Normal
+                        color: root.currentIndex === index ? Theme.fg : Theme.fgMuted
 
-                        Behavior on color { ColorAnimation { duration: Theme.duration } }
+                        Behavior on color { ColorAnimation { duration: Theme.fast } }
                     }
 
                     MouseArea {

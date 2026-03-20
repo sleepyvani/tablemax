@@ -11,20 +11,20 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        radius: Theme.radiusFull
-        color: Theme.secondary
+        radius: Theme.rFull
+        color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.12)
 
         Rectangle {
             id: bar
             height: parent.height
-            radius: Theme.radiusFull
-            color: Theme.primary
+            radius: Theme.rFull
+            color: Theme.accent
 
             width: root.indeterminate ? parent.width * 0.35 : parent.width * root.value
 
             Behavior on width {
                 enabled: !root.indeterminate
-                NumberAnimation { duration: Theme.durationSlow; easing.type: Easing.OutCubic }
+                NumberAnimation { duration: Theme.slow; easing.type: Easing.OutCubic }
             }
 
             SequentialAnimation on x {

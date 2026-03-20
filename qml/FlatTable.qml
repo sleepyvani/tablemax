@@ -16,7 +16,7 @@ Item {
         id: header
         width: parent.width
         height: headerHeight
-        color: Theme.muted
+        color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.04)
 
         RowLayout {
             anchors.fill: parent
@@ -34,10 +34,11 @@ Item {
                         anchors.leftMargin: 12
                         verticalAlignment: Text.AlignVCenter
                         text: modelData
-                        font.family: Theme.fontFamily
-                        font.pixelSize: Theme.fontSizeXs
-                        font.weight: Font.Medium
-                        color: Theme.mutedForeground
+                        font.family: Theme.sans
+                        font.pixelSize: Theme.t10
+                        font.weight: Font.DemiBold
+                        color: Theme.fgMuted
+                        letterSpacing: 0.5
                     }
 
                     // Right border
@@ -64,9 +65,8 @@ Item {
             Rectangle {
                 width: root.width
                 height: root.rowHeight
-                color: rowMouse.containsMouse ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.03) : "transparent"
-
-                Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+                color: rowMouse.containsMouse ? Theme.bgHover : "transparent"
+                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                 // Bottom border
                 DashedLine {
@@ -92,9 +92,9 @@ Item {
                                 anchors.leftMargin: 12
                                 verticalAlignment: Text.AlignVCenter
                                 text: modelData
-                                font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSizeSm
-                                color: Theme.foreground
+                                font.family: Theme.sans
+                                font.pixelSize: Theme.t12
+                                color: Theme.fg
                                 elide: Text.ElideRight
                             }
                         }
@@ -116,6 +116,6 @@ Item {
         color: "transparent"
         border.width: 1
         border.color: Theme.border
-        radius: Theme.radius
+        radius: Theme.r6
     }
 }
