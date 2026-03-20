@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "Icons.js" as Icons
@@ -318,6 +318,15 @@ ApplicationWindow {
             clip: true
             visible: root.showInfoPanel
             Behavior on Layout.preferredWidth { NumberAnimation { duration: Theme.slow; easing.type: Easing.OutCubic } }
+            // Bindings
+            tableName: root.currentTableName
+            dbType: root.activeDbType
+            rowCount: resultModel ? resultModel.totalRows : 0
+            queryTime: databaseService ? databaseService.lastExecTime : 0
+            schema: {
+                if (!databaseService || !root.currentTableName) return []
+                return databaseService.getTableSchema(root.currentTableName) || []
+            }
         }
 
         // History Panel

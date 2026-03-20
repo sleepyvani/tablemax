@@ -29,9 +29,14 @@ Rectangle {
         anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12
         spacing: Theme.s8
 
-        // Row count
+        // Row count — show visible range
         Text {
-            text: totalRows.toLocaleString() + " rows"
+            text: {
+                if (totalRows <= 0) return "0 rows"
+                var from = (currentPage - 1) * pageSize + 1
+                var to = Math.min(currentPage * pageSize, totalRows)
+                return from + "\u2013" + to + " of " + totalRows.toLocaleString() + " rows"
+            }
             font.pixelSize: Theme.t11; color: Theme.fgMuted
             font.family: Theme.sans
         }
@@ -68,8 +73,13 @@ Rectangle {
                 width: 24; height: 24; radius: Theme.r4
                 color: firstMa.containsMouse ? Theme.bgHover : "transparent"
                 opacity: currentPage > 1 ? 1 : 0.3
-                FlatIcon { anchors.centerIn: parent; icon: Icons.left; size: 12; color: Theme.fgMuted }
-                FlatIcon { anchors.centerIn: parent; icon: Icons.left; size: 12; color: Theme.fgMuted; x: parent.width/2 - 5 }
+                Behavior on opacity { NumberAnimation { duration: Theme.fast } }
+                Text {
+                    anchors.centerIn: parent
+                    text: "\u00AB"  // «
+                    font.pixelSize: Theme.t13; font.weight: Font.Bold
+                    color: Theme.fgMuted
+                }
                 MouseArea {
                     id: firstMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: if (currentPage > 1) pageChanged(1)
@@ -132,8 +142,13 @@ Rectangle {
                 width: 24; height: 24; radius: Theme.r4
                 color: lastMa.containsMouse ? Theme.bgHover : "transparent"
                 opacity: currentPage < totalPages ? 1 : 0.3
-                FlatIcon { anchors.centerIn: parent; icon: Icons.right; size: 12; color: Theme.fgMuted }
-                FlatIcon { anchors.centerIn: parent; icon: Icons.right; size: 12; color: Theme.fgMuted; x: parent.width/2 + 1 }
+                Behavior on opacity { NumberAnimation { duration: Theme.fast } }
+                Text {
+                    anchors.centerIn: parent
+                    text: "\u00BB"  // »
+                    font.pixelSize: Theme.t13; font.weight: Font.Bold
+                    color: Theme.fgMuted
+                }
                 MouseArea {
                     id: lastMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                     onClicked: if (currentPage < totalPages) pageChanged(totalPages)
