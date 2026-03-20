@@ -87,7 +87,7 @@ ApplicationWindow {
                     var c = connectionManager.get(connectionManager.activeIndex)
                     return c ? (c.name || "Server") : "Server"
                 }
-                databaseName: databaseService && databaseService.connected ? (databaseService.currentDatabase || "") : ""
+                databaseName: { if (!connectionManager) return ""; var _c = connectionManager.get(connectionManager.activeIndex); return _c ? (_c.database || "") : "" }
                 tableName: root.currentTableName
                 dbType: activeDbType
                 onDatabaseClicked: dbSwitcher.open()

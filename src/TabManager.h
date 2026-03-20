@@ -55,6 +55,14 @@ public:
         tabs_[index] = tab;
     }
 
+    Q_INVOKABLE void renameTab(int index, const QString& title) {
+        if (index < 0 || index >= tabs_.size()) return;
+        auto tab = tabs_[index].toMap();
+        tab["title"] = title.isEmpty() ? "Query" : title;
+        tabs_[index] = tab;
+        emit tabsChanged();
+    }
+
     Q_INVOKABLE void updateResult(int index, const QVariantList& result, double execTime, const QString& error = "") {
         if (index < 0 || index >= tabs_.size()) return;
         auto tab = tabs_[index].toMap();

@@ -42,7 +42,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top; anchors.topMargin: Math.max(40, parent.height * 0.08)
             width: Math.min(parent.width - 60, 500)
-            spacing: 32
+            spacing: Theme.s20
 
             // Logo
             Item {
@@ -64,12 +64,12 @@ Rectangle {
 
                 // Glow rings
                 Rectangle {
-                    anchors.centerIn: parent; width: 80; height: 80; radius: 20
+                    anchors.centerIn: parent; width: 80; height: 80; radius: Theme.r8
                     color: "transparent"; border.width: 1
                     border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.12)
                 }
                 Rectangle {
-                    anchors.centerIn: parent; width: 96; height: 96; radius: 24
+                    anchors.centerIn: parent; width: 96; height: 96; radius: Theme.r12
                     color: "transparent"; border.width: 1
                     border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.05)
                 }
