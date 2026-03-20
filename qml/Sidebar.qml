@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "DbHelper.js" as DB
@@ -65,7 +65,7 @@ Rectangle {
                                 Text { visible: !_search.text && !_search.activeFocus; text: "Filterâ€¦"; font: parent.font; color: Theme.fgDim; opacity: 0.5 }
                                 Keys.onEscapePressed: { _search.text = ""; sidebar.forceActiveFocus() }
                             }
-                            Text { anchors.verticalCenter: parent.verticalCenter; visible: !_search.activeFocus && !_search.text; text: "/"; font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.4 }
+                            Text { anchors.verticalCenter: parent.verticalCenter; visible: !_search.activeFocus && !_search.text; text: "/"; font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.4 }
                         }
                     }
                     Rectangle {
@@ -83,7 +83,7 @@ Rectangle {
             // â”€â”€ Connections Label â”€â”€
             Item {
                 Layout.fillWidth: true; Layout.preferredHeight: 22; Layout.leftMargin: Theme.s8; Layout.topMargin: Theme.s4
-                Text { anchors.verticalCenter: parent.verticalCenter; text: "CONNECTIONS"; font.family: Theme.sans; font.pixelSize: 10; font.weight: Font.DemiBold; font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7 }
+                Text { anchors.verticalCenter: parent.verticalCenter; text: "CONNECTIONS"; font.family: Theme.sans; font.pixelSize: Theme.t11; font.weight: Font.DemiBold; font.letterSpacing: 1.0; color: Theme.fgDim; opacity: 0.7 }
             }
 
             // â”€â”€ Connection List â”€â”€
@@ -112,7 +112,7 @@ Rectangle {
                         Rectangle { width: 6; height: 6; radius: 3; color: _connRow.active && databaseService.connected ? Theme.success : _connRow.active ? Theme.warning : Theme.fgDim; opacity: _connRow.active ? 1.0 : 0.3 }
                         Image { Layout.preferredWidth: 14; Layout.preferredHeight: 14; source: "qrc:/TableMax/icons/" + (modelData.dbType || "postgres").toLowerCase() + ".svg"; sourceSize: Qt.size(14, 14); fillMode: Image.PreserveAspectFit; opacity: _connRow.active ? 1.0 : 0.5 }
                         Text { text: modelData.name || "Untitled"; font.family: Theme.sans; font.pixelSize: Theme.t12; font.weight: _connRow.active ? Font.DemiBold : Font.Normal; color: _connRow.active ? Theme.fg : Theme.fgMuted; elide: Text.ElideRight; Layout.fillWidth: true }
-                        Text { text: DB.displayName(modelData.dbType || "").toLowerCase(); font.family: Theme.mono; font.pixelSize: 9; color: Theme.fgDim; opacity: 0.5; visible: !_connRow.hovered || _connRow.active }
+                        Text { text: DB.displayName(modelData.dbType || "").toLowerCase(); font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.fgDim; opacity: 0.5; visible: !_connRow.hovered || _connRow.active }
                         Rectangle {
                             visible: _connRow.hovered && !_connRow.active; width: 18; height: 18; radius: Theme.r4; color: _delBtnMa.containsMouse ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.12) : "transparent"
                             FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 9; color: _delBtnMa.containsMouse ? Theme.error : Theme.fgDim }
@@ -219,7 +219,7 @@ Rectangle {
                         }
                         Text {
                             text: { var c = connectionManager.get(connectionManager.activeIndex); return (c && c.dbType) ? DB.displayName(c.dbType) : "Connected" }
-                            font.family: Theme.mono; font.pixelSize: 10; color: Theme.success; opacity: 0.8
+                            font.family: Theme.mono; font.pixelSize: Theme.t11; color: Theme.success; opacity: 0.8
                         }
                     }
 

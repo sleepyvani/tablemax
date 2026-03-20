@@ -8,7 +8,7 @@ T.ToolTip {
     timeout: 3000
 
     font.family: Theme.sans
-    font.pixelSize: Theme.t10
+    font.pixelSize: Theme.t11
 
     contentItem: Text {
         text: root.text

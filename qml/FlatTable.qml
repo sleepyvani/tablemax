@@ -35,7 +35,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter
                         text: modelData
                         font.family: Theme.sans
-                        font.pixelSize: Theme.t10
+                        font.pixelSize: Theme.t11
                         font.weight: Font.DemiBold
                         color: Theme.fgMuted
                         letterSpacing: 0.5

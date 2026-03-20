@@ -1,4 +1,4 @@
-﻿// Toolbar.qml — Main toolbar with connection status + action buttons
+// Toolbar.qml — Main toolbar with connection status + action buttons
 // Ported from TablePro TableProToolbarView.swift
 
 import QtQuick
@@ -121,7 +121,7 @@ Rectangle {
                 FlatIcon { icon: Icons.filter; size: 10; color: Theme.accent }
                 Text {
                     text: filterCount > 0 ? filterCount + " filters" : "Filter active"
-                    font.pixelSize: Theme.t10; font.weight: Font.Medium; color: Theme.accent; font.family: Theme.sans
+                    font.pixelSize: Theme.t11; font.weight: Font.Medium; color: Theme.accent; font.family: Theme.sans
                 }
             }
             MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: toggleFilter() }

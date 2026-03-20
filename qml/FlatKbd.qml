@@ -16,7 +16,7 @@ Rectangle {
         anchors.centerIn: parent
         text: root.text
         font.family: Theme.mono
-        font.pixelSize: Theme.t10
+        font.pixelSize: Theme.t11
         color: Theme.fgMuted
     }
 }

@@ -1,4 +1,4 @@
-﻿// HistoryPanel.qml — Searchable query history sidebar
+// HistoryPanel.qml — Searchable query history sidebar
 // Ported from TablePro HistoryPanelView.swift
 
 import QtQuick
@@ -131,7 +131,7 @@ Rectangle {
                         // Timestamp
                         Text {
                             text: formatTimestamp(modelData.timestamp || "")
-                            font.pixelSize: 10; color: Theme.fgDim; font.family: Theme.sans
+                            font.pixelSize: Theme.t11; color: Theme.fgDim; font.family: Theme.sans
                         }
                     }
                 }

@@ -182,7 +182,7 @@ Rectangle {
                                             var v = resultModel.data(resultModel.index(selectedRow, fieldItem.colIdx), 0)
                                             return Fmt.valueType(v)
                                         }
-                                        font.pixelSize: 8; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono
+                                        font.pixelSize: Theme.t11; font.weight: Font.Bold; color: Theme.fgDim; font.family: Theme.mono
                                     }
                                 }
                             }

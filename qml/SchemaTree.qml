@@ -177,7 +177,7 @@ Rectangle {
                                     Text {
                                         visible: modelData.type === "column" && (modelData.colType || "").length > 0
                                         text: modelData.colType || ""
-                                        font.family: Theme.mono; font.pixelSize: 9
+                                        font.family: Theme.mono; font.pixelSize: Theme.t11
                                         color: Theme.fgDim; opacity: 0.4
                                     }
 

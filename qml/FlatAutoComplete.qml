@@ -127,7 +127,7 @@ Popup {
                 Text {
                     text: modelData.type || ""
                     font.family: Theme.sans
-                    font.pixelSize: 9
+                    font.pixelSize: Theme.t11
                     color: Theme.fgMuted
                     opacity: 0.6
                 }
