@@ -12,15 +12,14 @@ T.ScrollView {
         policy: T.ScrollBar.AsNeeded
 
         contentItem: Rectangle {
-            implicitWidth: 6
-            radius: Theme.radiusFull
-            color: parent.pressed ? Qt.lighter(Theme.border, 1.3)
-                 : parent.hovered ? Qt.lighter(Theme.border, 1.15)
-                 : Theme.border
-            opacity: parent.active ? 1.0 : 0.0
-
-            Behavior on opacity { NumberAnimation { duration: Theme.durationSlow } }
-            Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+            implicitWidth: 5
+            radius: Theme.rFull
+            color: parent.pressed ? Theme.fg
+                 : parent.hovered ? Theme.fgMuted
+                 : Theme.fgDim
+            opacity: parent.active ? 0.6 : 0.0
+            Behavior on opacity { NumberAnimation { duration: Theme.slow } }
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
         }
 
         background: Item {}
@@ -34,15 +33,14 @@ T.ScrollView {
         policy: T.ScrollBar.AsNeeded
 
         contentItem: Rectangle {
-            implicitHeight: 6
-            radius: Theme.radiusFull
-            color: parent.pressed ? Qt.lighter(Theme.border, 1.3)
-                 : parent.hovered ? Qt.lighter(Theme.border, 1.15)
-                 : Theme.border
-            opacity: parent.active ? 1.0 : 0.0
-
-            Behavior on opacity { NumberAnimation { duration: Theme.durationSlow } }
-            Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+            implicitHeight: 5
+            radius: Theme.rFull
+            color: parent.pressed ? Theme.fg
+                 : parent.hovered ? Theme.fgMuted
+                 : Theme.fgDim
+            opacity: parent.active ? 0.6 : 0.0
+            Behavior on opacity { NumberAnimation { duration: Theme.slow } }
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
         }
 
         background: Item {}

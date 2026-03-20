@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls.Basic as T
 import QtQuick.Layouts
+import "Icons.js" as Icons
 
 Item {
     id: root
@@ -18,13 +19,12 @@ Item {
         anchors.fill: parent
         onClicked: popup.open()
 
-        Text {
-            anchors.right: parent.right
-            anchors.rightMargin: 8
+        FlatIcon {
+            anchors.right: parent.right; anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
-            text: "▾"
-            font.pixelSize: 10
-            color: Theme.mutedForeground
+            icon: Icons.down; size: 10; color: Theme.fgMuted
+            rotation: popup.visible ? 180 : 0
+            Behavior on rotation { NumberAnimation { duration: Theme.fast } }
         }
     }
 
@@ -37,20 +37,23 @@ Item {
 
         enter: Transition {
             ParallelAnimation {
-                NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.durationFast }
-                NumberAnimation { property: "scale"; from: 0.95; to: 1.0; duration: Theme.durationFast; easing.type: Easing.OutQuad }
+                NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.fast }
+                NumberAnimation { property: "scale"; from: 0.95; to: 1.0; duration: Theme.fast; easing.type: Easing.OutQuad }
             }
         }
 
         exit: Transition {
-            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.durationFast }
+            NumberAnimation { property: "opacity"; from: 1; to: 0; duration: Theme.fast }
         }
 
         background: Rectangle {
-            color: Theme.popover
-            border.width: 1
-            border.color: Theme.border
-            radius: Theme.radiusMd
+            color: Theme.bgSurface
+            border.width: 1; border.color: Theme.border; radius: Theme.r8
+            Rectangle {
+                anchors.fill: parent; anchors.margins: -1; z: -1
+                radius: Theme.r8 + 1; color: "transparent"
+                border.width: 1; border.color: Qt.rgba(0,0,0,0.2)
+            }
         }
 
         contentItem: ColumnLayout {
@@ -73,8 +76,7 @@ Item {
                             DashedLine {
                                 height: 1
                                 anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.right: parent.right
+                                anchors.left: parent.left; anchors.right: parent.right
                                 anchors.leftMargin: 4; anchors.rightMargin: 4
                                 color: Theme.border
                             }
@@ -83,32 +85,24 @@ Item {
                         Component {
                             id: itemComp
                             Rectangle {
-                                anchors.fill: parent
-                                anchors.margins: 2
-                                radius: Theme.radiusSm
-                                color: dropMouse.containsMouse ? Theme.accent : "transparent"
-
-                                Behavior on color { ColorAnimation { duration: Theme.durationFast } }
+                                anchors.fill: parent; anchors.margins: 2
+                                radius: Theme.r4
+                                color: dropMouse.containsMouse ? Theme.bgHover : "transparent"
+                                Behavior on color { ColorAnimation { duration: Theme.fast } }
 
                                 Text {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 8
+                                    anchors.fill: parent; anchors.leftMargin: Theme.s8
                                     verticalAlignment: Text.AlignVCenter
                                     text: modelData
-                                    font.family: Theme.fontFamily
-                                    font.pixelSize: Theme.fontSizeSm
-                                    color: Theme.foreground
+                                    font.family: Theme.sans
+                                    font.pixelSize: Theme.t12
+                                    color: Theme.fg
                                 }
 
                                 MouseArea {
                                     id: dropMouse
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        root.menuItemClicked(index, modelData)
-                                        popup.close()
-                                    }
+                                    anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                                    onClicked: { root.menuItemClicked(index, modelData); popup.close() }
                                 }
                             }
                         }

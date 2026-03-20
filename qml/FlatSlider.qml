@@ -11,16 +11,15 @@ T.Slider {
         x: root.leftPadding
         y: root.topPadding + root.availableHeight / 2 - height / 2
         width: root.availableWidth
-        height: 6
-        radius: Theme.radiusFull
-        color: Theme.secondary
+        height: 4
+        radius: Theme.rFull
+        color: Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.12)
 
         Rectangle {
             width: root.visualPosition * parent.width
             height: parent.height
-            radius: Theme.radiusFull
-            color: Theme.primary
-
+            radius: Theme.rFull
+            color: Theme.accent
             Behavior on width { NumberAnimation { duration: 50 } }
         }
     }
@@ -28,20 +27,15 @@ T.Slider {
     handle: Rectangle {
         x: root.leftPadding + root.visualPosition * (root.availableWidth - width)
         y: root.topPadding + root.availableHeight / 2 - height / 2
-        width: 16
-        height: 16
-        radius: Theme.radiusFull
-        color: Theme.primary
+        width: 16; height: 16
+        radius: Theme.rFull
+        color: Theme.accent
         border.width: 2
-        border.color: Theme.primary
+        border.color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.4)
 
         scale: root.pressed ? 1.15 : (hoverHandler.hovered ? 1.1 : 1.0)
+        Behavior on scale { NumberAnimation { duration: Theme.fast; easing.type: Easing.OutBack } }
 
-        Behavior on scale { NumberAnimation { duration: Theme.durationFast; easing.type: Easing.OutBack } }
-
-        HoverHandler {
-            id: hoverHandler
-            cursorShape: Qt.PointingHandCursor
-        }
+        HoverHandler { id: hoverHandler; cursorShape: Qt.PointingHandCursor }
     }
 }

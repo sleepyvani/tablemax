@@ -8,28 +8,30 @@ T.TextArea {
     implicitHeight: 80
 
     padding: 10
-    font.family: Theme.monoFamily
-    font.pixelSize: Theme.fontSizeSm
-    color: Theme.foreground
-    placeholderTextColor: Theme.mutedForeground
-    selectionColor: Theme.ring
-    selectedTextColor: Theme.foreground
+    font.family: Theme.mono
+    font.pixelSize: Theme.t12
+    color: Theme.fg
+    placeholderTextColor: Theme.fgDim
+    selectionColor: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.3)
+    selectedTextColor: Theme.fg
     wrapMode: TextEdit.Wrap
 
     opacity: enabled ? 1.0 : 0.5
 
     background: Rectangle {
-        radius: Theme.radius
-        color: Qt.rgba(Theme.input.r, Theme.input.g, Theme.input.b, 0.3)
+        radius: Theme.r6
+        color: Theme.bgSurface
         border.width: 1
-        border.color: root.activeFocus ? Theme.ring : Theme.input
+        border.color: root.activeFocus
+            ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.7)
+            : Theme.border
 
-        Behavior on border.color { ColorAnimation { duration: Theme.duration } }
+        Behavior on border.color { ColorAnimation { duration: Theme.fast } }
     }
 
     cursorDelegate: Rectangle {
         width: 1.5
-        color: Theme.foreground
+        color: Theme.fg
         visible: root.activeFocus
 
         SequentialAnimation on opacity {
@@ -40,5 +42,5 @@ T.TextArea {
         }
     }
 
-    Behavior on opacity { NumberAnimation { duration: Theme.duration } }
+    Behavior on opacity { NumberAnimation { duration: Theme.fast } }
 }

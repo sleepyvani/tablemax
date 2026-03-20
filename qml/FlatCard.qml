@@ -9,10 +9,10 @@ Rectangle {
     default property alias content: contentArea.data
 
     implicitWidth: 320
-    color: Theme.card
+    color: Theme.bgSurface
     border.width: 1
     border.color: Theme.border
-    radius: Theme.radiusLg
+    radius: Theme.r12
 
     ColumnLayout {
         anchors.fill: parent
@@ -21,19 +21,19 @@ Rectangle {
 
         Text {
             id: titleText
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeLg
+            font.family: Theme.sans
+            font.pixelSize: Theme.t16
             font.weight: Font.DemiBold
-            color: Theme.foreground
+            color: Theme.fg
             visible: text.length > 0
             Layout.fillWidth: true
         }
 
         Text {
             id: descText
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize
-            color: Theme.mutedForeground
+            font.family: Theme.sans
+            font.pixelSize: Theme.t13
+            color: Theme.fgMuted
             wrapMode: Text.WordWrap
             visible: text.length > 0
             Layout.fillWidth: true

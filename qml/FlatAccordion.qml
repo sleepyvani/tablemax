@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import "Icons.js" as Icons
 
 Item {
     id: root
@@ -14,7 +15,7 @@ Item {
     clip: true
 
     Behavior on implicitHeight {
-        NumberAnimation { duration: Theme.durationSlow; easing.type: Easing.OutCubic }
+        NumberAnimation { duration: Theme.slow; easing.type: Easing.OutCubic }
     }
 
     DashedLine {
@@ -32,23 +33,20 @@ Item {
 
         Text {
             text: root.title
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize
+            font.family: Theme.sans
+            font.pixelSize: Theme.t13
             font.weight: Font.Medium
-            color: headerMouse.containsMouse ? Theme.foreground : Theme.mutedForeground
+            color: headerMouse.containsMouse ? Theme.fg : Theme.fgMuted
             Layout.fillWidth: true
-
-            Behavior on color { ColorAnimation { duration: Theme.duration } }
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
         }
 
-        Text {
-            text: "▸"
-            font.pixelSize: 12
-            color: Theme.mutedForeground
+        FlatIcon {
+            icon: Icons.right
+            size: 10; color: Theme.fgMuted
             rotation: root.expanded ? 90 : 0
             Layout.rightMargin: 4
-
-            Behavior on rotation { NumberAnimation { duration: Theme.duration; easing.type: Easing.OutCubic } }
+            Behavior on rotation { NumberAnimation { duration: Theme.fast; easing.type: Easing.OutCubic } }
         }
 
         MouseArea {
@@ -68,6 +66,6 @@ Item {
         opacity: root.expanded ? 1 : 0
         visible: root.expanded
 
-        Behavior on opacity { NumberAnimation { duration: Theme.duration } }
+        Behavior on opacity { NumberAnimation { duration: Theme.fast } }
     }
 }

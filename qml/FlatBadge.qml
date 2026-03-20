@@ -8,16 +8,16 @@ Rectangle {
 
     implicitWidth: label.implicitWidth + 16
     implicitHeight: 20
-    radius: Theme.radiusFull
+    radius: Theme.rFull
 
     color: {
         switch (variant) {
-            case "secondary": return Theme.secondary
-            case "outline": return "transparent"
-            case "destructive": return Qt.rgba(0.94, 0.27, 0.27, 0.1)
-            case "success": return Qt.rgba(0.06, 0.73, 0.51, 0.1)
-            case "warning": return Qt.rgba(0.96, 0.62, 0.04, 0.1)
-            default: return Theme.primary
+            case "secondary":   return Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08)
+            case "outline":     return "transparent"
+            case "destructive": return Qt.rgba(Theme.error.r,   Theme.error.g,   Theme.error.b,   0.12)
+            case "success":     return Qt.rgba(Theme.success.r, Theme.success.g, Theme.success.b, 0.12)
+            case "warning":     return Qt.rgba(Theme.warning.r, Theme.warning.g, Theme.warning.b, 0.12)
+            default:            return Theme.accent
         }
     }
 
@@ -28,17 +28,17 @@ Rectangle {
         id: label
         anchors.centerIn: parent
         text: root.text
-        font.family: Theme.fontFamily
-        font.pixelSize: Theme.fontSizeXs
-        font.weight: Font.Medium
+        font.family: Theme.sans
+        font.pixelSize: Theme.t10
+        font.weight: Font.DemiBold
         color: {
             switch (root.variant) {
-                case "secondary": return Theme.secondaryForeground
-                case "outline": return Theme.foreground
+                case "secondary":   return Theme.fg
+                case "outline":     return Theme.fg
                 case "destructive": return Theme.error
-                case "success": return Theme.success
-                case "warning": return Theme.warning
-                default: return Theme.primaryForeground
+                case "success":     return Theme.success
+                case "warning":     return Theme.warning
+                default:            return "#ffffff"
             }
         }
     }

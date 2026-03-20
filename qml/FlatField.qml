@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import "Icons.js" as Icons
 
 Rectangle {
     id: root
@@ -16,16 +17,17 @@ Rectangle {
     ColumnLayout {
         id: fieldLayout
         anchors.fill: parent
-        spacing: 6
+        spacing: Theme.s6
 
         Text {
             text: root.label
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSize
+            font.family: Theme.sans
+            font.pixelSize: Theme.t13
             font.weight: Font.Medium
-            color: Theme.foreground
+            color: root.error.length > 0 ? Theme.error : Theme.fg
             visible: text.length > 0
             Layout.fillWidth: true
+            Behavior on color { ColorAnimation { duration: Theme.fast } }
         }
 
         Item {
@@ -36,25 +38,26 @@ Rectangle {
 
         Text {
             text: root.description
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeXs
-            color: Theme.mutedForeground
+            font.family: Theme.sans
+            font.pixelSize: Theme.t11
+            color: Theme.fgMuted
             wrapMode: Text.WordWrap
             visible: text.length > 0 && root.error.length === 0
             Layout.fillWidth: true
         }
 
-        Text {
-            text: root.error
-            font.family: Theme.fontFamily
-            font.pixelSize: Theme.fontSizeXs
-            color: Theme.error
-            wrapMode: Text.WordWrap
-            visible: text.length > 0
-            Layout.fillWidth: true
-
-            opacity: text.length > 0 ? 1 : 0
-            Behavior on opacity { NumberAnimation { duration: Theme.duration } }
+        RowLayout {
+            spacing: Theme.s4
+            visible: root.error.length > 0
+            FlatIcon { icon: Icons.error; size: 11; color: Theme.error }
+            Text {
+                text: root.error
+                font.family: Theme.sans
+                font.pixelSize: Theme.t11
+                color: Theme.error
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
         }
     }
 }
