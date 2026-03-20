@@ -126,7 +126,7 @@ ApplicationWindow {
                             if (!ok) root.toast("Error: " + err, "error")
                             else {
                                 root.toast("Query executed", "success")
-                                if (historyService) historyService.addEntry(t.content, activeDbType, ok, 0, resultModel ? resultModel.totalRows : 0)
+                                if (historyService) { var _conn = connectionManager ? connectionManager.get(connectionManager.activeIndex) : null; historyService.addEntry(t.content, _conn ? (_conn.database || _conn.name || "") : "", activeDbType, resultModel ? resultModel.totalRows : 0, 0.0, ok) }
                             }
                         })
                     }
