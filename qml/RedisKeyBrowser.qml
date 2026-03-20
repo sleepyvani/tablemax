@@ -13,6 +13,13 @@ Rectangle {
     property var resultModel: null
     property int totalRows: resultModel ? resultModel.totalRows : 0
     property int totalColumns: resultModel ? resultModel.totalColumns : 0
+    property string searchQuery: ""
+
+    // Filter keys by search query
+    function keyMatchesSearch(row) {
+        if (!searchQuery) return true
+        return getKeyName(row).toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
+    }
 
     signal toast(string message, string type)
 
@@ -23,15 +30,36 @@ Rectangle {
 
         // ── Toolbar ──
         Rectangle {
-            Layout.fillWidth: true; Layout.preferredHeight: 36; color: Theme.bgElevated
+            Layout.fillWidth: true; Layout.preferredHeight: 40; color: Theme.bgElevated
             RowLayout {
-                anchors.fill: parent; anchors.leftMargin: Theme.s12; anchors.rightMargin: Theme.s12; spacing: Theme.s8
+                anchors.fill: parent; anchors.leftMargin: Theme.s8; anchors.rightMargin: Theme.s8; spacing: Theme.s6
+
                 FlatIcon { icon: Icons.key; size: 14; color: Theme.error }
-                Text {
-                    text: totalRows + " key" + (totalRows !== 1 ? "s" : "")
-                    font.pixelSize: Theme.t12; font.weight: Font.Medium; color: Theme.fg; font.family: Theme.sans
+
+                FlatInput {
+                    id: searchInput
+                    Layout.fillWidth: true; Layout.preferredHeight: 26
+                    placeholderText: "Search keys…"
+                    onTextChanged: root.searchQuery = text
                 }
-                Item { Layout.fillWidth: true }
+
+                // Key count
+                Text {
+                    text: {
+                        var visible = 0
+                        for (var i = 0; i < totalRows; i++) if (keyMatchesSearch(i)) visible++
+                        return searchQuery ? visible + " of " + totalRows : totalRows + " key" + (totalRows !== 1 ? "s" : "")
+                    }
+                    font.pixelSize: Theme.t11; color: Theme.fgDim; font.family: Theme.sans
+                }
+
+                // Clear search
+                Rectangle {
+                    width: 22; height: 22; radius: Theme.r4; color: clsMa.containsMouse ? Theme.bgHover : "transparent"
+                    visible: root.searchQuery !== ""
+                    FlatIcon { anchors.centerIn: parent; icon: Icons.close; size: 10; color: Theme.fgMuted }
+                    MouseArea { id: clsMa; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: searchInput.text = "" }
+                }
             }
             DashedLine { anchors.bottom: parent.bottom; width: parent.width; height: 1; color: Theme.border }
         }
@@ -47,8 +75,10 @@ Rectangle {
                 id: keyDelegate
                 required property int index
                 property int keyIdx: index
+                property bool matchesSearch: root.keyMatchesSearch(keyIdx)
 
-                width: keyListView.width; height: 42
+                width: keyListView.width; height: matchesSearch ? 42 : 0
+                visible: matchesSearch
                 color: keyMa.containsMouse ? Theme.bgHover : keyIdx % 2 === 0 ? "transparent" : Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.015)
 
                 RowLayout {
