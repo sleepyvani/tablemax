@@ -27,7 +27,7 @@ ApplicationWindow {
         return c ? (c.dbType || "") : ""
     }
 
-    function toast(msg: string, type: string) : void { toastBar.show(msg, type || "info") }
+    function toast(msg, type) { toastBar.show(msg, type || "info") }
 
     // Background Grid
     BlueprintGrid {
