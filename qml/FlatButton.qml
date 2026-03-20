@@ -31,41 +31,43 @@ T.Button {
     topPadding: 0
     bottomPadding: 0
 
-    font.family: Theme.fontFamily
-    font.pixelSize: size === "xs" ? Theme.fontSizeXs : (size === "sm" ? Theme.fontSizeSm : Theme.fontSize)
+    font.family: Theme.sans
+    font.pixelSize: size === "xs" ? Theme.t11 : (size === "sm" ? Theme.t12 : Theme.t13)
     font.weight: Font.Medium
 
     opacity: enabled ? 1.0 : 0.5
 
     background: Rectangle {
-        radius: size === "xs" ? Theme.radiusSm : Theme.radius
+        radius: Theme.r6
 
         color: {
             switch (root.variant) {
                 case "outline":
-                    return root.down ? Qt.darker(Theme.background, 1.2) :
-                           root.hovered ? Theme.muted : Theme.background
+                    return root.down ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08) :
+                           root.hovered ? Theme.bgHover : "transparent"
                 case "secondary":
-                    return root.down ? Qt.darker(Theme.secondary, 1.2) :
-                           root.hovered ? Qt.lighter(Theme.secondary, 1.2) : Theme.secondary
+                    return root.down ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.12) :
+                           root.hovered ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08) :
+                           Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.05)
                 case "ghost":
-                    return root.down ? Qt.darker(Theme.muted, 1.1) :
-                           root.hovered ? Theme.muted : "transparent"
+                    return root.down ? Qt.rgba(Theme.fg.r, Theme.fg.g, Theme.fg.b, 0.08) :
+                           root.hovered ? Theme.bgHover : "transparent"
                 case "destructive":
-                    return root.down ? Qt.rgba(0.94, 0.27, 0.27, 0.25) :
-                           root.hovered ? Qt.rgba(0.94, 0.27, 0.27, 0.15) : Qt.rgba(0.94, 0.27, 0.27, 0.1)
+                    return root.down ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.25) :
+                           root.hovered ? Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.15) :
+                           Qt.rgba(Theme.error.r, Theme.error.g, Theme.error.b, 0.1)
                 case "link":
                     return "transparent"
-                default:
-                    return root.down ? Qt.darker(Theme.primary, 1.15) :
-                           root.hovered ? Qt.darker(Theme.primary, 1.1) : Theme.primary
+                default:   // "default" → accent
+                    return root.down ? Qt.darker(Theme.accent, 1.1) :
+                           root.hovered ? Theme.accentHover : Theme.accent
             }
         }
 
         border.width: root.variant === "outline" ? 1 : 0
         border.color: Theme.border
 
-        Behavior on color { ColorAnimation { duration: Theme.duration } }
+        Behavior on color { ColorAnimation { duration: Theme.fast } }
     }
 
     contentItem: Text {
@@ -73,21 +75,21 @@ T.Button {
         font: root.font
         color: {
             switch (root.variant) {
-                case "outline": return Theme.foreground
-                case "secondary": return Theme.secondaryForeground
-                case "ghost": return Theme.foreground
+                case "outline":     return Theme.fg
+                case "secondary":   return Theme.fg
+                case "ghost":       return Theme.fg
                 case "destructive": return Theme.error
-                case "link": return Theme.primary
-                default: return Theme.primaryForeground
+                case "link":        return Theme.accent
+                default:            return "#ffffff"   // white on accent background
             }
         }
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
 
-        Behavior on color { ColorAnimation { duration: Theme.duration } }
+        Behavior on color { ColorAnimation { duration: Theme.fast } }
     }
 
-    Behavior on opacity { NumberAnimation { duration: Theme.duration } }
+    Behavior on opacity { NumberAnimation { duration: Theme.fast } }
 
     HoverHandler { cursorShape: Qt.PointingHandCursor }
 }
