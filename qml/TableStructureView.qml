@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "Icons.js" as Icons
+import "DbHelper.js" as DB
 
 Rectangle {
     id: root
@@ -12,6 +13,7 @@ Rectangle {
 
     property var schemaService: null
     property string tableName: ""
+    property string dbType: ""   // passed from Main.qml — used for DB-specific DDL
     property var columns: []   // [{ name, type, nullable, defaultVal, pk, extra }]
     property var indexes: []   // [{ name, type, columns, unique }] — populated externally or from SHOW INDEX
     property var triggers: []  // [{ name, timing, event, statement }]
@@ -288,7 +290,8 @@ Rectangle {
                                     onClicked: {
                                         var idxName = modelData.name || ""
                                         if (idxName && databaseService && databaseService.connected) {
-                                            databaseService.executeQuery("DROP INDEX " + idxName + " ON " + root.tableName, null)
+                                            var sql = DB.buildDropIndexSql(idxName, root.tableName, root.dbType)
+                                            databaseService.executeQuery(sql, null)
                                             root.toast("Index dropped: " + idxName, "success")
                                         }
                                     }
