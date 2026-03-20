@@ -1,4 +1,4 @@
-﻿import QtQuick
+import QtQuick
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import "FormatHelper.js" as Fmt
@@ -300,7 +300,9 @@ Rectangle {
         id: cellEditorDlg
         onCommitted: function(row, col, val) {
             if (changeTracker && resultModel) {
-                changeTracker.updateCell(row, col, val)
+                var colName = resultModel.columnName(col)
+                var oldVal = resultModel.cellValue(row, col)
+                changeTracker.recordCellEdit(row, col, colName, oldVal, val)
             }
             root.toast("Cell updated", "success")
         }
