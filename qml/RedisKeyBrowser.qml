@@ -121,7 +121,7 @@ Rectangle {
                         Text {
                             id: typeLbl; anchors.centerIn: parent
                             text: getRedisType(keyDelegate.keyIdx).toUpperCase()
-                            font.pixelSize: 9; font.weight: Font.Medium
+                            font.pixelSize: Theme.t11; font.weight: Font.Medium
                             font.family: Theme.sans; color: getTypeColor(getRedisType(keyDelegate.keyIdx), 1)
                         }
                     }
@@ -134,7 +134,7 @@ Rectangle {
                         RowLayout {
                             anchors.centerIn: parent; spacing: 3
                             FlatIcon { icon: Icons.clock; size: 8; color: Theme.fgMuted }
-                            Text { id: ttlLbl; text: getTTL(keyDelegate.keyIdx); font.pixelSize: 9; color: Theme.fgMuted; font.family: Theme.sans }
+                            Text { id: ttlLbl; text: getTTL(keyDelegate.keyIdx); font.pixelSize: Theme.t11; color: Theme.fgMuted; font.family: Theme.sans }
                         }
                     }
 

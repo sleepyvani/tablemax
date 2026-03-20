@@ -111,7 +111,7 @@ Rectangle {
                             Text {
                                 id: idLabel; anchors.centerIn: parent
                                 text: resultModel ? String(resultModel.data(resultModel.index(docDelegate.docIndex, 0), 0) || "") : ""
-                                font.pixelSize: 9; font.family: Theme.mono; color: Theme.accent
+                                font.pixelSize: Theme.t11; font.family: Theme.mono; color: Theme.accent
                                 elide: Text.ElideMiddle; maximumLineCount: 1
                             }
                         }
