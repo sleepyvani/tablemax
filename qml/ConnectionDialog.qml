@@ -11,7 +11,7 @@ T.Dialog {
     property string testStatus: ""
     property string testMsg: ""
     property int dbTypeIdx: 0
-    property var dbTypes: ["postgres", "mysql", "sqlite", "mongodb", "redis", "mssql", "mariadb"]
+    property var dbTypes: ["postgres", "mysql", "sqlite", "mongodb", "redis", "mssql", "mariadb", "clickhouse", "duckdb", "oracle"]
     property string selectedColor: "#6366f1"
 
     parent: T.Overlay.overlay
@@ -117,7 +117,10 @@ T.Dialog {
                         { label: "MongoDB",    icon: "qrc:/TableMax/icons/mongodb.svg" },
                         { label: "Redis",      icon: "qrc:/TableMax/icons/redis.svg" },
                         { label: "MSSQL",      icon: "qrc:/TableMax/icons/mssql.svg" },
-                        { label: "MariaDB",    icon: "qrc:/TableMax/icons/mariadb.svg" }
+                        { label: "MariaDB",    icon: "qrc:/TableMax/icons/mariadb.svg" },
+                        { label: "ClickHouse", icon: "qrc:/TableMax/icons/clickhouse.svg" },
+                        { label: "DuckDB",     icon: "qrc:/TableMax/icons/duckdb.svg" },
+                        { label: "Oracle",     icon: "qrc:/TableMax/icons/oracle.svg" }
                     ]
 
                     Rectangle {

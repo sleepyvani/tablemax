@@ -424,3 +424,4 @@ Rectangle {
 
         MouseArea { anchors.fill: parent; z: -1; onClicked: renameTableDlg.visible = false }
     }
+}
