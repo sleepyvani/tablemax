@@ -8,6 +8,9 @@ function isSQL(dbType) {
 function isClickHouse(dbType) { return (dbType || "").toLowerCase() === "clickhouse" }
 function isDuckDB(dbType) { return (dbType || "").toLowerCase() === "duckdb" }
 function isOracle(dbType) { return (dbType || "").toLowerCase() === "oracle" }
+function isMSSQL(dbType) { return (dbType || "").toLowerCase() === "mssql" }
+function isMySQL(dbType) { var t = (dbType||"").toLowerCase(); return t === "mysql" || t === "mariadb" }
+function isPostgres(dbType) { return (dbType || "").toLowerCase() === "postgres" }
 function isMongo(dbType) { return (dbType || "").toLowerCase() === "mongodb" }
 function isRedis(dbType) { return (dbType || "").toLowerCase() === "redis" }
 
@@ -60,6 +63,12 @@ function buildSelectQuery(dbType, entityName) {
         return "KEYS " + entityName + "*"
     if (isOracle(dbType))
         return 'SELECT * FROM "' + entityName + '" FETCH FIRST 100 ROWS ONLY'
+    if (isMSSQL(dbType))
+        return 'SELECT TOP 100 * FROM [' + entityName + ']'
+    if (isClickHouse(dbType))
+        return 'SELECT * FROM ' + entityName + ' LIMIT 100'
+    if (isDuckDB(dbType))
+        return 'SELECT * FROM ' + entityName + ' LIMIT 100'
     return 'SELECT * FROM "' + entityName + '" LIMIT 100'
 }
 
@@ -127,3 +136,38 @@ function buildDropColumnSql(tableName, columnName, dbType) {
 }
 
 function isSqlite(dbType) { return (dbType || '').toLowerCase() === 'sqlite' }
+
+// Build TRUNCATE command — DB-specific
+function buildTruncateSql(tableName, dbType) {
+    if (isMSSQL(dbType)) return 'TRUNCATE TABLE [' + tableName + ']'
+    if (isOracle(dbType)) return 'TRUNCATE TABLE "' + tableName + '"'
+    if (isClickHouse(dbType)) return 'TRUNCATE TABLE IF EXISTS ' + tableName
+    if (isDuckDB(dbType)) return 'DELETE FROM ' + tableName  // DuckDB: no TRUNCATE
+    return 'TRUNCATE TABLE "' + tableName + '"'
+}
+
+// Build DROP TABLE command — DB-specific
+function buildDropTableSql(tableName, dbType) {
+    if (isMSSQL(dbType)) return 'DROP TABLE IF EXISTS [' + tableName + ']'
+    if (isOracle(dbType)) return 'DROP TABLE "' + tableName + '"'
+    if (isClickHouse(dbType)) return 'DROP TABLE IF EXISTS ' + tableName
+    if (isDuckDB(dbType)) return 'DROP TABLE IF EXISTS ' + tableName
+    return 'DROP TABLE IF EXISTS "' + tableName + '"'
+}
+
+// Build RENAME TABLE command — DB-specific
+function buildRenameSql(oldName, newName, dbType) {
+    if (isMSSQL(dbType)) return "EXEC sp_rename '" + oldName + "', '" + newName + "'"
+    if (isOracle(dbType)) return 'ALTER TABLE "' + oldName + '" RENAME TO "' + newName + '"'
+    if (isMySQL(dbType)) return 'RENAME TABLE `' + oldName + '` TO `' + newName + '`'
+    if (isClickHouse(dbType)) return 'RENAME TABLE ' + oldName + ' TO ' + newName
+    return 'ALTER TABLE "' + oldName + '" RENAME TO "' + newName + '"'
+}
+
+// Build quoted identifier for DB
+function quoteIdentifier(name, dbType) {
+    if (isMSSQL(dbType)) return '[' + name + ']'
+    if (isMySQL(dbType)) return '`' + name + '`'
+    if (isOracle(dbType)) return '"' + name + '"'
+    return '"' + name + '"'
+}

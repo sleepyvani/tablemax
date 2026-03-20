@@ -340,7 +340,8 @@ Rectangle {
         confirmLabel: "Truncate"; confirmVariant: "destructive"
         onConfirmed: {
             if (databaseService && databaseService.connected) {
-                var r = databaseService.executeQuery("TRUNCATE TABLE " + tableName, null)
+                var cmd = DB.buildTruncateSql(tableName, _dbType)
+                var r = databaseService.executeQuery(cmd, null)
                 root.toast(r.success ? "Table truncated: " + tableName : "Error: " + r.error,
                            r.success ? "warning" : "destructive")
                 if (schemaService) schemaService.refresh()
@@ -360,10 +361,9 @@ Rectangle {
             if (databaseService && databaseService.connected) {
                 var cmd = DB.isMongo(_dbType)
                     ? ("db." + tableName + ".drop()")
-                    : ("DROP TABLE IF EXISTS " + tableName)
+                    : DB.buildDropTableSql(tableName, _dbType)
                 var r = databaseService.executeQuery(cmd, null)
-                root.toast(r.success ? "Dropped: " + tableName : "Error: " + r.error,
-                           r.success ? "destructive" : "destructive")
+                root.toast(r.success ? "Dropped: " + tableName : "Error: " + r.error, "destructive")
                 if (schemaService) schemaService.refresh()
             }
         }
@@ -415,7 +415,7 @@ Rectangle {
         function doRename() {
             var newName = newNameInput.text.trim()
             if (!newName || !databaseService) { renameTableDlg.visible = false; return }
-            var cmd = "ALTER TABLE " + renameTableDlg.tableName + " RENAME TO " + newName
+            var cmd = DB.buildRenameSql(renameTableDlg.tableName, newName, _dbType)
             var r = databaseService.executeQuery(cmd, null)
             root.toast(r.success ? "Renamed to: " + newName : "Error: " + r.error, r.success ? "success" : "destructive")
             renameTableDlg.visible = false
